@@ -4,36 +4,60 @@ import axios from 'axios'
 import styles from '../styles/ProductDetails.module.css'
 
 function ProductDetails() {
-  const { id } = useParams() // Извлекаем id из URL
+  const { id } = useParams()
   const [product, setProduct] = useState(null)
-  const [loading, setLoading] = useState(true) // Стейт для отслеживания загрузки
-  const [error, setError] = useState(null) // Стейт для ошибок
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (id) {
-      // Делаем запрос к API для получения информации о продукте по id
       axios
-        .get(`http://localhost/my-shop/backend/api/product-details.php?id=${id}`) // Убедитесь, что URL правильный
+        .get(`http://localhost/my-shop/backend/api/product-details.php?id=${id}`)
         .then((response) => {
-          setProduct(response.data) // Сохраняем данные о продукте в состоянии
-          setLoading(false) // Загрузка завершена
+          setProduct(response.data)
+          setLoading(false)
         })
         .catch((error) => {
-          setError('Error loading product details') // Обработка ошибки
-          setLoading(false) // Загрузка завершена
+          setError('Error loading product details')
+          setLoading(false)
         })
     } else {
-      setError('Product id is missing!') // Если id нет в URL
-      setLoading(false) // Загрузка завершена
+      setError('Product id is missing!')
+      setLoading(false)
     }
-  }, [id]) // Перезапускать эффект при изменении id в URL
+  }, [id])
+
+  // Функция для добавления товара в корзину
+  const handleAddToCart = () => {
+    if (product) {
+      // Проверяем, есть ли уже корзина в localStorage
+      const currentCart = JSON.parse(localStorage.getItem('cart')) || []
+
+      // Проверяем, есть ли уже такой товар в корзине
+      const existingProductIndex = currentCart.findIndex((item) => item.id === product.id)
+
+      if (existingProductIndex !== -1) {
+        // Если товар уже в корзине, увеличиваем его количество
+        currentCart[existingProductIndex].quantity += 1
+      } else {
+        // Если товара нет в корзине, добавляем его с количеством 1
+        product.quantity = 1
+        currentCart.push(product)
+      }
+
+      // Сохраняем обновленную корзину в localStorage
+      localStorage.setItem('cart', JSON.stringify(currentCart))
+
+      alert('Продукт добавлен в корзину')
+    }
+  }
 
   if (loading) {
-    return <div>Loading...</div> // Пока данные загружаются, показываем загрузку
+    return <div>Loading...</div>
   }
 
   if (error) {
-    return <div>{error}</div> // Если ошибка, показываем ее
+    return <div>{error}</div>
   }
 
   return (
@@ -46,6 +70,11 @@ function ProductDetails() {
       <p>Доступность: {product.availability ? 'В наличии' : 'Нет в наличии'}</p>
       <p>Количество на складе: {product.quantity_in_stock}</p>
       <p>Вес: {product.weight} кг</p>
+
+      {/* Кнопка для добавления в корзину */}
+      <button onClick={handleAddToCart} className={styles.addToCartButton}>
+        Добавить в корзину
+      </button>
     </div>
   )
 }
