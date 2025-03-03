@@ -6,6 +6,7 @@ import Categories from './pages/Categories' // Импорт компонента
 import Products from './pages/Products' // Импорт компонента Products
 import Cart from './pages/Cart' // Импорт компонента Cart
 import Register from './pages/Register' // Импорт компонента Register
+import ProductDetails from './pages/ProductDetails' // Импорт компонента для деталей продукта
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
 
         {/* Страница регистрации */}
         <Route path="/register" element={<Register />} />
+
+        {/* Страница с деталями продукта */}
+        <Route path="/product/:id" element={<ProductDetails />} />
       </Routes>
     </Router>
   )
