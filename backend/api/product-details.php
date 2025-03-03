@@ -10,13 +10,13 @@ require_once __DIR__ . '/../includes/db.php';
 session_start();
 
 // Проверяем, был ли передан параметр id в URL
-if (isset($_GET['id'])) {
-    $productId = $_GET['id'];
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $productId = $_GET['id'];  // Получаем id, теперь это строка
 
     // Подготавливаем запрос, чтобы избежать SQL-инъекций
     $sql = "SELECT * FROM products WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('i', $productId); // 'i' означает, что параметр это integer (целое число)
+    $stmt->bind_param('s', $productId);  // 's' означает строковый параметр
     
     // Выполняем запрос
     $stmt->execute();

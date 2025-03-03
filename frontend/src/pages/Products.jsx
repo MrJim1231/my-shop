@@ -7,22 +7,26 @@ function Products() {
   const [currentPage, setCurrentPage] = useState(1) // Текущая страница
   const [totalPages, setTotalPages] = useState(1) // Общее количество страниц
   const [loading, setLoading] = useState(false) // Состояние загрузки
+  const [error, setError] = useState(null) // Ошибка загрузки
 
   const limit = 20 // Количество товаров на странице
 
   useEffect(() => {
-    setLoading(true)
-    axios
-      .get(`http://localhost/my-shop/backend/api/products.php?page=${currentPage}`)
-      .then((response) => {
+    const fetchProducts = async () => {
+      setLoading(true)
+      try {
+        const response = await axios.get(`http://localhost/my-shop/backend/api/products.php?page=${currentPage}`)
         setProducts(response.data.products) // Сохраняем товары
         setTotalPages(response.data.total_pages) // Устанавливаем количество страниц
-        setLoading(false)
-      })
-      .catch((error) => {
+      } catch (error) {
+        setError('Ошибка при загрузке данных. Попробуйте позже.')
         console.error('Error loading products:', error)
+      } finally {
         setLoading(false)
-      })
+      }
+    }
+
+    fetchProducts()
   }, [currentPage]) // Перезапускаем эффект при изменении текущей страницы
 
   const handlePageChange = (page) => {
@@ -38,6 +42,7 @@ function Products() {
   return (
     <div className={styles.products}>
       <h1>Продукты</h1>
+      {error && <div className={styles.error}>{error}</div>} {/* Отображение ошибки */}
       <div className={styles.productList}>
         {products.map((product) => (
           <div className={styles.productItem} key={product.id}>
@@ -47,20 +52,20 @@ function Products() {
               <h2>{product.name}</h2>
               <p>{product.description}</p>
               <p>Цена: ${product.price}</p>
+              <p>Размер: {product.size}</p> {/* Добавляем отображение размера */}
             </a>
           </div>
         ))}
       </div>
-
       {/* Пагинация */}
       <div className={styles.pagination}>
-        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1 || loading}>
           Previous
         </button>
         <span>
           {currentPage} / {totalPages}
         </span>
-        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages || loading}>
           Next
         </button>
       </div>

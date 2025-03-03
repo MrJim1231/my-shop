@@ -14,7 +14,7 @@ function ProductDetails() {
       axios
         .get(`http://localhost/my-shop/backend/api/product-details.php?id=${id}`)
         .then((response) => {
-          setProduct(response.data)
+          setProduct(response.data) // Получаем все данные о товаре, включая размер
           setLoading(false)
         })
         .catch((error) => {
@@ -30,22 +30,16 @@ function ProductDetails() {
   // Функция для добавления товара в корзину
   const handleAddToCart = () => {
     if (product) {
-      // Проверяем, есть ли уже корзина в localStorage
       const currentCart = JSON.parse(localStorage.getItem('cart')) || []
-
-      // Проверяем, есть ли уже такой товар в корзине
       const existingProductIndex = currentCart.findIndex((item) => item.id === product.id)
 
       if (existingProductIndex !== -1) {
-        // Если товар уже в корзине, увеличиваем его количество
         currentCart[existingProductIndex].quantity += 1
       } else {
-        // Если товара нет в корзине, добавляем его с количеством 1
         product.quantity = 1
         currentCart.push(product)
       }
 
-      // Сохраняем обновленную корзину в localStorage
       localStorage.setItem('cart', JSON.stringify(currentCart))
 
       alert('Продукт добавлен в корзину')
@@ -66,11 +60,10 @@ function ProductDetails() {
       <h1>{product.name}</h1>
       <p>{product.description}</p>
       <p>Цена: ${product.price}</p>
-      <p>Размер: {product.size}</p>
+      <p>Размер: {product.size}</p> {/* Здесь показываем размер */}
       <p>Доступность: {product.availability ? 'В наличии' : 'Нет в наличии'}</p>
       <p>Количество на складе: {product.quantity_in_stock}</p>
       <p>Вес: {product.weight} кг</p>
-
       {/* Кнопка для добавления в корзину */}
       <button onClick={handleAddToCart} className={styles.addToCartButton}>
         Добавить в корзину
