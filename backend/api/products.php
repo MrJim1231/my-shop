@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // Подключаем файл с подключением к базе данных
 require_once __DIR__ . '/../includes/db.php';
 
-
 $sql = "SELECT * FROM products";
 $result = $conn->query($sql);
 
@@ -20,5 +19,6 @@ while ($row = $result->fetch_assoc()) {
     $products[] = $row;
 }
 
-echo json_encode($products);
+// Выводим результат в формате JSON с использованием JSON_UNESCAPED_UNICODE
+echo json_encode($products, JSON_UNESCAPED_UNICODE);
 ?>
