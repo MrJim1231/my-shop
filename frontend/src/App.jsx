@@ -7,6 +7,7 @@ import Products from './pages/Products' // Импорт компонента Pro
 import Cart from './pages/Cart' // Импорт компонента Cart
 import Register from './pages/Register' // Импорт компонента Register
 import ProductDetails from './pages/ProductDetails' // Импорт компонента для деталей продукта
+import CategoryPage from './pages/CategoryPage' // Импорт компонента для отображения товаров в категории
 
 function App() {
   return (
@@ -17,21 +18,18 @@ function App() {
       <Routes>
         {/* Главная страница */}
         <Route path="/" element={<Home />} />
-
         {/* Страница категорий */}
         <Route path="/categories" element={<Categories />} />
-
         {/* Страница продуктов */}
         <Route path="/products" element={<Products />} />
-
         {/* Страница корзины */}
         <Route path="/cart" element={<Cart />} />
-
         {/* Страница регистрации */}
         <Route path="/register" element={<Register />} />
-
         {/* Страница с деталями продукта */}
         <Route path="/product/:id" element={<ProductDetails />} />
+        {/* Страница товаров по категории */}
+        <Route path="/category/:categoryId" element={<CategoryPage />} /> {/* Добавляем новый маршрут для категории */}
       </Routes>
     </Router>
   )

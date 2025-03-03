@@ -31,7 +31,7 @@ function Categories() {
                 className={styles['category-image']}
               />
               <h3>{category.name}</h3>
-              <Link to={`/category/${category.slug}`}>Перейти</Link>
+              <Link to={`/category/${category.id}`}>Перейти</Link> {/* Используем category.id */}
             </div>
           ))
         ) : (

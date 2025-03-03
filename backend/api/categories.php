@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // Подключаем файл с подключением к базе данных
 require_once __DIR__ . '/../includes/db.php';
 
-// Запрос к базе данных для получения всех категорий
-$sql = "SELECT * FROM categories";
+// Запрос к базе данных для получения всех категорий (без исключений)
+$sql = "SELECT * FROM categories";  // Убираем исключения
 $result = $conn->query($sql);
 
 // Если запрос успешен, получаем все категории
