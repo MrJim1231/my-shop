@@ -6,7 +6,6 @@ import styles from '../styles/ProductDetails.module.css'
 function ProductDetails() {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
-  const [similarProducts, setSimilarProducts] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -17,8 +16,7 @@ function ProductDetails() {
         .get(`http://localhost/my-shop/backend/api/product-details.php?id=${id}`)
         .then((response) => {
           setProduct(response.data)
-          setSimilarProducts(response.data.sizes || [])
-          setSelectedProduct(response.data)
+          setSelectedProduct(response.data) // Инициализируем выбранный товар
           setLoading(false)
         })
         .catch((error) => {
@@ -31,11 +29,12 @@ function ProductDetails() {
     }
   }, [id])
 
-  const handleSizeChange = (event) => {
-    const newSize = event.target.value
-    const newProduct = similarProducts.find((item) => item.size === newSize)
+  const handleSizeChange = (size, groupId) => {
+    // Ищем товар с выбранным размером в конкретной группе
+    const newProduct = product.sizes[groupId]?.find((item) => item.size === size)
     if (newProduct) {
-      setSelectedProduct({ ...product, ...newProduct })
+      console.log('Updated product:', newProduct) // Логируем для проверки
+      setSelectedProduct({ ...newProduct }) // Обновляем выбранный товар
     }
   }
 
@@ -61,23 +60,30 @@ function ProductDetails() {
 
   return (
     <div className={styles.productDetails}>
-      <img src={selectedProduct.image} alt={selectedProduct.name} className={styles.productImage} />
+      {/* Обновляем картинку в зависимости от выбранного товара */}
+      {selectedProduct && selectedProduct.image && <img src={selectedProduct.image} alt={selectedProduct.name} className={styles.productImage} />}
+
       <h1>{selectedProduct.name}</h1>
       <p>{selectedProduct.description}</p>
-      <p>Цена: ${selectedProduct.price}</p>
-      <p>
-        Размер:
-        <select onChange={handleSizeChange} value={selectedProduct.size}>
-          {similarProducts.map((item) => (
-            <option key={item.id} value={item.size}>
-              {item.size}
-            </option>
-          ))}
-        </select>
-      </p>
+      <p>Цена: {selectedProduct.price} грн</p>
       <p>Доступность: {selectedProduct.availability ? 'В наличии' : 'Нет в наличии'}</p>
       <p>Количество на складе: {selectedProduct.quantity_in_stock}</p>
-      <p>Вес: {selectedProduct.weight} кг</p>
+
+      {/* Выбор размера */}
+      <div className={styles.sizeSelector}>
+        <h3>Выберите размер:</h3>
+        {Object.keys(product.sizes).map((groupId) => (
+          <div key={groupId} className={styles.sizeGroup}>
+            <h4>Группа товаров {groupId}</h4>
+            {product.sizes[groupId].map((item) => (
+              <button key={item.id} onClick={() => handleSizeChange(item.size, groupId)} className={selectedProduct.size === item.size ? styles.active : ''}>
+                {item.size}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
+
       <button onClick={handleAddToCart} className={styles.addToCartButton}>
         Добавить в корзину
       </button>
