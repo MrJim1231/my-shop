@@ -11,7 +11,13 @@ function Categories() {
     axios
       .get('http://localhost/my-shop/backend/api/categories.php')
       .then((response) => {
-        setCategories(response.data) // Записываем данные о категориях в state
+        // Проверяем, что данные действительно массив
+        if (Array.isArray(response.data)) {
+          setCategories(response.data) // Записываем данные о категориях в state
+        } else {
+          console.error('Получены неправильные данные:', response.data)
+          setCategories([]) // Инициализируем пустым массивом, если данные не корректные
+        }
       })
       .catch((error) => {
         console.error('Ошибка при получении категорий:', error)
@@ -22,11 +28,11 @@ function Categories() {
     <div className={styles.categories}>
       <h1>Категории товаров</h1>
       <div className={styles['category-list']}>
-        {categories.length > 0 ? (
+        {Array.isArray(categories) && categories.length > 0 ? (
           categories.map((category) => (
             <div className={styles['category-item']} key={category.id}>
               <img
-                src={category.image_url} // Например, изображение категории из базы данных
+                src={category.image} // Например, изображение категории из базы данных
                 alt={category.name}
                 className={styles['category-image']}
               />
