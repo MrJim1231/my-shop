@@ -1,43 +1,40 @@
-/* Стили для компонента Categories */
-.categories {
-  text-align: center;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
 }
 
-h1 {
-  font-size: 2em;
+.title {
+  text-align: center;
   margin-bottom: 20px;
 }
 
-.category-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
-.category-item {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  text-align: center;
-  max-width: 180px;
-}
-
-.category-item:hover {
-  transform: translateY(-5px);
-}
-
-.category-image {
-  width: 100%;
-  height: 200px;
-  border-radius: 4px;
-}
-
-h3 {
-  margin-top: 10px;
-  font-size: 1.2em;
+.categoryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
   color: #333;
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.categoryItem:hover {
+  transform: scale(1.05);
+}
+
+.categoryImage {
+  width: 100%;
+  max-width: 250px;
+  height: 250px;
+  border-radius: 10px;
 }

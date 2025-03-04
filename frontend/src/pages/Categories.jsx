@@ -7,16 +7,14 @@ function Categories() {
   const [categories, setCategories] = useState([])
 
   useEffect(() => {
-    // Отправка запроса на сервер для получения категорий
     axios
       .get('http://localhost/my-shop/backend/api/categories.php')
       .then((response) => {
-        // Проверяем, что данные действительно массив
         if (Array.isArray(response.data)) {
-          setCategories(response.data) // Записываем данные о категориях в state
+          setCategories(response.data)
         } else {
           console.error('Получены неправильные данные:', response.data)
-          setCategories([]) // Инициализируем пустым массивом, если данные не корректные
+          setCategories([])
         }
       })
       .catch((error) => {
@@ -25,20 +23,15 @@ function Categories() {
   }, [])
 
   return (
-    <div className={styles.categories}>
-      <h1>Категории товаров</h1>
-      <div className={styles['category-list']}>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Категории товаров</h1>
+      <div className={styles.categoryGrid}>
         {Array.isArray(categories) && categories.length > 0 ? (
           categories.map((category) => (
-            <div className={styles['category-item']} key={category.id}>
-              <img
-                src={category.image} // Например, изображение категории из базы данных
-                alt={category.name}
-                className={styles['category-image']}
-              />
+            <Link to={`/category/${category.id}`} key={category.id} className={styles.categoryItem}>
+              <img src={category.image} alt={category.name} className={styles.categoryImage} />
               <h3>{category.name}</h3>
-              <Link to={`/category/${category.id}`}>Перейти</Link> {/* Используем category.id */}
-            </div>
+            </Link>
           ))
         ) : (
           <p>Загрузка...</p>
