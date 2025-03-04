@@ -9,61 +9,67 @@ require_once __DIR__ . '/../includes/db.php';
 // Стартуем сессию для работы с корзиной
 session_start();
 
-// Проверяем, был ли передан параметр id в URL
-if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $productId = $_GET['id'];  // Получаем id, теперь это строка
+// Получаем id товара из URL
+$product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-    // Подготавливаем запрос, чтобы избежать SQL-инъекций
-    $sql = "SELECT * FROM products WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('s', $productId);  // 's' означает строковый параметр
-    
-    // Выполняем запрос
-    $stmt->execute();
-    
-    // Получаем результат
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        // Если товар найден, возвращаем его данные
-        $product = $result->fetch_assoc();
+// Получаем информацию о товаре
+$query = "SELECT products.*, categories.name AS category_name, categories.parent_id 
+          FROM products
+          JOIN categories ON products.category_id = categories.id
+          WHERE products.id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('i', $product_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $product = $result->fetch_assoc();
+    $product_name = $conn->real_escape_string($product['name']);
+    $parent_id = $product['parent_id'];
+
+    // Получаем все товары с таким же именем и parent_id
+    $sizes_query = "SELECT products.id, products.size, products.price, products.availability, products.quantity_in_stock 
+                    FROM products 
+                    JOIN categories ON products.category_id = categories.id 
+                    WHERE products.name = ? 
+                    AND categories.parent_id = ?";
+    $sizes_stmt = $conn->prepare($sizes_query);
+    $sizes_stmt->bind_param('si', $product_name, $parent_id);
+    $sizes_stmt->execute();
+    $sizes_result = $sizes_stmt->get_result();
+
+    $sizes = [];
+    while ($row = $sizes_result->fetch_assoc()) {
+        $sizes[] = $row;
+    }
+
+    // Если запрос метода POST для добавления в корзину
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+        $productExists = false;
         
-        // Если запрос метода POST для добавления в корзину
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Добавляем товар в корзину
-            $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
-            $productExists = false;
-            
-            // Проверяем, существует ли уже этот товар в корзине
-            foreach ($cart as &$item) {
-                if ($item['id'] == $product['id']) {
-                    $item['quantity'] += 1; // Увеличиваем количество товара
-                    $productExists = true;
-                    break;
-                }
+        foreach ($cart as &$item) {
+            if ($item['id'] == $product['id']) {
+                $item['quantity'] += 1;
+                $productExists = true;
+                break;
             }
-            
-            // Если товара нет в корзине, добавляем его
-            if (!$productExists) {
-                $product['quantity'] = 1; // Если товар новый, ставим количество 1
-                $cart[] = $product;
-            }
-            
-            // Сохраняем корзину в сессию
-            $_SESSION['cart'] = $cart;
-
-            echo json_encode(["message" => "Product added to cart"]);
-        } else {
-            // Если товар просто запрашивается, возвращаем его
-            echo json_encode($product, JSON_UNESCAPED_UNICODE);
         }
+        
+        if (!$productExists) {
+            $product['quantity'] = 1;
+            $cart[] = $product;
+        }
+        
+        $_SESSION['cart'] = $cart;
+        echo json_encode(["message" => "Product added to cart"]);
     } else {
-        // Если товар с таким id не найден, возвращаем ошибку 404
-        http_response_code(404);
-        echo json_encode(["message" => "Product not found"]);
+        // Возвращаем товар и его размеры
+        $product['sizes'] = $sizes;
+        echo json_encode($product, JSON_UNESCAPED_UNICODE);
     }
 } else {
-    // Если параметр id не был передан, возвращаем ошибку
-    http_response_code(400);
-    echo json_encode(["message" => "Product ID is required"]);
+    http_response_code(404);
+    echo json_encode(["message" => "Product not found"]);
 }
 ?>

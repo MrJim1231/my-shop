@@ -6,6 +6,7 @@ import styles from '../styles/ProductDetails.module.css'
 function ProductDetails() {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
+  const [similarProducts, setSimilarProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -14,7 +15,8 @@ function ProductDetails() {
       axios
         .get(`http://localhost/my-shop/backend/api/product-details.php?id=${id}`)
         .then((response) => {
-          setProduct(response.data) // Получаем все данные о товаре, включая размер
+          setProduct(response.data)
+          setSimilarProducts(response.data.sizes || []) // Сохраняем массив с похожими товарами
           setLoading(false)
         })
         .catch((error) => {
@@ -27,7 +29,6 @@ function ProductDetails() {
     }
   }, [id])
 
-  // Функция для добавления товара в корзину
   const handleAddToCart = () => {
     if (product) {
       const currentCart = JSON.parse(localStorage.getItem('cart')) || []
@@ -41,18 +42,12 @@ function ProductDetails() {
       }
 
       localStorage.setItem('cart', JSON.stringify(currentCart))
-
       alert('Продукт добавлен в корзину')
     }
   }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  if (error) {
-    return <div>{error}</div>
-  }
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>{error}</div>
 
   return (
     <div className={styles.productDetails}>
@@ -60,14 +55,27 @@ function ProductDetails() {
       <h1>{product.name}</h1>
       <p>{product.description}</p>
       <p>Цена: ${product.price}</p>
-      <p>Размер: {product.size}</p> {/* Здесь показываем размер */}
+      <p>Размер: {product.size}</p>
       <p>Доступность: {product.availability ? 'В наличии' : 'Нет в наличии'}</p>
       <p>Количество на складе: {product.quantity_in_stock}</p>
       <p>Вес: {product.weight} кг</p>
-      {/* Кнопка для добавления в корзину */}
       <button onClick={handleAddToCart} className={styles.addToCartButton}>
         Добавить в корзину
       </button>
+
+      {/* Блок с доступными размерами */}
+      {similarProducts.length > 0 && (
+        <div className={styles.similarProducts}>
+          <h2>Другие размеры этого товара:</h2>
+          <ul>
+            {similarProducts.map((item) => (
+              <li key={item.id}>
+                Размер: {item.size} | Цена: ${item.price} | {item.availability ? 'В наличии' : 'Нет в наличии'}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   )
 }
