@@ -7,6 +7,8 @@ function ProductDetails() {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedSizeType, setSelectedSizeType] = useState('50*70') // Размер наволочки
+  const [selectedSetSize, setSelectedSetSize] = useState('1,5сп') // Размер комплекта
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -16,72 +18,96 @@ function ProductDetails() {
         .get(`http://localhost/my-shop/backend/api/product-details.php?id=${id}`)
         .then((response) => {
           setProduct(response.data)
-          setSelectedProduct(response.data) // Инициализируем выбранный товар
+          const firstProduct = Object.values(response.data.sizes).flat()[0] // Выбираем первый товар из всех групп
+          setSelectedProduct(firstProduct)
           setLoading(false)
         })
-        .catch((error) => {
-          setError('Error loading product details')
+        .catch(() => {
+          setError('Ошибка при загрузке товара')
           setLoading(false)
         })
-    } else {
-      setError('Product id is missing!')
-      setLoading(false)
     }
   }, [id])
 
-  const handleSizeChange = (size, groupId) => {
-    // Ищем товар с выбранным размером в конкретной группе
-    const newProduct = product.sizes[groupId]?.find((item) => item.size === size)
-    if (newProduct) {
-      console.log('Updated product:', newProduct) // Логируем для проверки
-      setSelectedProduct({ ...newProduct }) // Обновляем выбранный товар
-    }
+  // Обработка изменения комплекта
+  const handleSetSizeChange = (setSize) => {
+    setSelectedSetSize(setSize)
+    const firstProduct = Object.values(product.sizes)
+      .flat()
+      .find((item) => item.size.includes(setSize) && item.size.includes(selectedSizeType))
+    setSelectedProduct(firstProduct)
+  }
+
+  // Обработка изменения размера наволочки
+  const handleSizeTypeChange = (sizeType) => {
+    setSelectedSizeType(sizeType)
+    const firstProduct = Object.values(product.sizes)
+      .flat()
+      .find((item) => item.size.includes(selectedSetSize) && item.size.includes(sizeType))
+    setSelectedProduct(firstProduct)
+  }
+
+  const handleSizeChange = (product) => {
+    setSelectedProduct(product)
   }
 
   const handleAddToCart = () => {
-    if (selectedProduct) {
-      const currentCart = JSON.parse(localStorage.getItem('cart')) || []
-      const existingProductIndex = currentCart.findIndex((item) => item.id === selectedProduct.id)
+    console.log('Добавляем в корзину товар:', selectedProduct)
+    const cart = JSON.parse(localStorage.getItem('cart')) || []
+    const index = cart.findIndex((item) => item.id === selectedProduct.id)
 
-      if (existingProductIndex !== -1) {
-        currentCart[existingProductIndex].quantity += 1
-      } else {
-        selectedProduct.quantity = 1
-        currentCart.push(selectedProduct)
-      }
-
-      localStorage.setItem('cart', JSON.stringify(currentCart))
-      alert('Продукт добавлен в корзину')
+    if (index !== -1) {
+      cart[index].quantity += 1
+    } else {
+      selectedProduct.quantity = 1
+      cart.push(selectedProduct)
     }
+
+    localStorage.setItem('cart', JSON.stringify(cart))
+    alert('Товар добавлен в корзину')
   }
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div>Загрузка...</div>
   if (error) return <div>{error}</div>
 
   return (
     <div className={styles.productDetails}>
-      {/* Обновляем картинку в зависимости от выбранного товара */}
-      {selectedProduct && selectedProduct.image && <img src={selectedProduct.image} alt={selectedProduct.name} className={styles.productImage} />}
+      {selectedProduct?.image && <img src={selectedProduct.image} alt={selectedProduct.name} className={styles.productImage} />}
+      <h1>{selectedProduct?.name}</h1>
+      <p>Цена: {selectedProduct?.price} грн</p>
+      <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
+      <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
 
-      <h1>{selectedProduct.name}</h1>
-      <p>{selectedProduct.description}</p>
-      <p>Цена: {selectedProduct.price} грн</p>
-      <p>Доступность: {selectedProduct.availability ? 'В наличии' : 'Нет в наличии'}</p>
-      <p>Количество на складе: {selectedProduct.quantity_in_stock}</p>
+      {/* Выбор размера комплекта */}
+      <div className={styles.sizeTypeSection}>
+        <h3>Выбор размера комплекта:</h3>
+        <div className={styles.sizeTypeButtons}>
+          <button className={selectedSetSize === '1,5сп' ? styles.active : ''} onClick={() => handleSetSizeChange('1,5сп')}>
+            1,5сп
+          </button>
+          <button className={selectedSetSize === '2сп' ? styles.active : ''} onClick={() => handleSetSizeChange('2сп')}>
+            2сп
+          </button>
+          <button className={selectedSetSize === 'Євро' ? styles.active : ''} onClick={() => handleSetSizeChange('Євро')}>
+            Євро
+          </button>
+          <button className={selectedSetSize === 'Сімейний' ? styles.active : ''} onClick={() => handleSetSizeChange('Сімейний')}>
+            Сімейний
+          </button>
+        </div>
+      </div>
 
-      {/* Выбор размера */}
-      <div className={styles.sizeSelector}>
-        <h3>Выберите размер:</h3>
-        {Object.keys(product.sizes).map((groupId) => (
-          <div key={groupId} className={styles.sizeGroup}>
-            <h4>Группа товаров {groupId}</h4>
-            {product.sizes[groupId].map((item) => (
-              <button key={item.id} onClick={() => handleSizeChange(item.size, groupId)} className={selectedProduct.size === item.size ? styles.active : ''}>
-                {item.size}
-              </button>
-            ))}
-          </div>
-        ))}
+      {/* Выбор размера наволочки подушки */}
+      <div className={styles.sizeTypeSection}>
+        <h3>Выбор размера наволочки подушки:</h3>
+        <div className={styles.sizeTypeButtons}>
+          <button className={selectedSizeType === '50*70' ? styles.active : ''} onClick={() => handleSizeTypeChange('50*70')}>
+            50*70
+          </button>
+          <button className={selectedSizeType === '70*70' ? styles.active : ''} onClick={() => handleSizeTypeChange('70*70')}>
+            70*70
+          </button>
+        </div>
       </div>
 
       <button onClick={handleAddToCart} className={styles.addToCartButton}>
