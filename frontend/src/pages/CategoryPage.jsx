@@ -32,13 +32,16 @@ function CategoryPage() {
           {products.length > 0 ? (
             products.map((product) => (
               <div className={styles['product-item']} key={product.id}>
-                <img
-                  src={product.image_url} // Изображение товара из базы данных
-                  alt={product.name}
-                  className={styles['product-image']}
-                />
-                <h3>{product.name}</h3>
-                <p>{product.price} грн</p>
+                <a href={`/product/${product.id}`}>
+                  <img
+                    src={product.image} // Изображение товара из базы данных
+                    alt={product.name}
+                    className={styles['product-image']}
+                  />
+                  <h3>{product.name}</h3>
+                  <p>{product.price} грн</p>
+                  <p className={styles['product-size']}>Размер: {product.size}</p>
+                </a>
               </div>
             ))
           ) : (

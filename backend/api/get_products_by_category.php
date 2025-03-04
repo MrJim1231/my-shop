@@ -16,25 +16,34 @@ require_once __DIR__ . '/../includes/db.php';
 // Получаем category_id из GET-запроса
 $category_id = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 0;
 
-// Если category_id указан, выбираем товары для этой категории
 if ($category_id > 0) {
-    // Запрос для получения товаров, которые принадлежат выбранной категории по category_id
-    $sql = "SELECT * FROM products WHERE category_id = ?";
-    $stmt = $conn->prepare($sql);
+    // Получаем все подкатегории для выбранной категории
+    $subcategories_query = "SELECT id FROM categories WHERE parent_id = ?";
+    $stmt = $conn->prepare($subcategories_query);
     $stmt->bind_param('i', $category_id);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $subcategories_result = $stmt->get_result();
 
-    // Получаем все товары
+    // Формируем список всех категорий, включая подкатегории
+    $all_categories = [$category_id];
+    while ($subcategory = $subcategories_result->fetch_assoc()) {
+        $all_categories[] = $subcategory['id'];
+    }
+
+    // Преобразуем массив в строку для SQL-запроса
+    $categories_list = implode(',', $all_categories);
+
+    // Запрос на получение товаров для всех выбранных категорий
+    $query = "SELECT * FROM products WHERE category_id IN ($categories_list)";
+    $result = $conn->query($query);
+
     $products = [];
     while ($row = $result->fetch_assoc()) {
         $products[] = $row;
     }
 
-    // Выводим товары в формате JSON
     echo json_encode($products);
 } else {
-    // Если category_id не был передан, выводим ошибку
     echo json_encode(["error" => "Invalid category ID"]);
 }
 ?>
