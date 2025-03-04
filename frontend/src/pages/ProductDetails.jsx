@@ -7,6 +7,7 @@ function ProductDetails() {
   const { id } = useParams()
   const [product, setProduct] = useState(null)
   const [similarProducts, setSimilarProducts] = useState([])
+  const [selectedProduct, setSelectedProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -16,7 +17,8 @@ function ProductDetails() {
         .get(`http://localhost/my-shop/backend/api/product-details.php?id=${id}`)
         .then((response) => {
           setProduct(response.data)
-          setSimilarProducts(response.data.sizes || []) // Сохраняем массив с похожими товарами
+          setSimilarProducts(response.data.sizes || [])
+          setSelectedProduct(response.data)
           setLoading(false)
         })
         .catch((error) => {
@@ -29,16 +31,24 @@ function ProductDetails() {
     }
   }, [id])
 
+  const handleSizeChange = (event) => {
+    const newSize = event.target.value
+    const newProduct = similarProducts.find((item) => item.size === newSize)
+    if (newProduct) {
+      setSelectedProduct({ ...product, ...newProduct })
+    }
+  }
+
   const handleAddToCart = () => {
-    if (product) {
+    if (selectedProduct) {
       const currentCart = JSON.parse(localStorage.getItem('cart')) || []
-      const existingProductIndex = currentCart.findIndex((item) => item.id === product.id)
+      const existingProductIndex = currentCart.findIndex((item) => item.id === selectedProduct.id)
 
       if (existingProductIndex !== -1) {
         currentCart[existingProductIndex].quantity += 1
       } else {
-        product.quantity = 1
-        currentCart.push(product)
+        selectedProduct.quantity = 1
+        currentCart.push(selectedProduct)
       }
 
       localStorage.setItem('cart', JSON.stringify(currentCart))
@@ -51,31 +61,26 @@ function ProductDetails() {
 
   return (
     <div className={styles.productDetails}>
-      <img src={product.image} alt={product.name} className={styles.productImage} />
-      <h1>{product.name}</h1>
-      <p>{product.description}</p>
-      <p>Цена: ${product.price}</p>
-      <p>Размер: {product.size}</p>
-      <p>Доступность: {product.availability ? 'В наличии' : 'Нет в наличии'}</p>
-      <p>Количество на складе: {product.quantity_in_stock}</p>
-      <p>Вес: {product.weight} кг</p>
+      <img src={selectedProduct.image} alt={selectedProduct.name} className={styles.productImage} />
+      <h1>{selectedProduct.name}</h1>
+      <p>{selectedProduct.description}</p>
+      <p>Цена: ${selectedProduct.price}</p>
+      <p>
+        Размер:
+        <select onChange={handleSizeChange} value={selectedProduct.size}>
+          {similarProducts.map((item) => (
+            <option key={item.id} value={item.size}>
+              {item.size}
+            </option>
+          ))}
+        </select>
+      </p>
+      <p>Доступность: {selectedProduct.availability ? 'В наличии' : 'Нет в наличии'}</p>
+      <p>Количество на складе: {selectedProduct.quantity_in_stock}</p>
+      <p>Вес: {selectedProduct.weight} кг</p>
       <button onClick={handleAddToCart} className={styles.addToCartButton}>
         Добавить в корзину
       </button>
-
-      {/* Блок с доступными размерами */}
-      {similarProducts.length > 0 && (
-        <div className={styles.similarProducts}>
-          <h2>Другие размеры этого товара:</h2>
-          <ul>
-            {similarProducts.map((item) => (
-              <li key={item.id}>
-                Размер: {item.size} | Цена: ${item.price} | {item.availability ? 'В наличии' : 'Нет в наличии'}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   )
 }
