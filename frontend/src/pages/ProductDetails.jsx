@@ -11,6 +11,7 @@ function ProductDetails() {
   const [selectedSetSize, setSelectedSetSize] = useState(null) // Размер комплекта
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [previousImage, setPreviousImage] = useState(null) // Состояние для хранения изображения
 
   useEffect(() => {
     if (id) {
@@ -53,6 +54,7 @@ function ProductDetails() {
       .find((item) => item.size.includes(availableSetSize) && item.size.includes(availableSizeType) && item.availability && item.quantity_in_stock > 0)
 
     setSelectedProduct(firstAvailableProduct || null)
+    setPreviousImage(firstAvailableProduct?.image || null) // Сохраняем изображение первого доступного товара
   }
 
   const handleSetSizeChange = (setSize) => {
@@ -63,6 +65,7 @@ function ProductDetails() {
       .find((item) => item.size.includes(setSize) && item.size.includes(selectedSizeType) && item.availability && item.quantity_in_stock > 0)
 
     setSelectedProduct(availableProduct || null)
+    setPreviousImage(availableProduct?.image || previousImage) // Обновляем изображение или сохраняем прежнее
   }
 
   const handleSizeTypeChange = (sizeType) => {
@@ -73,6 +76,7 @@ function ProductDetails() {
       .find((item) => item.size.includes(selectedSetSize) && item.size.includes(sizeType) && item.availability && item.quantity_in_stock > 0)
 
     setSelectedProduct(availableProduct || null)
+    setPreviousImage(availableProduct?.image || previousImage) // Обновляем изображение или сохраняем прежнее
   }
 
   const handleAddToCart = () => {
@@ -97,7 +101,12 @@ function ProductDetails() {
 
   return (
     <div className={styles.productDetails}>
-      {selectedProduct?.image && <img src={selectedProduct.image} alt={selectedProduct.name} className={styles.productImage} />}
+      {/* Отображаем изображение, если оно есть, или используем сохраненное */}
+      {selectedProduct?.image || previousImage ? (
+        <img src={selectedProduct?.image || previousImage} alt={selectedProduct?.name} className={styles.productImage} />
+      ) : (
+        <div className={styles.noImage}>Изображение отсутствует</div>
+      )}
       <h1>{selectedProduct?.name}</h1>
       <p>Цена: {selectedProduct?.price} грн</p>
       <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
