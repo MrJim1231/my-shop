@@ -13,7 +13,9 @@ function CategoryPage() {
     axios
       .get(`http://localhost/my-shop/backend/api/get_products_by_category.php?category_id=${categoryId}`)
       .then((response) => {
-        setProducts(response.data) // Записываем товары в state
+        // Фильтруем товары, оставляя только уникальные по имени
+        const uniqueProducts = response.data.filter((product, index, self) => index === self.findIndex((p) => p.name === product.name))
+        setProducts(uniqueProducts) // Записываем уникальные товары в state
         setLoading(false)
       })
       .catch((error) => {
