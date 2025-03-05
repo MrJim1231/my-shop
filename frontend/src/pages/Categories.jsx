@@ -31,7 +31,6 @@ function Categories() {
       <h1 className={styles.title}>Категории товаров</h1>
 
       {loading ? (
-        // Скелетон-заглушки вместо резких сдвигов контента
         <div className={styles.categoryGrid}>
           {Array(6)
             .fill(0)
@@ -45,9 +44,19 @@ function Categories() {
       ) : (
         <div className={styles.categoryGrid}>
           {categories.length > 0 ? (
-            categories.map((category) => (
+            categories.map((category, index) => (
               <Link to={`/category/${category.id}`} key={category.id} className={styles.categoryItem}>
-                <img src={category.image} alt={category.name} className={styles.categoryImage} width="250" height="250" loading="lazy" style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }} />
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className={styles.categoryImage}
+                  width="250"
+                  height="250"
+                  decoding="async"
+                  fetchpriority={index === 0 ? 'high' : 'auto'} // Оптимизация LCP
+                  loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу
+                  style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
+                />
                 <h3>{category.name}</h3>
               </Link>
             ))
