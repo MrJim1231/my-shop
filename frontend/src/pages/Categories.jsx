@@ -48,7 +48,7 @@ function Categories() {
               <Link to={`/category/${category.id}`} key={category.id} className={styles.categoryItem}>
                 <img
                   src={category.image}
-                  alt={category.name}
+                  alt={`Изображение категории ${category.name}`} // Описательное alt-описание
                   className={styles.categoryImage}
                   width="250"
                   height="250"
@@ -57,7 +57,7 @@ function Categories() {
                   loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу
                   // style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
                 />
-                <h3>{category.name}</h3>
+                <h2 className={styles.categoryName}>{category.name}</h2>
               </Link>
             ))
           ) : (
