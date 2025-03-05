@@ -1,7 +1,7 @@
 /* Подвал */
 .footer {
-  background-color: #222;
-  color: white;
+  background-color: #222; /* Темнее фон для лучшего контраста */
+  color: #f1f1f1; /* Яркий текст для лучшего контраста с фоном */
   padding: 20px;
   text-align: center;
   margin-top: 40px;
@@ -9,4 +9,5 @@
 
 .footerContent p {
   margin: 5px 0;
+  color: #f1f1f1; /* Убедитесь, что текст также светлый */
 }

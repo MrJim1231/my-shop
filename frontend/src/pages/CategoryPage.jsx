@@ -57,7 +57,7 @@ function CategoryPage() {
                     loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу, другие — лениво
                     // style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
                   />
-                  <h3>{product.name}</h3>
+                  <h2 className={styles.productName}>{product.name}</h2>
                   <p className={styles.productPrice}>Цена: {product.price} грн</p>
                 </Link>
               </div>

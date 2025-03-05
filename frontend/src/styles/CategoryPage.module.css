@@ -52,13 +52,19 @@
   border-radius: 10px;
   object-fit: cover; /* Обеспечивает красивый вид изображений */
   aspect-ratio: 1/1; /* Фиксирует пропорции */
-  /* min-height: 250px;  */
   background-color: #f0f0f0; /* Фоновый цвет, пока изображение не загрузится */
+}
+
+/* Для имени продукта */
+.productName {
+  font-size: 1.5rem; /* Размер шрифта */
+  font-weight: bold; /* Жирный шрифт */
+  color: #333; /* Цвет текста, контрастный для лучшей читаемости */
+  margin-bottom: 10px; /* Отступ снизу */
 }
 
 .productPrice {
   font-weight: bold;
-  color: #e67e22;
   margin-top: 10px; /* Больше пространства между ценой и названием */
 }
 
