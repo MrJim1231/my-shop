@@ -17,18 +17,20 @@ function Cart() {
               <img src={item.image} alt={item.name} className={cartStyles.cartItemImage} />
               <div>
                 <h2>{item.name}</h2>
-                <p>Цена: ${item.price}</p>
+                <p>Цена: {item.price} грн</p>
                 <p>Размер: {item.size}</p>
-                <p>
-                  Количество:
-                  <button onClick={() => decreaseQuantity(item.id, item.size)} className={cartStyles.quantityButton}>
+
+                {/* Кнопки увеличения и уменьшения количества */}
+                <div className={cartStyles.quantityControl}>
+                  <button onClick={() => decreaseQuantity(item.id, item.size)} className={cartStyles.decreaseButton}>
                     -
                   </button>
-                  {item.quantity}
-                  <button onClick={() => increaseQuantity(item.id, item.size)} className={cartStyles.quantityButton}>
+                  <span>{item.quantity}</span>
+                  <button onClick={() => increaseQuantity(item.id, item.size)} className={cartStyles.increaseButton}>
                     +
                   </button>
-                </p>
+                </div>
+
                 <button onClick={() => removeFromCart(item.id, item.size)} className={cartStyles.removeButton}>
                   Удалить
                 </button>
@@ -36,7 +38,7 @@ function Cart() {
             </div>
           ))}
           <div className={cartStyles.cartSummary}>
-            <p>Общая стоимость: ${getTotalPrice().toFixed(2)}</p>
+            <p>Общая стоимость: {getTotalPrice()} грн</p>
             <button className={cartStyles.checkoutButton}>Оформить заказ</button>
           </div>
         </div>

@@ -13,13 +13,6 @@ export const CartProvider = ({ children }) => {
     setCart(storedCart)
   }, [])
 
-  // Обновляем localStorage каждый раз, когда корзина изменяется
-  useEffect(() => {
-    if (cart.length > 0) {
-      localStorage.setItem('cart', JSON.stringify(cart))
-    }
-  }, [cart])
-
   // Функция для добавления товара в корзину
   const addToCart = (product) => {
     const productIndex = cart.findIndex((item) => item.id === product.id && item.size === product.size)
@@ -29,10 +22,12 @@ export const CartProvider = ({ children }) => {
       const updatedCart = [...cart]
       updatedCart[productIndex].quantity += 1
       setCart(updatedCart)
+      localStorage.setItem('cart', JSON.stringify(updatedCart))
     } else {
       // Если товара нет в корзине, добавляем его с количеством 1
       const updatedCart = [...cart, { ...product, quantity: 1 }]
       setCart(updatedCart)
+      localStorage.setItem('cart', JSON.stringify(updatedCart))
     }
   }
 
@@ -40,18 +35,21 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = (productId, size) => {
     const updatedCart = cart.filter((item) => !(item.id === productId && item.size === size))
     setCart(updatedCart)
+    localStorage.setItem('cart', JSON.stringify(updatedCart)) // Сохраняем обновленную корзину в localStorage
   }
 
-  // Функция для увеличения количества товара в корзине
+  // Функция для увеличения количества товара
   const increaseQuantity = (productId, size) => {
     const updatedCart = cart.map((item) => (item.id === productId && item.size === size ? { ...item, quantity: item.quantity + 1 } : item))
     setCart(updatedCart)
+    localStorage.setItem('cart', JSON.stringify(updatedCart))
   }
 
-  // Функция для уменьшения количества товара в корзине
+  // Функция для уменьшения количества товара
   const decreaseQuantity = (productId, size) => {
     const updatedCart = cart.map((item) => (item.id === productId && item.size === size && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item))
     setCart(updatedCart)
+    localStorage.setItem('cart', JSON.stringify(updatedCart))
   }
 
   // Функция для расчета общей стоимости
