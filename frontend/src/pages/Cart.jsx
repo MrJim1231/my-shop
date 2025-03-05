@@ -1,23 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useCart } from '../context/CartContext' // Импортируем useCart
 import cartStyles from '../styles/Cart.module.css'
 
 function Cart() {
-  const [cart, setCart] = useState([])
-
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || []
-    setCart(storedCart)
-  }, [])
-
-  const handleRemoveFromCart = (productId, size) => {
-    const updatedCart = cart.filter((item) => !(item.id === productId && item.size === size))
-    setCart(updatedCart)
-    localStorage.setItem('cart', JSON.stringify(updatedCart))
-  }
-
-  const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + (item.price || 0) * (item.quantity || 1), 0)
-  }
+  const { cart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice } = useCart() // Извлекаем нужные данные и функции из контекста
 
   return (
     <div className={cartStyles.cart}>
@@ -33,8 +19,17 @@ function Cart() {
                 <h2>{item.name}</h2>
                 <p>Цена: ${item.price}</p>
                 <p>Размер: {item.size}</p>
-                <p>Количество: {item.quantity}</p>
-                <button onClick={() => handleRemoveFromCart(item.id, item.size)} className={cartStyles.removeButton}>
+                <p>
+                  Количество:
+                  <button onClick={() => decreaseQuantity(item.id, item.size)} className={cartStyles.quantityButton}>
+                    -
+                  </button>
+                  {item.quantity}
+                  <button onClick={() => increaseQuantity(item.id, item.size)} className={cartStyles.quantityButton}>
+                    +
+                  </button>
+                </p>
+                <button onClick={() => removeFromCart(item.id, item.size)} className={cartStyles.removeButton}>
                   Удалить
                 </button>
               </div>

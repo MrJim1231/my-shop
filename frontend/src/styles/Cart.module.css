@@ -1,45 +1,103 @@
+/* cart.module.css */
+
 .cart {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
+  /* background-color: #f4f4f4; */
+  border-radius: 8px;
 }
 
-.cartItems {
-  display: flex;
-  flex-direction: column;
+.cart h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
 }
 
 .cartItem {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .cartItemImage {
-  width: 100px;
-  height: 100px;
+  max-width: 100px;
+  max-height: 100px;
   object-fit: cover;
+  border-radius: 8px;
   margin-right: 20px;
 }
 
-.cartItemDetails {
-  flex: 1;
+.cartItem h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.cartItem p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.quantityButton {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin: 0 5px;
+  transition: background-color 0.3s ease;
+}
+
+.quantityButton:hover {
+  background-color: #ddd;
 }
 
 .removeButton {
-  background-color: red;
-  color: white;
-  padding: 5px 10px;
+  background-color: #e74c3c;
   border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.removeButton:hover {
+  background-color: #c0392b;
 }
 
 .cartSummary {
+  text-align: center;
   margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .checkoutButton {
-  padding: 10px 20px;
-  background-color: green;
-  color: white;
+  background-color: #27ae60;
   border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.checkoutButton:hover {
+  background-color: #2ecc71;
+}
+
+.cartItem button:disabled {
+  cursor: not-allowed;
+  background-color: #ddd;
 }

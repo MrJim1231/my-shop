@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import { useCart } from '../context/CartContext' // Импортируем useCart
 import styles from '../styles/ProductDetails.module.css'
 
 function ProductDetails() {
   const { id } = useParams()
+  const { addToCart } = useCart() // Получаем функцию addToCart из контекста
   const [product, setProduct] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedSizeType, setSelectedSizeType] = useState(null) // Размер наволочки
@@ -82,17 +84,8 @@ function ProductDetails() {
   const handleAddToCart = () => {
     if (!selectedProduct) return
 
-    const cart = JSON.parse(localStorage.getItem('cart')) || []
-    const index = cart.findIndex((item) => item.id === selectedProduct.id)
-
-    if (index !== -1) {
-      cart[index].quantity += 1
-    } else {
-      selectedProduct.quantity = 1
-      cart.push(selectedProduct)
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart))
+    // Используем функцию addToCart из контекста для добавления товара в корзину
+    addToCart(selectedProduct)
     alert('Товар добавлен в корзину')
   }
 
