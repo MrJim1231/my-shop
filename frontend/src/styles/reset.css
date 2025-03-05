@@ -1,0 +1,65 @@
+/* Сброс базовых стилей */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Убираем стандартное оформление списка */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Убираем стандартное подчеркивание ссылок */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Глобальный стиль для изображений, чтобы они не выходили за границы */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Убираем стандартные стили для кнопок */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Глобальный стиль для `html` и `body`, чтобы избежать проблем с высотой */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif; /* Можно заменить на свой шрифт */
+}
+
+/* Унифицированный стиль для `input` и `textarea` */
+input,
+textarea {
+  font-family: inherit;
+  border: none;
+  outline: none;
+}
+
+/* Улучшаем отображение кнопок в мобильных браузерах */
+button,
+input,
+textarea {
+  background-color: transparent;
+}
+
+/* Убираем стандартные стили для заголовков */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
