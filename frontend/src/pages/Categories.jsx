@@ -55,7 +55,7 @@ function Categories() {
                   decoding="async"
                   fetchpriority={index === 0 ? 'high' : 'auto'} // Оптимизация LCP
                   loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу
-                  style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
+                  // style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
                 />
                 <h3>{category.name}</h3>
               </Link>
