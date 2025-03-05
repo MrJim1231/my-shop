@@ -57,7 +57,8 @@
 
 /* Для имени продукта */
 .productName {
-  font-size: 1.5rem; /* Размер шрифта */
+  padding-top: 10px;
+  font-size: 1.2rem; /* Размер шрифта */
   font-weight: bold; /* Жирный шрифт */
   color: #333; /* Цвет текста, контрастный для лучшей читаемости */
   margin-bottom: 10px; /* Отступ снизу */

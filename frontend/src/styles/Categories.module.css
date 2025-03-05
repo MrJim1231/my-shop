@@ -47,7 +47,8 @@
 
 /* Для имени категории */
 .categoryName {
-  font-size: 1.8rem; /* Размер шрифта */
+  padding-top: 10px;
+  font-size: 1.2rem; /* Размер шрифта */
   font-weight: bold; /* Жирный шрифт */
   color: #333; /* Цвет текста, контрастный для лучшей читаемости */
   margin-bottom: 15px; /* Отступ снизу */
