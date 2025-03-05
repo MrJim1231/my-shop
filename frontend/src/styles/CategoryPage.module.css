@@ -43,7 +43,7 @@
 .productImage {
   width: 100%;
   max-width: 250px;
-  height: auto;
+  height: 250px;
   border-radius: 10px;
 }
 
