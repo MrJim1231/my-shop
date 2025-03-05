@@ -1,3 +1,4 @@
+/* Основные стили для контейнера и карточек */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -18,7 +19,7 @@
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 карточки на больших экранах */
   gap: 20px;
   min-height: 400px; /* Фиксируем пространство для предотвращения скачков */
 }
@@ -51,7 +52,7 @@
   border-radius: 10px;
   object-fit: cover; /* Обеспечивает красивый вид изображений */
   aspect-ratio: 1/1; /* Фиксирует пропорции */
-  min-height: 250px; /* Чтобы изображения не сжались до менее чем 250px */
+  /* min-height: 250px;  */
   background-color: #f0f0f0; /* Фоновый цвет, пока изображение не загрузится */
 }
 
@@ -96,5 +97,43 @@
   }
   100% {
     background-position: 200% 0;
+  }
+}
+
+/* Адаптивные стили для мобильных устройств */
+
+/* Для экранов меньше 768px (мобильные устройства) */
+@media (max-width: 768px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2 карточки на экранах меньше 768px */
+  }
+
+  .productImage {
+    max-width: 200px; /* Уменьшаем размер изображения */
+    height: 200px;
+  }
+
+  .productItem {
+    padding: 10px; /* Уменьшаем паддинг карточек */
+  }
+}
+
+/* Для экранов меньше 485px */
+@media (max-width: 485px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr); /* 1 карточка на экранах меньше 485px */
+  }
+
+  .productItem {
+    padding: 8px; /* Еще меньше паддинг */
+  }
+
+  .productImage {
+    max-width: 150px; /* Уменьшаем размер изображения */
+    height: 150px;
+  }
+
+  .productPrice {
+    font-size: 14px; /* Уменьшаем размер шрифта для цены */
   }
 }
