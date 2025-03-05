@@ -1,3 +1,5 @@
+/* Основные стили для контейнера и карточек */
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -11,11 +13,12 @@
 
 .categoryGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 карточки на больших экранах */
   gap: 20px;
   min-height: 400px; /* Фиксируем пространство для предотвращения скачков */
 }
 
+/* Карточки */
 .categoryItem {
   display: flex;
   flex-direction: column;
@@ -77,5 +80,40 @@
   }
   100% {
     background-position: 200% 0;
+  }
+}
+
+/* Адаптивность для мобильных устройств */
+
+/* Для экранов меньше 768px (мобильные устройства) */
+@media (max-width: 768px) {
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2 карточки на мобильных */
+  }
+
+  /* Уменьшаем padding внутри карточек */
+  .categoryItem {
+    padding: 10px;
+  }
+
+  .categoryImage {
+    max-width: 200px;
+    height: 200px;
+  }
+}
+
+/* Для экранов меньше 485px */
+@media (max-width: 485px) {
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2 карточки на экранах меньше 485px */
+  }
+
+  .categoryItem {
+    padding: 8px;
+  }
+
+  .categoryImage {
+    max-width: 150px;
+    height: 150px;
   }
 }
