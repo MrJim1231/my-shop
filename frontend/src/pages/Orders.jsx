@@ -15,11 +15,13 @@ function Orders() {
         }
 
         const data = await response.json()
+
+        // Если нет заказов, возвращаем пустой массив
         if (Array.isArray(data)) {
-          // Проверка на массив
           setOrders(data)
         } else {
-          setError('Полученные данные не являются массивом')
+          setOrders([]) // Если нет заказов, устанавливаем пустой массив
+          setError('Нет заказов')
         }
       } catch (err) {
         setError(err.message)
@@ -36,14 +38,14 @@ function Orders() {
   }
 
   if (error) {
-    return <div>Ошибка: {error}</div>
+    return <div>{error}</div>
   }
 
   return (
     <div>
       <h2>Заказы</h2>
       <ul>
-        {Array.isArray(orders) && orders.length > 0 ? (
+        {orders.length > 0 ? (
           orders.map((order) => (
             <li key={order.id}>
               <h3>Заказ №{order.id}</h3>
