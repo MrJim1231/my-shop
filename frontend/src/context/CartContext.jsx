@@ -57,5 +57,11 @@ export const CartProvider = ({ children }) => {
     return cart.reduce((total, item) => total + (item.price || 0) * (item.quantity || 1), 0)
   }
 
-  return <CartContext.Provider value={{ cart, addToCart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice }}>{children}</CartContext.Provider>
+  // Функция для очистки корзины
+  const clearCart = () => {
+    setCart([]) // Очищаем корзину в состоянии
+    localStorage.removeItem('cart') // Удаляем корзину из localStorage
+  }
+
+  return <CartContext.Provider value={{ cart, addToCart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice, clearCart }}>{children}</CartContext.Provider>
 }

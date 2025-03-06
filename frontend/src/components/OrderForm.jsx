@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useCart } from '../context/CartContext'
 import styles from '../styles/OrderForm.module.css'
+import { API_URL } from '../api/config'
 
 function OrderForm({ onClose }) {
   const { cart, getTotalPrice, clearCart } = useCart()
@@ -25,7 +26,7 @@ function OrderForm({ onClose }) {
     }
 
     try {
-      const response = await fetch('https://your-backend.com/api/order', {
+      const response = await fetch(`${API_URL}order.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
