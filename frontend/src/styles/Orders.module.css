@@ -1,0 +1,80 @@
+.container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.orderList {
+  list-style: none;
+  padding: 0;
+}
+
+.orderItem {
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.orderTitle {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.orderDetail {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.orderTotal {
+  font-size: 18px;
+  font-weight: bold;
+  color: green;
+  margin-top: 10px;
+}
+
+.itemHeader {
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.itemList {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  margin-bottom: 15px;
+}
+
+.itemDetail {
+  font-size: 16px;
+  margin-right: 20px;
+}
+
+.itemImage {
+  width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.noOrders {
+  text-align: center;
+  font-size: 18px;
+  color: red;
+}
+
+.loading,
+.error {
+  text-align: center;
+  font-size: 18px;
+  color: #f00;
+  margin-top: 20px;
+}

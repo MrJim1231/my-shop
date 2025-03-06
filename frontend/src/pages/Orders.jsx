@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import styles from '../styles/Orders.module.css' // Подключение стилей
 
 function Orders() {
   const [orders, setOrders] = useState([])
@@ -34,43 +35,42 @@ function Orders() {
   }, [])
 
   if (loading) {
-    return <div>Загрузка...</div>
+    return <div className={styles.loading}>Загрузка...</div>
   }
 
   if (error) {
-    return <div>{error}</div>
+    return <div className={styles.error}>{error}</div>
   }
 
   return (
-    <div>
-      <h2>Заказы</h2>
-      <ul>
+    <div className={styles.container}>
+      <h2 className={styles.header}>Заказы</h2>
+      <ul className={styles.orderList}>
         {orders.length > 0 ? (
           orders.map((order) => (
-            <li key={order.id}>
-              <h3>Заказ №{order.id}</h3>
-              <p>Имя: {order.name}</p>
-              <p>Телефон: {order.phone}</p>
-              <p>Адрес: {order.address}</p>
-              <p>Комментарий: {order.comment}</p>
-              <p>Общая сумма: {parseFloat(order.total_price).toFixed(2)} руб.</p>
+            <li key={order.id} className={styles.orderItem}>
+              <h3 className={styles.orderTitle}>Заказ №{order.id}</h3>
+              <p className={styles.orderDetail}>Имя: {order.name}</p>
+              <p className={styles.orderDetail}>Телефон: {order.phone}</p>
+              <p className={styles.orderDetail}>Адрес: {order.address}</p>
+              <p className={styles.orderDetail}>Комментарий: {order.comment}</p>
+              <p className={styles.orderTotal}>Общая сумма: {parseFloat(order.total_price).toFixed(2)} грн.</p>
 
-              <h4>Товары:</h4>
-              <ul>
+              <h4 className={styles.itemHeader}>Товары:</h4>
+              <ul className={styles.itemList}>
                 {order.items.map((item) => (
-                  <li key={item.id}>
-                    <p>Продукт ID: {item.product_id}</p>
-                    <p>Количество: {parseInt(item.quantity, 10)}</p>
-                    <p>Цена: {parseFloat(item.price).toFixed(2)} руб.</p>
-                    <p>Размер: {item.size}</p>
-                    <img src={item.image} alt="Product" style={{ width: '100px', height: 'auto' }} />
+                  <li key={item.id} className={styles.item}>
+                    <p className={styles.itemDetail}>Количество: {parseInt(item.quantity, 10)}</p>
+                    <p className={styles.itemDetail}>Цена: {parseFloat(item.price).toFixed(2)} грн.</p>
+                    <p className={styles.itemDetail}>Размер: {item.size}</p>
+                    <img src={item.image} alt="Product" className={styles.itemImage} />
                   </li>
                 ))}
               </ul>
             </li>
           ))
         ) : (
-          <p>Нет заказов</p>
+          <p className={styles.noOrders}>Нет заказов</p>
         )}
       </ul>
     </div>
