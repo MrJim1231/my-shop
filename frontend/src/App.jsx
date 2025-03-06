@@ -7,6 +7,7 @@ import Categories from './pages/Categories'
 import Products from './pages/Products'
 import Cart from './pages/Cart'
 import Register from './pages/Register'
+import Login from './pages/Login'
 import ProductDetails from './pages/ProductDetails'
 import CategoryPage from './pages/CategoryPage'
 import Footer from './components/Footer'
@@ -27,6 +28,7 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/category/:categoryId" element={<CategoryPage />} />
           </Routes>

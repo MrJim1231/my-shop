@@ -30,6 +30,11 @@ function Navbar() {
             Личный кабинет
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/login" className={({ isActive }) => (isActive ? styles.active : '')}>
+            Войти
+          </NavLink>
+        </li>
       </ul>
     </nav>
   )

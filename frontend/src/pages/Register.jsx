@@ -1,57 +1,32 @@
 import React, { useState } from 'react'
-import '../styles/Register.module.css'
+import { API_URL } from '../api/config'
+import axios from 'axios'
+import styles from '../styles/Register.module.css'
 
-function Register() {
-  // Состояния для каждого поля формы
-  const [name, setName] = useState('')
+const Register = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
 
-  // Функция для обработки отправки формы
-  const handleSubmit = (e) => {
+  const registerUser = async (e) => {
     e.preventDefault()
-
-    // Простая валидация
-    if (password !== confirmPassword) {
-      setError('Пароли не совпадают')
-      return
+    try {
+      const res = await axios.post(`${API_URL}register.php`, { email, password })
+      setMessage(res.data.message)
+    } catch (err) {
+      setMessage('Ошибка при регистрации')
     }
-
-    if (!name || !email || !password) {
-      setError('Все поля обязательны для заполнения')
-      return
-    }
-
-    setError('')
-    alert('Регистрация прошла успешно!')
-    // Здесь можно добавить логику для отправки данных на сервер
   }
 
   return (
-    <div className="register">
-      <h1>Регистрация</h1>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Имя:</label>
-          <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Введите ваше имя" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Электронная почта:</label>
-          <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Введите ваш email" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Пароль:</label>
-          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Введите пароль" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Подтверждение пароля:</label>
-          <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Подтвердите пароль" />
-        </div>
+    <div className={styles.container}>
+      <h2>Регистрация</h2>
+      <form onSubmit={registerUser}>
+        <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Пароль" onChange={(e) => setPassword(e.target.value)} />
         <button type="submit">Зарегистрироваться</button>
       </form>
+      {message && <p>{message}</p>}
     </div>
   )
 }
