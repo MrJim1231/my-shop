@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 // Если это предварительный запрос OPTIONS, сразу завершаем обработку
@@ -40,10 +40,12 @@ if ($stmt->execute()) {
         $productId = $item["product_id"];
         $quantity = $item["quantity"];
         $price = $item["price"];
+        $image = $item["image"];
+        $size = $item["size"];
 
-        $sql_item = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+        $sql_item = "INSERT INTO order_items (order_id, product_id, quantity, price, image, size) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt_item = $conn->prepare($sql_item);
-        $stmt_item->bind_param("iiii", $orderId, $productId, $quantity, $price);
+        $stmt_item->bind_param("iiiiss", $orderId, $productId, $quantity, $price, $image, $size);
         $stmt_item->execute();
     }
 

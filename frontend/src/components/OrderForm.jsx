@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { useCart } from '../context/CartContext'
+import { useCart } from '../context/CartContext' // Подключаем контекст корзины
 import styles from '../styles/OrderForm.module.css'
-import { API_URL } from '../api/config'
+import { API_URL } from '../api/config' // URL для API
 
 function OrderForm({ onClose }) {
   const { cart, getTotalPrice, clearCart } = useCart() // Извлекаем данные из контекста корзины
@@ -27,13 +27,15 @@ function OrderForm({ onClose }) {
       return
     }
 
-    // Формируем данные заказа
+    // Формируем данные заказа с картинками и размерами
     const orderData = {
       ...formData,
       items: cart.map((item) => ({
         product_id: item.id, // ID товара
         quantity: item.quantity, // Количество товара
         price: item.price, // Цена товара
+        image: item.image, // Картинка товара
+        size: item.size, // Размер товара
       })),
       totalPrice: getTotalPrice(), // Общая цена
     }

@@ -15,7 +15,12 @@ function Orders() {
         }
 
         const data = await response.json()
-        setOrders(data)
+        if (Array.isArray(data)) {
+          // Проверка на массив
+          setOrders(data)
+        } else {
+          setError('Полученные данные не являются массивом')
+        }
       } catch (err) {
         setError(err.message)
       } finally {
@@ -38,17 +43,33 @@ function Orders() {
     <div>
       <h2>Заказы</h2>
       <ul>
-        {orders.map((order) => (
-          <li key={order.id}>
-            <h3>Заказ №{order.id}</h3>
-            <p>Имя: {order.name}</p>
-            <p>Телефон: {order.phone}</p>
-            <p>Адрес: {order.address}</p>
-            <p>Комментарий: {order.comment}</p>
-            <p>Общая сумма: {order.total_price} руб.</p>
-            <pre>{JSON.stringify(order.items, null, 2)}</pre>
-          </li>
-        ))}
+        {Array.isArray(orders) && orders.length > 0 ? (
+          orders.map((order) => (
+            <li key={order.id}>
+              <h3>Заказ №{order.id}</h3>
+              <p>Имя: {order.name}</p>
+              <p>Телефон: {order.phone}</p>
+              <p>Адрес: {order.address}</p>
+              <p>Комментарий: {order.comment}</p>
+              <p>Общая сумма: {parseFloat(order.total_price).toFixed(2)} руб.</p>
+
+              <h4>Товары:</h4>
+              <ul>
+                {order.items.map((item) => (
+                  <li key={item.id}>
+                    <p>Продукт ID: {item.product_id}</p>
+                    <p>Количество: {parseInt(item.quantity, 10)}</p>
+                    <p>Цена: {parseFloat(item.price).toFixed(2)} руб.</p>
+                    <p>Размер: {item.size}</p>
+                    <img src={item.image} alt="Product" style={{ width: '100px', height: 'auto' }} />
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        ) : (
+          <p>Нет заказов</p>
+        )}
       </ul>
     </div>
   )
