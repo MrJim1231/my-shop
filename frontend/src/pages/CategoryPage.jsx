@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
 import styles from '../styles/CategoryPage.module.css'
+import { API_URL } from '../api/config'
 
 function CategoryPage() {
   const { categoryId } = useParams()
@@ -11,7 +12,7 @@ function CategoryPage() {
   useEffect(() => {
     // Загружаем данные о товарах для конкретной категории
     axios
-      .get(`http://localhost/my-shop/backend/api/get_products_by_category.php?category_id=${categoryId}`)
+      .get(`${API_URL}get_products_by_category.php?category_id=${categoryId}`)
       .then((response) => {
         // Убираем дублирующиеся товары
         const uniqueProducts = response.data.filter((product, index, self) => index === self.findIndex((p) => p.name === product.name))

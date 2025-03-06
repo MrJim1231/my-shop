@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import styles from '../styles/Categories.module.css'
+import { API_URL } from '../api/config'
 
 function Categories() {
   const [categories, setCategories] = useState([])
@@ -9,7 +10,7 @@ function Categories() {
 
   useEffect(() => {
     axios
-      .get('http://localhost/my-shop/backend/api/categories.php')
+      .get(`${API_URL}categories.php`)
       .then((response) => {
         if (Array.isArray(response.data)) {
           setCategories(response.data)

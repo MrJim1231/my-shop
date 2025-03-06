@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useCart } from '../context/CartContext' // Импортируем useCart
 import styles from '../styles/ProductDetails.module.css'
+import { API_URL } from '../api/config'
 
 function ProductDetails() {
   const { id } = useParams()
@@ -18,7 +19,7 @@ function ProductDetails() {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://localhost/my-shop/backend/api/product-details.php?id=${id}`)
+        .get(`${API_URL}product-details.php?id=${id}`)
         .then((response) => {
           setProduct(response.data)
           initializeSelection(response.data) // Устанавливаем доступные значения

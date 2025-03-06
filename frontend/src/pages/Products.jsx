@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from '../styles/Products.module.css'
 import axios from 'axios'
+import { API_URL } from '../api/config'
 
 function Products() {
   const [products, setProducts] = useState([]) // Список товаров
@@ -15,7 +16,7 @@ function Products() {
     const fetchProducts = async () => {
       setLoading(true)
       try {
-        const response = await axios.get(`http://localhost/my-shop/backend/api/products.php?page=${currentPage}`)
+        const response = await axios.get(`${API_URL}products.php?page=${currentPage}`)
         setProducts(response.data.products) // Сохраняем товары
         setTotalPages(response.data.total_pages) // Устанавливаем количество страниц
       } catch (error) {
