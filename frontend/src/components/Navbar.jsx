@@ -26,6 +26,11 @@ function Navbar() {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/orders" className={({ isActive }) => (isActive ? styles.active : '')}>
+            Заказы
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/register" className={({ isActive }) => (isActive ? styles.active : '')}>
             Личный кабинет
           </NavLink>

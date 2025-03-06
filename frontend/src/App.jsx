@@ -10,6 +10,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import ProductDetails from './pages/ProductDetails'
 import CategoryPage from './pages/CategoryPage'
+import Orders from './pages/Orders'
 import Footer from './components/Footer'
 import './App.css'
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/category/:categoryId" element={<CategoryPage />} />
+            <Route path="/orders" element={<Orders />} /> {/* Новый маршрут для заказов */}
           </Routes>
         </main>
         <Footer />

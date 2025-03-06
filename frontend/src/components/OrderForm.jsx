@@ -4,13 +4,15 @@ import styles from '../styles/OrderForm.module.css'
 import { API_URL } from '../api/config'
 
 function OrderForm({ onClose }) {
-  const { cart, getTotalPrice, clearCart } = useCart()
+  const { cart, getTotalPrice, clearCart } = useCart() // Извлекаем данные из контекста корзины
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     address: '',
     comment: '',
   })
+  const [loading, setLoading] = useState(false) // Для состояния загрузки
+  const [error, setError] = useState(null) // Для отображения ошибки
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -19,17 +21,31 @@ function OrderForm({ onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Проверяем валидность данных
+    if (!formData.name || !formData.phone || !formData.address) {
+      setError('Все поля, кроме комментария, обязательны для заполнения.')
+      return
+    }
+
+    // Формируем данные заказа
     const orderData = {
       ...formData,
-      items: cart,
-      totalPrice: getTotalPrice(),
+      items: cart.map((item) => ({
+        product_id: item.id, // ID товара
+        quantity: item.quantity, // Количество товара
+        price: item.price, // Цена товара
+      })),
+      totalPrice: getTotalPrice(), // Общая цена
     }
+
+    setLoading(true) // Включаем индикатор загрузки
+    setError(null) // Очищаем возможные предыдущие ошибки
 
     try {
       const response = await fetch(`${API_URL}order.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(orderData), // Отправляем данные
       })
 
       if (response.ok) {
@@ -37,11 +53,13 @@ function OrderForm({ onClose }) {
         clearCart()
         onClose()
       } else {
-        alert('Ошибка при оформлении заказа')
+        throw new Error('Ошибка при оформлении заказа')
       }
     } catch (error) {
       console.error('Ошибка:', error)
-      alert('Ошибка соединения с сервером')
+      setError('Ошибка соединения с сервером')
+    } finally {
+      setLoading(false) // Отключаем индикатор загрузки
     }
   }
 
@@ -54,7 +72,10 @@ function OrderForm({ onClose }) {
           <input type="tel" name="phone" placeholder="Телефон" value={formData.phone} onChange={handleChange} required />
           <input type="text" name="address" placeholder="Адрес доставки" value={formData.address} onChange={handleChange} required />
           <textarea name="comment" placeholder="Комментарий к заказу" value={formData.comment} onChange={handleChange} />
-          <button type="submit">Отправить заказ</button>
+          {error && <p className={styles.error}>{error}</p>} {/* Отображаем ошибку, если есть */}
+          <button type="submit" disabled={loading}>
+            {loading ? 'Отправка заказа...' : 'Отправить заказ'}
+          </button>
           <button type="button" onClick={onClose}>
             Отмена
           </button>
