@@ -1,9 +1,11 @@
-import React from 'react'
-import { useCart } from '../context/CartContext' // Импортируем useCart
+import React, { useState } from 'react'
+import { useCart } from '../context/CartContext'
 import cartStyles from '../styles/Cart.module.css'
+import OrderForm from '../components/OrderForm'
 
 function Cart() {
-  const { cart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice } = useCart() // Извлекаем нужные данные и функции из контекста
+  const { cart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice } = useCart()
+  const [isOrdering, setIsOrdering] = useState(false)
 
   return (
     <div className={cartStyles.cart}>
@@ -39,10 +41,13 @@ function Cart() {
           ))}
           <div className={cartStyles.cartSummary}>
             <p>Общая стоимость: {getTotalPrice()} грн</p>
-            <button className={cartStyles.checkoutButton}>Оформить заказ</button>
+            <button onClick={() => setIsOrdering(true)} className={cartStyles.checkoutButton}>
+              Оформить заказ
+            </button>
           </div>
         </div>
       )}
+      {isOrdering && <OrderForm onClose={() => setIsOrdering(false)} />}
     </div>
   )
 }
