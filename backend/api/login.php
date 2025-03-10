@@ -3,6 +3,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
+session_start();
+
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -39,6 +41,7 @@ if ($result->num_rows === 0) {
 $user = $result->fetch_assoc();
 
 if (password_verify($password, $user['password'])) {
+    $_SESSION['user_id'] = $user['id'];
     echo json_encode(["status" => "success", "message" => "Вход выполнен успешно", "user_id" => $user['id']]);
 } else {
     echo json_encode(["status" => "error", "message" => "Неверный email или пароль"]);
