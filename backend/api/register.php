@@ -9,6 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../vendor/autoload.php';  // Путь к autoload файлу Composer
+
+use \Firebase\JWT\JWT;
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -45,16 +48,37 @@ if ($stmt_check->num_rows > 0) {
 // Хеширование пароля
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
+// Вставка нового пользователя в базу данных
 $sql = "INSERT INTO users (email, password) VALUES (?, ?)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ss", $email, $hashed_password);
 
-if ($stmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "Регистрация прошла успешно"]);
-} else {
-    echo json_encode(["status" => "error", "message" => "Ошибка при регистрации"]);
+try {
+    if ($stmt->execute()) {
+        // Генерация JWT после успешной регистрации
+        $user_id = $stmt->insert_id;
+        $secret_key = "your_secret_key";  // Жестко заданный секретный ключ
+        $issued_at = time();
+        $expiration_time = $issued_at + 3600;  // Время истечения (1 час)
+
+        // Плейлоуд для JWT
+        $payload = array(
+            "iat" => $issued_at,
+            "exp" => $expiration_time,
+            "user_id" => $user_id
+        );
+
+        // Генерация токена с алгоритмом 'HS256'
+        $jwt = JWT::encode($payload, $secret_key, 'HS256');
+
+        // Отправка токена пользователю
+        echo json_encode(["status" => "success", "message" => "Регистрация прошла успешно", "token" => $jwt]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Ошибка при регистрации"]);
+    }
+} catch (Exception $e) {
+    echo json_encode(["status" => "error", "message" => "Ошибка при генерации токена: " . $e->getMessage()]);
 }
 
 $stmt->close();
 $conn->close();
-?>
