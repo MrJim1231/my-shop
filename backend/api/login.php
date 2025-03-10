@@ -62,3 +62,4 @@ echo json_encode(["status" => "success", "message" => "Авторизация п
 
 $stmt_check->close();
 $conn->close();
+?>
