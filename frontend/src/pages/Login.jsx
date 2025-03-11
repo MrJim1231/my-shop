@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { API_URL } from '../api/config'
+import { useAuth } from '../context/AuthContext' // Импортируем хук useAuth
 import axios from 'axios'
-import styles from '../styles/Login.module.css'
+import { API_URL } from '../api/config'
 import { useNavigate } from 'react-router-dom' // Используем useNavigate
+import styles from '../styles/Login.module.css'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState({ text: '', type: '' })
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { login } = useAuth() // Получаем функцию login из AuthContext
   const navigate = useNavigate() // Хук для навигации
 
   // Проверка наличия токена при монтировании компонента
@@ -46,8 +48,15 @@ const Login = () => {
           // Сохраняем токен и userId в localStorage
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.userId) // Добавляем сохранение userId
+
+          // Обновляем контекст аутентификации с помощью хука useAuth
+          login({ email, token: res.data.token, userId: res.data.userId })
+
           setIsLoggedIn(true)
           console.log('Token and UserId saved:', res.data.token, res.data.userId)
+
+          // Перенаправляем на страницу заказов после успешного логина
+          navigate('/orders')
         } else {
           setMessage({ text: 'Токен или userId не был получен от сервера', type: 'error' })
         }
@@ -66,7 +75,7 @@ const Login = () => {
     setMessage({ text: 'Вы вышли из системы', type: 'success' })
 
     // Перенаправление на страницу входа
-    navigate('/login') // Используем navigate для перенаправления
+    navigate('/login')
   }
 
   return (

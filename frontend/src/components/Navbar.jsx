@@ -1,7 +1,11 @@
+import React from 'react'
 import { NavLink } from 'react-router-dom'
-import styles from '../styles/Navbar.module.css' // Импортируем стили как объект
+import { useAuth } from '../context/AuthContext' // Импортируем хук useAuth
+import styles from '../styles/Navbar.module.css'
 
 function Navbar() {
+  const { isAuthenticated, logout } = useAuth() // Получаем доступ к состоянию аутентификации
+
   return (
     <nav className={styles.navbar}>
       <ul>
@@ -25,21 +29,31 @@ function Navbar() {
             Корзина
           </NavLink>
         </li>
-        <li>
-          <NavLink to="/orders" className={({ isActive }) => (isActive ? styles.active : '')}>
-            Заказы
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/register" className={({ isActive }) => (isActive ? styles.active : '')}>
-            Личный кабинет
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/login" className={({ isActive }) => (isActive ? styles.active : '')}>
-            Войти
-          </NavLink>
-        </li>
+        {isAuthenticated ? (
+          <>
+            <li>
+              <NavLink to="/orders" className={({ isActive }) => (isActive ? styles.active : '')}>
+                Заказы
+              </NavLink>
+            </li>
+            <li>
+              <button onClick={logout}>Выйти</button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <NavLink to="/register" className={({ isActive }) => (isActive ? styles.active : '')}>
+                Регистрация
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/login" className={({ isActive }) => (isActive ? styles.active : '')}>
+                Войти
+              </NavLink>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   )

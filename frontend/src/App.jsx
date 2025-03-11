@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext' // Импортируем AuthProvider
 import Home from './pages/Home'
 import Navbar from './components/Navbar'
 import Banner from './components/Banner'
@@ -16,28 +17,32 @@ import './App.css'
 
 function App() {
   return (
-    <Router>
-      <div className="app">
-        <header className="header-container">
-          <Navbar />
-          <Banner /> {/* Баннер отображается только на главной странице */}
-        </header>
-        <main className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/category/:categoryId" element={<CategoryPage />} />
-            <Route path="/orders" element={<Orders />} /> {/* Новый маршрут для заказов */}
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <AuthProvider>
+      {' '}
+      {/* Оборачиваем приложение в AuthProvider */}
+      <Router>
+        <div className="app">
+          <header className="header-container">
+            <Navbar />
+            <Banner /> {/* Баннер отображается только на главной странице */}
+          </header>
+          <main className="content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/category/:categoryId" element={<CategoryPage />} />
+              <Route path="/orders" element={<Orders />} /> {/* Новый маршрут для заказов */}
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   )
 }
 
