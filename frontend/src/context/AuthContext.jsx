@@ -1,38 +1,31 @@
-import React, { createContext, useState, useContext, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 
-// Создаем контекст
+// Создание контекста
 const AuthContext = createContext()
 
-// Провайдер аутентификации
+export const useAuth = () => {
+  return useContext(AuthContext)
+}
+
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    // Здесь можно проверить localStorage или сделать запрос для получения данных о текущем пользователе
-    const userData = localStorage.getItem('user')
-    if (userData) {
-      setUser(JSON.parse(userData))
-      setIsAuthenticated(true)
+    const token = localStorage.getItem('token')
+    if (token) {
+      setIsAuthenticated(true) // Если токен есть, значит пользователь авторизован
     }
   }, [])
 
   const login = (userData) => {
-    setUser(userData)
+    localStorage.setItem('token', userData.token)
     setIsAuthenticated(true)
-    localStorage.setItem('user', JSON.stringify(userData)) // Сохраняем пользователя в localStorage
   }
 
   const logout = () => {
-    setUser(null)
+    localStorage.removeItem('token')
     setIsAuthenticated(false)
-    localStorage.removeItem('user')
   }
 
-  return <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>{children}</AuthContext.Provider>
-}
-
-// Хук для использования контекста
-export const useAuth = () => {
-  return useContext(AuthContext)
+  return <AuthContext.Provider value={{ isAuthenticated, login, logout }}>{children}</AuthContext.Provider>
 }

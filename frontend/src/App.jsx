@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext' // Импортируем AuthProvider
 import Home from './pages/Home'
 import Navbar from './components/Navbar'
@@ -13,12 +13,12 @@ import ProductDetails from './pages/ProductDetails'
 import CategoryPage from './pages/CategoryPage'
 import Orders from './pages/Orders'
 import Footer from './components/Footer'
+import PrivateRoute from './components/PrivateRoute' // Импортируем компонент PrivateRoute
 import './App.css'
 
 function App() {
   return (
     <AuthProvider>
-      {' '}
       {/* Оборачиваем приложение в AuthProvider */}
       <Router>
         <div className="app">
@@ -36,7 +36,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/category/:categoryId" element={<CategoryPage />} />
-              <Route path="/orders" element={<Orders />} /> {/* Новый маршрут для заказов */}
+              {/* Используем PrivateRoute для защищённых маршрутов */}
+              <Route path="/orders" element={<PrivateRoute element={Orders} />} />
             </Routes>
           </main>
           <Footer />

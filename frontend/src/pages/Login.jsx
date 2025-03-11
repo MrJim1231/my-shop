@@ -67,17 +67,6 @@ const Login = () => {
     }
   }
 
-  const logoutUser = () => {
-    // Удаляем токен и userId из localStorage
-    localStorage.removeItem('token')
-    localStorage.removeItem('userId')
-    setIsLoggedIn(false)
-    setMessage({ text: 'Вы вышли из системы', type: 'success' })
-
-    // Перенаправление на страницу входа
-    navigate('/login')
-  }
-
   return (
     <div className={styles.loginContainer}>
       <h2 className={styles.title}>{isLoggedIn ? 'Вы в системе' : 'Вход'}</h2>
@@ -91,13 +80,6 @@ const Login = () => {
             Войти
           </button>
         </form>
-      )}
-
-      {/* Если пользователь авторизован, показываем кнопку выхода */}
-      {isLoggedIn && (
-        <button className={styles.button} onClick={logoutUser}>
-          Выйти
-        </button>
       )}
 
       {message.text && <p className={message.type === 'success' ? styles.successMessage : styles.errorMessage}>{message.text}</p>}
