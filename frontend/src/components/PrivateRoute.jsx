@@ -1,12 +1,16 @@
 import React from 'react'
-import { Navigate } from 'react-router-dom' // Используем Navigate для перенаправления
-import { useAuth } from '../context/AuthContext' // Импортируем контекст аутентификации
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext' // Используем контекст аутентификации
 
 const PrivateRoute = ({ element: Element }) => {
-  const { isAuthenticated } = useAuth() // Проверяем, авторизован ли пользователь
+  const { isAuthenticated } = useAuth() // Проверка аутентификации
 
-  // Если пользователь не авторизован, перенаправляем на страницу входа
-  return isAuthenticated ? <Element /> : <Navigate to="/login" />
+  // Если токен в localStorage есть, не перенаправляем
+  if (!isAuthenticated && !localStorage.getItem('token')) {
+    return <Navigate to="/login" />
+  }
+
+  return <Element />
 }
 
 export default PrivateRoute
