@@ -29,15 +29,10 @@ function OrderForm({ onClose }) {
       return
     }
 
+    // Получаем userId из localStorage или ставим null
+    const userId = localStorage.getItem('userId') || null
+
     // Формируем данные заказа с картинками и размерами
-    const userId = localStorage.getItem('userId')
-
-    if (!userId) {
-      console.error('User ID не найден в localStorage!')
-      setError('Ошибка: ID пользователя не найден!')
-      return
-    }
-
     const orderData = {
       ...formData,
       items: cart.map((item) => ({
@@ -48,10 +43,10 @@ function OrderForm({ onClose }) {
         size: item.size, // Размер товара
       })),
       totalPrice: getTotalPrice(), // Общая цена
-      userId: userId, // Добавляем userId из localStorage
+      userId: userId, // Добавляем userId из localStorage или null
     }
 
-    console.log('Order Data before sending:', JSON.stringify(orderData)) // Логируем данные перед отправкой
+    console.log('Order Data:', orderData) // Логируем данные перед отправкой
 
     setLoading(true) // Включаем индикатор загрузки
     setError(null) // Очищаем возможные предыдущие ошибки
