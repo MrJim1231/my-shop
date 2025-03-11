@@ -7,7 +7,7 @@ const PrivateRoute = ({ element: Element }) => {
 
   // Если токен в localStorage есть, не перенаправляем
   if (!isAuthenticated && !localStorage.getItem('token')) {
-    return <Navigate to="/login" />
+    return <Navigate to="/auth" />
   }
 
   return <Element />

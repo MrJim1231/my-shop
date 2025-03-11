@@ -9,7 +9,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout()
-    navigate('/login')
+    navigate('/auth')
   }
 
   return (
@@ -35,7 +35,7 @@ function Navbar() {
             Корзина
           </NavLink>
         </li>
-        {isAuthenticated ? (
+        {isAuthenticated ? ( // Проверяем, если пользователь авторизован
           <>
             <li>
               <NavLink to="/orders" className={({ isActive }) => (isActive ? styles.active : '')}>

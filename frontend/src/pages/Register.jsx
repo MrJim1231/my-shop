@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import { API_URL } from '../api/config'
 import axios from 'axios'
+import { useAuth } from '../context/AuthContext' // Получаем хук для работы с контекстом
+import { useNavigate } from 'react-router-dom' // Импортируем useNavigate для редиректа
 import styles from '../styles/Auth.module.css' // Используем тот же файл стилей
 
 const Register = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState({ text: '', type: '' })
+  const { login } = useAuth() // Получаем функцию login из контекста
+  const navigate = useNavigate() // Хук для навигации
 
   const registerUser = async (e) => {
     e.preventDefault()
@@ -29,6 +33,12 @@ const Register = () => {
           // Сохраняем токен и userId в localStorage
           localStorage.setItem('token', token)
           localStorage.setItem('userId', userId)
+
+          // Входим в систему с помощью контекста
+          login({ token, userId })
+
+          // Перенаправляем на главную страницу
+          navigate('/') // Перенаправление на главную
         } else {
           setMessage({ text: 'Ошибка: данные от сервера неполные', type: 'error' })
           console.log('Ошибка: токен или userId отсутствует')
