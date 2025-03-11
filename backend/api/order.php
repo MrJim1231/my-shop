@@ -14,7 +14,7 @@ require_once __DIR__ . '/../includes/db.php'; // Подключение к ба�
 $data = json_decode(file_get_contents("php://input"), true); // Чтение данных, отправленных в формате JSON
 
 // Проверка на наличие необходимых данных
-if (!isset($data["name"], $data["phone"], $data["address"], $data["items"], $data["totalPrice"])) {
+if (!isset($data["name"], $data["phone"], $data["address"], $data["items"], $data["totalPrice"], $data["userId"])) {
     echo json_encode(["status" => "error", "message" => "Некорректные данные"]);
     exit();
 }
@@ -25,11 +25,12 @@ $address = trim($data["address"]);
 $comment = isset($data["comment"]) ? trim($data["comment"]) : "";
 $items = $data["items"]; // Массив товаров
 $totalPrice = (float) $data["totalPrice"];
+$userId = (int) $data["userId"]; // Получаем userId
 
 // Вставка заказа в таблицу orders
-$sql = "INSERT INTO orders (name, phone, address, comment, total_price) VALUES (?, ?, ?, ?, ?)";
+$sql = "INSERT INTO orders (name, phone, address, comment, total_price, user_id) VALUES (?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssd", $name, $phone, $address, $comment, $totalPrice);
+$stmt->bind_param("ssssdi", $name, $phone, $address, $comment, $totalPrice, $userId); // Добавляем userId в запрос
 
 if ($stmt->execute()) {
     // Получаем ID только что вставленного заказа

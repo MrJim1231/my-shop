@@ -14,10 +14,12 @@ function OrderForm({ onClose }) {
   const [loading, setLoading] = useState(false) // Для состояния загрузки
   const [error, setError] = useState(null) // Для отображения ошибки
 
+  // Обработчик изменения значений в форме
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  // Обработчик отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -28,6 +30,14 @@ function OrderForm({ onClose }) {
     }
 
     // Формируем данные заказа с картинками и размерами
+    const userId = localStorage.getItem('userId')
+
+    if (!userId) {
+      console.error('User ID не найден в localStorage!')
+      setError('Ошибка: ID пользователя не найден!')
+      return
+    }
+
     const orderData = {
       ...formData,
       items: cart.map((item) => ({
@@ -38,7 +48,10 @@ function OrderForm({ onClose }) {
         size: item.size, // Размер товара
       })),
       totalPrice: getTotalPrice(), // Общая цена
+      userId: userId, // Добавляем userId из localStorage
     }
+
+    console.log('Order Data before sending:', JSON.stringify(orderData)) // Логируем данные перед отправкой
 
     setLoading(true) // Включаем индикатор загрузки
     setError(null) // Очищаем возможные предыдущие ошибки

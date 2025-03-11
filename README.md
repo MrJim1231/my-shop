@@ -45,6 +45,8 @@ total_price DECIMAL(10, 2),
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE orders ADD user_id INT NOT NULL;
+
 CREATE TABLE order_items (
 id INT AUTO_INCREMENT PRIMARY KEY,
 order_id INT,
