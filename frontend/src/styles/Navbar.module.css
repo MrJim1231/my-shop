@@ -1,9 +1,9 @@
 /* Стили для навигации */
 .navbar {
   background-color: #333;
-  padding: 10px 20px;
+  padding: 5px 20px; /* Уменьшена высота навбара */
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* Лого слева, меню справа */
   align-items: center;
   position: fixed; /* Фиксируем навбар */
   top: 0; /* Располагаем его вверху */
@@ -13,55 +13,99 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень для навбара */
 }
 
+/* Стили для логотипа */
+.navbar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px; /* Уменьшен отступ для логотипа */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: color 0.3s ease;
+}
+
+/* Лого не изменяет свой стиль при наведении */
+.navbar .logo:hover {
+  color: #ffd700;
+}
+
+/* Стили для меню навигации */
 .navbar ul {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   gap: 20px; /* Отступ между пунктами */
+  justify-content: flex-end; /* Меню выравнивается вправо */
+  align-items: center; /* Выравнивание по вертикали */
 }
 
 .navbar li {
-  display: inline;
+  display: inline-flex;
+  align-items: center; /* Выравнивание элементов по вертикали */
 }
 
+/* Стили для ссылок */
 .navbar a {
   text-decoration: none;
   color: #fff;
-  font-size: 1.1rem;
-  /* font-weight: bold; */
-  padding: 8px 15px; /* Увеличиваем padding для удобства клика */
+  font-size: 1rem; /* Немного уменьшен размер шрифта */
+  padding: 6px 12px; /* Уменьшен padding для ссылок */
   transition: all 0.3s ease; /* Плавный переход для всех свойств */
   display: block; /* Убедитесь, что ссылки занимают всю ширину */
   border-radius: 4px; /* Скругление углов */
 }
 
+/* Стили для ховера на ссылках */
 .navbar a:hover {
   background-color: #555; /* Цвет фона при наведении */
   color: #ffd700; /* Цвет текста при наведении */
   transform: scale(1.1); /* Увеличение элемента при наведении */
 }
 
-.navbar a:focus,
-.navbar a:active {
-  background-color: #333; /* Сохраняем фон нажатого элемента */
-  color: #fff; /* Цвет текста на активном элементе */
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Легкая тень при активном элементе */
-}
-
 /* Стили для активного состояния */
 .active {
   background-color: #0056b3; /* Яркий синий цвет для фона активной кнопки */
   color: #fff; /* Белый цвет текста для контраста */
-  padding: 8px 15px; /* Поддерживаем одинаковый padding */
+  padding: 6px 12px; /* Поддерживаем одинаковый padding */
   border-radius: 4px; /* Скругление углов */
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.6); /* Легкая тень для активного пункта */
 }
 
-/* Добавление выравнивания элементов */
+/* Стили для кнопки "Выйти" */
+.navbar .button {
+  background-color: #333;
+  color: #fff;
+  font-size: 1rem;
+  padding: 6px 12px; /* Уменьшен padding для кнопки */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0; /* Убираем возможные маргины */
+}
+
+.navbar .button:hover {
+  background-color: #555;
+  color: #ffd700;
+}
+
+/* Выравнивание всех элементов списка */
 .navbar ul {
   display: flex;
-  justify-content: center; /* Это выравнивает пункты по центру */
-  align-items: center;
-  margin: 0;
+  justify-content: flex-end; /* Все элементы выравниваем справа */
+  align-items: center; /* Выравнивание по центру по вертикали */
+  gap: 20px;
+}
+
+.navbar li {
+  display: inline-flex; /* Используем inline-flex для выравнивания внутри li */
+  align-items: center; /* Выравнивание элементов по вертикали */
 }

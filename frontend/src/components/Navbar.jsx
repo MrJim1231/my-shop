@@ -14,7 +14,14 @@ function Navbar() {
 
   return (
     <nav className={styles.navbar}>
-      <ul>
+      {/* Логотип слева */}
+      <div className={styles.logo}>
+        <NavLink to="/" className={styles.logoLink}>
+          Sleep & Dream
+        </NavLink>
+      </div>
+
+      <ul className={styles.navLinks}>
         <li>
           <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : '')}>
             Главная
@@ -26,16 +33,11 @@ function Navbar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/products" className={({ isActive }) => (isActive ? styles.active : '')}>
-            Продукты
-          </NavLink>
-        </li>
-        <li>
           <NavLink to="/cart" className={({ isActive }) => (isActive ? styles.active : '')}>
             Корзина
           </NavLink>
         </li>
-        {isAuthenticated ? ( // Проверяем, если пользователь авторизован
+        {isAuthenticated ? (
           <>
             <li>
               <NavLink to="/orders" className={({ isActive }) => (isActive ? styles.active : '')}>
