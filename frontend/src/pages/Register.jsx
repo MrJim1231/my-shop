@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { API_URL } from '../api/config'
 import axios from 'axios'
-import styles from '../styles/Register.module.css'
+import styles from '../styles/Auth.module.css' // Используем тот же файл стилей
 
 const Register = () => {
   const [email, setEmail] = useState('')
@@ -42,7 +42,6 @@ const Register = () => {
 
   return (
     <div className={styles.loginContainer}>
-      <h2 className={styles.title}>Регистрация</h2>
       <form className={styles.form} onSubmit={registerUser}>
         <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />

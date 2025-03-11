@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext' // Импортируем ху�
 import axios from 'axios'
 import { API_URL } from '../api/config'
 import { useNavigate } from 'react-router-dom' // Используем useNavigate
-import styles from '../styles/Login.module.css'
+import styles from '../styles/Auth.module.css' // Используем тот же файл стилей
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -69,8 +69,6 @@ const Login = () => {
 
   return (
     <div className={styles.loginContainer}>
-      <h2 className={styles.title}>{isLoggedIn ? 'Вы в системе' : 'Вход'}</h2>
-
       {/* Если пользователь не авторизован, показываем форму входа */}
       {!isLoggedIn && (
         <form className={styles.form} onSubmit={loginUser}>

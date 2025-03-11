@@ -1,15 +1,15 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext' // Импортируем хук useAuth
+import { useAuth } from '../context/AuthContext'
 import styles from '../styles/Navbar.module.css'
 
 function Navbar() {
-  const { isAuthenticated, logout } = useAuth() // Получаем доступ к состоянию аутентификации
-  const navigate = useNavigate() // Хук для навигации
+  const { isAuthenticated, logout } = useAuth()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
-    logout() // Вызов logout, который сбрасывает состояние аутентификации
-    navigate('/login') // Перенаправление на страницу входа после выхода
+    logout()
+    navigate('/login')
   }
 
   return (
@@ -50,8 +50,8 @@ function Navbar() {
           </>
         ) : (
           <li>
-            <NavLink to="/login" className={({ isActive }) => (isActive ? styles.active : '')}>
-              Войти
+            <NavLink to="/auth" className={({ isActive }) => (isActive ? styles.active : '')}>
+              Личный кабинет
             </NavLink>
           </li>
         )}
