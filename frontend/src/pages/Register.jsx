@@ -11,41 +11,32 @@ const Register = () => {
   const registerUser = async (e) => {
     e.preventDefault()
 
-    // Логирование отправленных данных
-    console.log('Sending data:', { email, password })
+    console.log('Отправка данных:', { email, password })
 
     try {
-      const res = await axios.post(
-        `${API_URL}register.php`,
-        { email, password },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      const res = await axios.post(`${API_URL}register.php`, { email, password }, { headers: { 'Content-Type': 'application/json' } })
 
-      // Логируем ответ сервера для проверки данных
-      console.log('Server Response:', res.data)
+      console.log('Ответ сервера:', res.data)
 
-      setMessage({ text: res.data.message, type: 'success' })
+      setMessage({ text: res.data.message, type: res.data.status === 'success' ? 'success' : 'error' })
 
       if (res.data.status === 'success') {
-        // Логируем наличие токена в ответе
-        if (res.data.token) {
-          console.log('Token received:', res.data.token) // Логируем токен из ответа
+        const { token, userId } = res.data
 
-          // Сохраняем токен в localStorage
-          localStorage.setItem('token', res.data.token)
-          console.log('Token saved to localStorage:', res.data.token) // Логируем сохранённый токен
+        if (token && userId) {
+          console.log('Полученные данные:', { token, userId })
+
+          // Сохраняем токен и userId в localStorage
+          localStorage.setItem('token', token)
+          localStorage.setItem('userId', userId)
         } else {
-          setMessage({ text: 'Токен не был получен от сервера', type: 'error' })
-          console.log('Token not received') // Логируем, если токен не пришел
+          setMessage({ text: 'Ошибка: данные от сервера неполные', type: 'error' })
+          console.log('Ошибка: токен или userId отсутствует')
         }
       }
     } catch (err) {
       setMessage({ text: 'Ошибка при регистрации', type: 'error' })
-      console.error('Error:', err) // Логирование ошибки
+      console.error('Ошибка запроса:', err)
     }
   }
 

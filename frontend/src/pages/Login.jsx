@@ -41,14 +41,15 @@ const Login = () => {
       setMessage({ text: res.data.message, type: 'success' })
 
       if (res.data.status === 'success') {
-        // Проверяем, что токен присутствует в ответе
-        if (res.data.token) {
-          // Сохраняем токен в localStorage
+        // Проверяем, что токен и userId присутствуют в ответе
+        if (res.data.token && res.data.userId) {
+          // Сохраняем токен и userId в localStorage
           localStorage.setItem('token', res.data.token)
+          localStorage.setItem('userId', res.data.userId) // Добавляем сохранение userId
           setIsLoggedIn(true)
-          console.log('Token saved:', res.data.token)
+          console.log('Token and UserId saved:', res.data.token, res.data.userId)
         } else {
-          setMessage({ text: 'Токен не был получен от сервера', type: 'error' })
+          setMessage({ text: 'Токен или userId не был получен от сервера', type: 'error' })
         }
       }
     } catch (err) {
@@ -58,8 +59,9 @@ const Login = () => {
   }
 
   const logoutUser = () => {
-    // Удаляем токен из localStorage
+    // Удаляем токен и userId из localStorage
     localStorage.removeItem('token')
+    localStorage.removeItem('userId')
     setIsLoggedIn(false)
     setMessage({ text: 'Вы вышли из системы', type: 'success' })
 

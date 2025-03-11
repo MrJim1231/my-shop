@@ -57,8 +57,13 @@ $payload = array(
 
 $jwt = JWT::encode($payload, $secret_key, 'HS256');
 
-// Отправка токена пользователю
-echo json_encode(["status" => "success", "message" => "Авторизация прошла успешно", "token" => $jwt]);
+// Отправка токена и userId пользователю
+echo json_encode([
+    "status" => "success", 
+    "message" => "Авторизация прошла успешно", 
+    "token" => $jwt,
+    "userId" => $user_id  // Отправляем userId
+]);
 
 $stmt_check->close();
 $conn->close();

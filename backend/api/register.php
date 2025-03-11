@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../vendor/autoload.php';  // Путь к autoload файлу Composer
+require_once __DIR__ . '/../vendor/autoload.php';  // Подключаем Composer autoload
 
 use \Firebase\JWT\JWT;
 
@@ -55,11 +55,11 @@ $stmt->bind_param("ss", $email, $hashed_password);
 
 try {
     if ($stmt->execute()) {
-        // Генерация JWT после успешной регистрации
+        // Получаем ID нового пользователя
         $user_id = $stmt->insert_id;
-        $secret_key = "your_secret_key";  // Жестко заданный секретный ключ
+        $secret_key = "your_secret_key";  // Секретный ключ для JWT
         $issued_at = time();
-        $expiration_time = $issued_at + 3600;  // Время истечения (1 час)
+        $expiration_time = $issued_at + 3600;  // Токен действует 1 час
 
         // Плейлоуд для JWT
         $payload = array(
@@ -68,11 +68,16 @@ try {
             "user_id" => $user_id
         );
 
-        // Генерация токена с алгоритмом 'HS256'
+        // Генерация токена
         $jwt = JWT::encode($payload, $secret_key, 'HS256');
 
-        // Отправка токена пользователю
-        echo json_encode(["status" => "success", "message" => "Регистрация прошла успешно", "token" => $jwt]);
+        // Отправка токена и userId пользователю
+        echo json_encode([
+            "status" => "success",
+            "message" => "Регистрация прошла успешно",
+            "token" => $jwt,
+            "userId" => $user_id
+        ]);
     } else {
         echo json_encode(["status" => "error", "message" => "Ошибка при регистрации"]);
     }
