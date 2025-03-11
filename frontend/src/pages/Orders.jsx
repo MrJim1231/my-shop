@@ -8,8 +8,16 @@ function Orders() {
 
   useEffect(() => {
     const fetchOrders = async () => {
+      const userId = localStorage.getItem('userId') // Получаем userId из localStorage
+
+      if (!userId) {
+        setError('Пожалуйста, войдите в систему, чтобы увидеть ваши заказы.')
+        setLoading(false)
+        return
+      }
+
       try {
-        const response = await fetch('http://localhost/my-shop/backend/api/get_orders.php')
+        const response = await fetch(`http://localhost/my-shop/backend/api/get_orders.php?userId=${userId}`)
 
         if (!response.ok) {
           throw new Error('Ошибка при загрузке заказов')

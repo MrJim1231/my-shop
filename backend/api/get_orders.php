@@ -11,9 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 require_once __DIR__ . '/../includes/db.php'; // Подключение к базе данных
 
-// Получаем список заказов
-$sql = "SELECT * FROM orders";
-$result = $conn->query($sql);
+// Получаем userId из параметров запроса
+$userId = isset($_GET['userId']) ? $_GET['userId'] : null;
+
+if (!$userId) {
+    echo json_encode(["status" => "error", "message" => "Пользователь не авторизован"]);
+    exit();
+}
+
+// Получаем список заказов для текущего пользователя
+$sql = "SELECT * FROM orders WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $orders = [];
@@ -34,7 +45,7 @@ if ($result->num_rows > 0) {
 
     echo json_encode($orders);
 } else {
-    echo json_encode(["status" => "error", "message" => "Нет заказов"]);
+    echo json_encode(["status" => "error", "message" => "Нет заказов для этого пользователя"]);
 }
 
 $conn->close();
