@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useCart } from '../context/CartContext' // Подключаем контекст корзины
+import { useCart } from '../context/CartContext'
+import { FiMenu, FiX } from 'react-icons/fi'
 import styles from '../styles/Navbar.module.css'
 
 function Navbar() {
   const { isAuthenticated, logout } = useAuth()
-  const { getTotalItems } = useCart() // Получаем общее количество товаров в корзине
+  const { getTotalItems } = useCart()
+  const [isMenuOpen, setMenuOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen)
+  }
 
   return (
     <div className={styles.navbarContainer}>
@@ -17,6 +23,7 @@ function Navbar() {
           </NavLink>
         </div>
 
+        {/* Десктоп-меню (скрывается на мобильных) */}
         <ul className={styles.navLinks}>
           <li>
             <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : '')}>
@@ -55,7 +62,59 @@ function Navbar() {
             </li>
           )}
         </ul>
+
+        {/* Бургер-меню (показывается только на мобильных) */}
+        <div className={styles.burgerIcon} onClick={toggleMenu}>
+          {isMenuOpen ? <FiX /> : <FiMenu />}
+        </div>
       </nav>
+
+      {/* Мобильное меню (изначально скрыто) */}
+      <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ''}`}>
+        <ul>
+          <li>
+            <NavLink to="/" onClick={toggleMenu}>
+              Главная
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/categories" onClick={toggleMenu}>
+              Категории
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/cart" onClick={toggleMenu}>
+              Корзина ({getTotalItems()})
+            </NavLink>
+          </li>
+          {isAuthenticated ? (
+            <>
+              <li>
+                <NavLink to="/orders" onClick={toggleMenu}>
+                  Заказы
+                </NavLink>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    logout()
+                    toggleMenu()
+                  }}
+                  className={styles.button}
+                >
+                  Выйти
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <NavLink to="/auth" onClick={toggleMenu}>
+                Личный кабинет
+              </NavLink>
+            </li>
+          )}
+        </ul>
+      </div>
     </div>
   )
 }

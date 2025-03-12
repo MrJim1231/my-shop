@@ -4,7 +4,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background: #333; /* Или другой цвет, совпадающий с дизайном */
+  background: #333;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -13,15 +13,14 @@
 
 .navbar {
   background-color: #333;
-  padding: 5px 20px; /* Уменьшена высота навбара */
+  padding: 5px 20px;
   display: flex;
-  justify-content: space-between; /* Лого слева, меню справа */
+  justify-content: space-between;
   align-items: center;
-  width: 100%; /* Растягиваем на всю ширину */
-  max-width: 1200px; /* Ограничиваем сам nav */
+  width: 100%;
+  max-width: 1200px;
 }
 
-/* Стили для логотипа */
 .navbar .logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -30,66 +29,60 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 10px; /* Уменьшен отступ для логотипа */
+  padding: 5px 10px;
   text-transform: uppercase;
   letter-spacing: 2px;
   transition: color 0.3s ease;
 }
 
-/* Лого не изменяет свой стиль при наведении */
 .navbar .logo:hover {
   color: #ffd700;
 }
 
-/* Стили для меню навигации */
 .navbar ul {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
-  gap: 20px; /* Отступ между пунктами */
-  justify-content: flex-end; /* Меню выравнивается вправо */
-  align-items: center; /* Выравнивание по вертикали */
+  gap: 20px;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .navbar li {
   display: inline-flex;
-  align-items: center; /* Выравнивание элементов по вертикали */
+  align-items: center;
 }
 
-/* Стили для ссылок */
 .navbar a {
   text-decoration: none;
   color: #fff;
-  font-size: 1rem; /* Немного уменьшен размер шрифта */
-  padding: 6px 12px; /* Уменьшен padding для ссылок */
-  transition: all 0.3s ease; /* Плавный переход для всех свойств */
-  display: block; /* Убедитесь, что ссылки занимают всю ширину */
-  border-radius: 4px; /* Скругление углов */
+  font-size: 1rem;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+  display: block;
+  border-radius: 4px;
 }
 
-/* Стили для ховера на ссылках */
 .navbar a:hover {
-  background-color: #555; /* Цвет фона при наведении */
-  color: #ffd700; /* Цвет текста при наведении */
-  transform: scale(1.1); /* Увеличение элемента при наведении */
+  background-color: #555;
+  color: #ffd700;
+  transform: scale(1.1);
 }
 
-/* Стили для активного состояния */
 .active {
-  background-color: #0056b3; /* Яркий синий цвет для фона активной кнопки */
-  color: #fff; /* Белый цвет текста для контраста */
-  padding: 6px 12px; /* Поддерживаем одинаковый padding */
-  border-radius: 4px; /* Скругление углов */
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.6); /* Легкая тень для активного пункта */
+  background-color: #0056b3;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
 }
 
-/* Стили для кнопки "Выйти" */
 .navbar .button {
   background-color: #333;
   color: #fff;
   font-size: 1rem;
-  padding: 6px 12px; /* Уменьшен padding для кнопки */
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -97,7 +90,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin: 0; /* Убираем возможные маргины */
+  margin: 0;
 }
 
 .navbar .button:hover {
@@ -105,20 +98,6 @@
   color: #ffd700;
 }
 
-/* Выравнивание всех элементов списка */
-.navbar ul {
-  display: flex;
-  justify-content: flex-end; /* Все элементы выравниваем справа */
-  align-items: center; /* Выравнивание по центру по вертикали */
-  gap: 20px;
-}
-
-.navbar li {
-  display: inline-flex; /* Используем inline-flex для выравнивания внутри li */
-  align-items: center; /* Выравнивание элементов по вертикали */
-}
-
-/* Бейдж */
 .cartLink {
   position: relative;
 }
@@ -137,4 +116,70 @@
   position: absolute;
   top: -5px;
   right: -10px;
+}
+
+/* Стили для бургер-меню */
+.burgerIcon {
+  display: none;
+  font-size: 1.8rem;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1101;
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8); /* Тёмный фон */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease-in-out; /* Плавное появление */
+  z-index: 1100;
+  opacity: 0; /* Скрыто по умолчанию */
+  visibility: hidden; /* Скрыто по умолчанию */
+}
+
+.mobileMenu.open {
+  opacity: 1; /* Меню становится видимым */
+  visibility: visible;
+}
+
+.mobileMenu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mobileMenu a {
+  color: #fff;
+  font-size: 1.2rem;
+  text-decoration: none;
+  padding: 10px;
+  transition: background 0.3s;
+}
+
+.mobileMenu a:hover {
+  background: #444;
+}
+
+@media (max-width: 768px) {
+  .navbar .navLinks {
+    display: none; /* Скрываем обычное меню на мобильных */
+  }
+
+  .navbar .burgerIcon {
+    display: block; /* Показываем иконку бургера */
+  }
+
+  .navbar .navLinks.open {
+    display: flex; /* Показываем меню, когда оно открыто */
+  }
 }
