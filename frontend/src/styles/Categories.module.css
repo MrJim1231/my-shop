@@ -13,7 +13,7 @@
 
 .categoryGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 карточки на больших экранах */
+  grid-template-columns: repeat(4, 1fr); /* 3 карточки на больших экранах */
   gap: 20px;
   min-height: 400px; /* Фиксируем пространство для предотвращения скачков */
 }
@@ -49,7 +49,7 @@
 .categoryName {
   padding-top: 10px;
   font-size: 1.2rem; /* Размер шрифта */
-  font-weight: bold; /* Жирный шрифт */
+  /* font-weight: bold;  */
   color: #333; /* Цвет текста, контрастный для лучшей читаемости */
   margin-bottom: 15px; /* Отступ снизу */
   text-align: center; /* Выравнивание по центру */

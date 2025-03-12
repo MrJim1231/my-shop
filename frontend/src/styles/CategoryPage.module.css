@@ -20,7 +20,7 @@
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 карточки на больших экранах */
+  grid-template-columns: repeat(4, 1fr); /* 3 карточки на больших экранах */
   gap: 20px;
   min-height: 400px; /* Фиксируем пространство для предотвращения скачков */
 }
@@ -60,13 +60,14 @@
 .productName {
   padding-top: 10px;
   font-size: 1.2rem; /* Размер шрифта */
-  font-weight: bold; /* Жирный шрифт */
+  /* font-weight: bold;  */
   color: #333; /* Цвет текста, контрастный для лучшей читаемости */
   margin-bottom: 10px; /* Отступ снизу */
 }
 
 .productPrice {
   font-weight: bold;
+  color: #d9534f;
   margin-top: 10px; /* Больше пространства между ценой и названием */
 }
 
