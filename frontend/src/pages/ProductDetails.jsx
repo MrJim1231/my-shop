@@ -87,7 +87,7 @@ function ProductDetails() {
 
     // Используем функцию addToCart из контекста для добавления товара в корзину
     addToCart(selectedProduct)
-    alert('Товар добавлен в корзину')
+    // alert('Товар добавлен в корзину')
   }
 
   if (loading) return <div>Загрузка...</div>

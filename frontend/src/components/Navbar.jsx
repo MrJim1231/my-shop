@@ -1,21 +1,16 @@
 import React from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useCart } from '../context/CartContext' // Подключаем контекст корзины
 import styles from '../styles/Navbar.module.css'
 
 function Navbar() {
   const { isAuthenticated, logout } = useAuth()
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    logout()
-    navigate('/auth')
-  }
+  const { getTotalItems } = useCart() // Получаем общее количество товаров в корзине
 
   return (
     <div className={styles.navbarContainer}>
       <nav className={styles.navbar}>
-        {/* Логотип слева */}
         <div className={styles.logo}>
           <NavLink to="/" className={styles.logoLink}>
             Sleep & Dream
@@ -33,9 +28,10 @@ function Navbar() {
               Категории
             </NavLink>
           </li>
-          <li>
+          <li className={styles.cartLink}>
             <NavLink to="/cart" className={({ isActive }) => (isActive ? styles.active : '')}>
               Корзина
+              {getTotalItems() > 0 && <span className={styles.badge}>{getTotalItems()}</span>}
             </NavLink>
           </li>
           {isAuthenticated ? (
@@ -46,7 +42,7 @@ function Navbar() {
                 </NavLink>
               </li>
               <li>
-                <button onClick={handleLogout} className={styles.button}>
+                <button onClick={logout} className={styles.button}>
                   Выйти
                 </button>
               </li>

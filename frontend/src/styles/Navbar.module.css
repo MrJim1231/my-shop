@@ -117,3 +117,24 @@
   display: inline-flex; /* Используем inline-flex для выравнивания внутри li */
   align-items: center; /* Выравнивание элементов по вертикали */
 }
+
+/* Бейдж */
+.cartLink {
+  position: relative;
+}
+
+.badge {
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+}
