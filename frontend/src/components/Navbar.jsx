@@ -49,9 +49,9 @@ function Navbar() {
                 </NavLink>
               </li>
               <li>
-                <button onClick={logout} className={styles.button}>
+                <NavLink to="/" onClick={logout} className={styles.navLink}>
                   Выйти
-                </button>
+                </NavLink>
               </li>
             </>
           ) : (
@@ -95,15 +95,16 @@ function Navbar() {
                 </NavLink>
               </li>
               <li>
-                <button
+                <NavLink
+                  to="/"
                   onClick={() => {
                     logout()
                     toggleMenu()
                   }}
-                  className={styles.button}
+                  className={styles.navLink}
                 >
                   Выйти
-                </button>
+                </NavLink>
               </li>
             </>
           ) : (
