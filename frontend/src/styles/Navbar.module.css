@@ -1,16 +1,24 @@
 /* Стили для навигации */
+.navbarContainer {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #333; /* Или другой цвет, совпадающий с дизайном */
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
 .navbar {
   background-color: #333;
   padding: 5px 20px; /* Уменьшена высота навбара */
   display: flex;
   justify-content: space-between; /* Лого слева, меню справа */
   align-items: center;
-  position: fixed; /* Фиксируем навбар */
-  top: 0; /* Располагаем его вверху */
-  left: 0;
   width: 100%; /* Растягиваем на всю ширину */
-  z-index: 1000; /* Чтобы навбар был поверх других элементов */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень для навбара */
+  max-width: 1200px; /* Ограничиваем сам nav */
 }
 
 /* Стили для логотипа */

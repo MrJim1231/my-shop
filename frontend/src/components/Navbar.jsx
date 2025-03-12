@@ -13,52 +13,54 @@ function Navbar() {
   }
 
   return (
-    <nav className={styles.navbar}>
-      {/* Логотип слева */}
-      <div className={styles.logo}>
-        <NavLink to="/" className={styles.logoLink}>
-          Sleep & Dream
-        </NavLink>
-      </div>
+    <div className={styles.navbarContainer}>
+      <nav className={styles.navbar}>
+        {/* Логотип слева */}
+        <div className={styles.logo}>
+          <NavLink to="/" className={styles.logoLink}>
+            Sleep & Dream
+          </NavLink>
+        </div>
 
-      <ul className={styles.navLinks}>
-        <li>
-          <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : '')}>
-            Главная
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/categories" className={({ isActive }) => (isActive ? styles.active : '')}>
-            Категории
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/cart" className={({ isActive }) => (isActive ? styles.active : '')}>
-            Корзина
-          </NavLink>
-        </li>
-        {isAuthenticated ? (
-          <>
-            <li>
-              <NavLink to="/orders" className={({ isActive }) => (isActive ? styles.active : '')}>
-                Заказы
-              </NavLink>
-            </li>
-            <li>
-              <button onClick={handleLogout} className={styles.button}>
-                Выйти
-              </button>
-            </li>
-          </>
-        ) : (
+        <ul className={styles.navLinks}>
           <li>
-            <NavLink to="/auth" className={({ isActive }) => (isActive ? styles.active : '')}>
-              Личный кабинет
+            <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : '')}>
+              Главная
             </NavLink>
           </li>
-        )}
-      </ul>
-    </nav>
+          <li>
+            <NavLink to="/categories" className={({ isActive }) => (isActive ? styles.active : '')}>
+              Категории
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/cart" className={({ isActive }) => (isActive ? styles.active : '')}>
+              Корзина
+            </NavLink>
+          </li>
+          {isAuthenticated ? (
+            <>
+              <li>
+                <NavLink to="/orders" className={({ isActive }) => (isActive ? styles.active : '')}>
+                  Заказы
+                </NavLink>
+              </li>
+              <li>
+                <button onClick={handleLogout} className={styles.button}>
+                  Выйти
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <NavLink to="/auth" className={({ isActive }) => (isActive ? styles.active : '')}>
+                Личный кабинет
+              </NavLink>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </div>
   )
 }
 
