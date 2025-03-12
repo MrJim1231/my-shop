@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useCart } from '../context/CartContext' // Подключаем контекст корзины
+import { useNavigate } from 'react-router-dom' // Подключаем useNavigate
 import styles from '../styles/OrderForm.module.css'
 import { API_URL } from '../api/config' // URL для API
 
@@ -13,6 +14,7 @@ function OrderForm({ onClose }) {
   })
   const [loading, setLoading] = useState(false) // Для состояния загрузки
   const [error, setError] = useState(null) // Для отображения ошибки
+  const navigate = useNavigate() // Хук для навигации
 
   // Обработчик изменения значений в форме
   const handleChange = (e) => {
@@ -59,9 +61,16 @@ function OrderForm({ onClose }) {
       })
 
       if (response.ok) {
-        alert('Заказ успешно оформлен!')
+        // alert('Заказ успешно оформлен!')
         clearCart()
         onClose()
+
+        // После успешного оформления заказа проверяем, зарегистрирован ли пользователь
+        if (userId) {
+          navigate('/orders') // Перенаправляем на страницу заказов, если пользователь зарегистрирован
+        } else {
+          navigate('/') // Перенаправляем на главную, если пользователь не зарегистрирован
+        }
       } else {
         throw new Error('Ошибка при оформлении заказа')
       }
