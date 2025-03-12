@@ -87,16 +87,19 @@ function Navbar() {
               Главная
             </NavLink>
           </li>
+          <hr />
           <li>
             <NavLink to="/categories" onClick={toggleMenu}>
               Категории
             </NavLink>
           </li>
+          <hr />
           <li>
             <NavLink to="/cart" onClick={toggleMenu}>
-              Корзина ({getTotalItems()})
+              Корзина
             </NavLink>
           </li>
+          <hr />
           {isAuthenticated ? (
             <>
               <li>
@@ -104,6 +107,7 @@ function Navbar() {
                   Заказы
                 </NavLink>
               </li>
+              <hr />
               <li>
                 <NavLink
                   to="/"
