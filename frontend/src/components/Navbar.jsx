@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
-import { FiMenu, FiX } from 'react-icons/fi'
+import { FiMenu, FiX, FiShoppingCart } from 'react-icons/fi'
 import styles from '../styles/Navbar.module.css'
 
 function Navbar() {
@@ -22,6 +22,16 @@ function Navbar() {
             Sleep & Dream
           </NavLink>
         </div>
+
+        {/* Мобильная корзина рядом с логотипом */}
+        {getTotalItems() > 0 && (
+          <div className={`${styles.cartIcon} ${isMenuOpen ? styles.hidden : ''}`}>
+            <NavLink to="/cart">
+              <FiShoppingCart />
+              <span className={styles.badge}>{getTotalItems()}</span>
+            </NavLink>
+          </div>
+        )}
 
         {/* Десктоп-меню (скрывается на мобильных) */}
         <ul className={styles.navLinks}>

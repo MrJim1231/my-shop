@@ -118,6 +118,36 @@
   right: -10px;
 }
 
+/* Иконка корзины рядом с логотипом */
+.cartIcon {
+  display: none;
+  position: relative; /* Добавим position для корректного позиционирования бейджа */
+}
+
+.cartIcon a {
+  font-size: 1.5rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cartIcon .badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+}
+
 /* Стили для бургер-меню */
 .burgerIcon {
   display: none;
@@ -177,9 +207,18 @@
 
   .navbar .burgerIcon {
     display: block; /* Показываем иконку бургера */
+    padding-top: 4px;
   }
 
   .navbar .navLinks.open {
     display: flex; /* Показываем меню, когда оно открыто */
+  }
+
+  .cartIcon {
+    display: block; /* Показываем иконку корзины рядом с логотипом */
+  }
+
+  .cartLink {
+    display: none; /* Скрываем ссылку на корзину в обычном меню */
   }
 }
