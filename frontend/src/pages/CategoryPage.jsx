@@ -8,11 +8,30 @@ import useViewedProducts from '../hooks/useViewedProducts' // импорт ху�
 
 function CategoryPage() {
   const { categoryId } = useParams()
+  const [categoryName, setCategoryName] = useState('Загрузка...') // Имя категории
   const [products, setProducts] = useState([]) // Все товары для категории
   const [loading, setLoading] = useState(true)
 
   // Используем кастомный хук для работы с просмотренными товарами
   const { viewedProducts, addViewedProduct } = useViewedProducts()
+
+  // Загружаем данные о категории
+  useEffect(() => {
+    axios
+      .get(`${API_URL}get_category_by_id.php?category_id=${categoryId}`) // Исправленный запрос
+      .then((response) => {
+        if (response.data.name) {
+          setCategoryName(response.data.name) // Сохраняем имя категории
+        } else {
+          console.warn('Категория не найдена, ID:', categoryId)
+          setCategoryName('Категория не найдена')
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка при получении данных о категории:', error)
+        setCategoryName('Ошибка загрузки категории')
+      })
+  }, [categoryId])
 
   useEffect(() => {
     // Загружаем данные о товарах для конкретной категории
@@ -42,7 +61,7 @@ function CategoryPage() {
           Категории товаров
         </Link>
         <span className={styles.separator}>/</span>
-        <span className={styles.breadcrumbText}>Товары в категории {categoryId}</span>
+        <span className={styles.breadcrumbText}>Товары в категории {categoryName}</span>
       </nav>
 
       <h1 className={styles.title}>Товары в категории</h1>
