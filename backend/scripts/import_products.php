@@ -60,7 +60,6 @@ foreach ($xml->shop->offers->offer as $offer) {
     $name = $mysqli->real_escape_string($offer->name);
     $description = $mysqli->real_escape_string($offer->description);
     $price = (float)$offer->price;
-    $image = $mysqli->real_escape_string($offer->picture);
     $availability = ($offer['available'] == 'true') ? 1 : 0;
     $quantity_in_stock = isset($offer->quantity_in_stock) ? (int)$offer->quantity_in_stock : 0;
     $weight = isset($offer->weight) ? (float)$offer->weight : 0.0;
@@ -80,9 +79,18 @@ foreach ($xml->shop->offers->offer as $offer) {
 
     if ($result->num_rows == 0) {
         // Вставляем товар в базу
-        $mysqli->query("INSERT INTO products (id, group_id, category_id, name, description, price, image, size, availability, quantity_in_stock, weight) 
-                        VALUES ('$product_id', " . ($group_id ? "'$group_id'" : "NULL") . ", '$category_id', '$name', '$description', $price, '$image', '$size', $availability, $quantity_in_stock, $weight)");
+        $mysqli->query("INSERT INTO products (id, group_id, category_id, name, description, price, size, availability, quantity_in_stock, weight) 
+                        VALUES ('$product_id', " . ($group_id ? "'$group_id'" : "NULL") . ", '$category_id', '$name', '$description', $price, '$size', $availability, $quantity_in_stock, $weight)");
         $totalProducts++;
+    }
+
+    // Вставка изображений
+    if (isset($offer->picture)) {
+        // Вставляем все картинки для товара
+        foreach ($offer->picture as $image) {
+            $imageUrl = $mysqli->real_escape_string((string)$image);
+            $mysqli->query("INSERT INTO product_images (product_id, image) VALUES ('$product_id', '$imageUrl')");
+        }
     }
 }
 
