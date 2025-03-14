@@ -103,67 +103,71 @@ function ProductDetails() {
 
   return (
     <div className={styles.productDetails}>
-      <div className={styles.productInfo}>
-        {/* Маленькие картинки слева */}
-        {product?.images && product.images.length > 1 && (
-          <div className={styles.thumbnailContainer}>
-            {product.images.map((image, index) => (
-              <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.thumbnailImage} onClick={() => setPreviousImage(image)} />
-            ))}
+      <div className={styles.container}>
+        <div className={styles.productInfo}>
+          {/* Маленькие картинки слева */}
+          {product?.images && product.images.length > 1 && (
+            <div className={styles.thumbnailContainer}>
+              {product.images.map((image, index) => (
+                <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.thumbnailImage} onClick={() => setPreviousImage(image)} />
+              ))}
+            </div>
+          )}
+
+          {/* Основное изображение справа */}
+          <div className={styles.mainImage}>
+            {previousImage ? <img src={previousImage} alt="Main Product Image" className={styles.mainImageDisplay} /> : <div className={styles.noImage}>Изображения отсутствуют</div>}
           </div>
-        )}
+        </div>
 
-        {/* Основное изображение справа */}
-        <div className={styles.mainImage}>
-          {previousImage ? <img src={previousImage} alt="Main Product Image" className={styles.mainImageDisplay} /> : <div className={styles.noImage}>Изображения отсутствуют</div>}
+        <div className={styles.section}>
+          <h1>{selectedProduct?.name}</h1>
+          <p>Цена: {selectedProduct?.price} грн</p>
+          <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
+          <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
+
+          {/* Выбор размера комплекта */}
+          <div className={styles.sizeTypeSection}>
+            <h3>Выбор размера комплекта:</h3>
+            <div className={styles.sizeTypeButtons}>
+              {['1,5сп', '2сп', 'Євро', 'Сімейний'].map((size) => {
+                const isAvailable = Object.values(product.sizes)
+                  .flat()
+                  .some((item) => item.size.includes(size) && item.availability && item.quantity_in_stock > 0)
+
+                return (
+                  <button key={size} className={selectedSetSize === size ? styles.active : ''} onClick={() => handleSetSizeChange(size)} disabled={!isAvailable}>
+                    {size}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Выбор размера наволочки */}
+          <div className={styles.sizeTypeSection}>
+            <h3>Выбор размера наволочки подушки:</h3>
+            <div className={styles.sizeTypeButtons}>
+              {['50*70', '70*70'].map((size) => {
+                const isAvailable = Object.values(product.sizes)
+                  .flat()
+                  .some((item) => item.size.includes(size) && item.availability && item.quantity_in_stock > 0)
+
+                return (
+                  <button key={size} className={selectedSizeType === size ? styles.active : ''} onClick={() => handleSizeTypeChange(size)} disabled={!isAvailable}>
+                    {size}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Кнопка "Добавить в корзину" */}
+          <button onClick={handleAddToCart} className={styles.addToCartButton} disabled={!selectedProduct || !selectedProduct.availability || selectedProduct.quantity_in_stock <= 0}>
+            Добавить в корзину
+          </button>
         </div>
       </div>
-
-      <h1>{selectedProduct?.name}</h1>
-      <p>Цена: {selectedProduct?.price} грн</p>
-      <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
-      <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
-
-      {/* Выбор размера комплекта */}
-      <div className={styles.sizeTypeSection}>
-        <h3>Выбор размера комплекта:</h3>
-        <div className={styles.sizeTypeButtons}>
-          {['1,5сп', '2сп', 'Євро', 'Сімейний'].map((size) => {
-            const isAvailable = Object.values(product.sizes)
-              .flat()
-              .some((item) => item.size.includes(size) && item.availability && item.quantity_in_stock > 0)
-
-            return (
-              <button key={size} className={selectedSetSize === size ? styles.active : ''} onClick={() => handleSetSizeChange(size)} disabled={!isAvailable}>
-                {size}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Выбор размера наволочки */}
-      <div className={styles.sizeTypeSection}>
-        <h3>Выбор размера наволочки подушки:</h3>
-        <div className={styles.sizeTypeButtons}>
-          {['50*70', '70*70'].map((size) => {
-            const isAvailable = Object.values(product.sizes)
-              .flat()
-              .some((item) => item.size.includes(size) && item.availability && item.quantity_in_stock > 0)
-
-            return (
-              <button key={size} className={selectedSizeType === size ? styles.active : ''} onClick={() => handleSizeTypeChange(size)} disabled={!isAvailable}>
-                {size}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Кнопка "Добавить в корзину" */}
-      <button onClick={handleAddToCart} className={styles.addToCartButton} disabled={!selectedProduct || !selectedProduct.availability || selectedProduct.quantity_in_stock <= 0}>
-        Добавить в корзину
-      </button>
     </div>
   )
 }
