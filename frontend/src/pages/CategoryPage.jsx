@@ -47,22 +47,19 @@ function CategoryPage() {
             products.map((product, index) => (
               <div className={styles.productItem} key={product.id}>
                 <Link to={`/product/${product.id}`} className={styles.productLink}>
-                  {/* Отображаем все изображения товара */}
+                  {/* Отображаем только первую картинку товара */}
                   <div className={styles.productImages}>
                     {product.images && product.images.length > 0 ? (
-                      product.images.map((image, imgIndex) => (
-                        <img
-                          key={imgIndex}
-                          src={image}
-                          alt={product.name}
-                          className={styles.productImage}
-                          width="250"
-                          height="250"
-                          decoding="async"
-                          fetchpriority={imgIndex === 0 ? 'high' : 'auto'} // Приоритет загрузки первого изображения
-                          loading={imgIndex === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу, другие — лениво
-                        />
-                      ))
+                      <img
+                        src={product.images[0]} // Показываем только первое изображение
+                        alt={product.name}
+                        className={styles.productImage}
+                        width="250"
+                        height="250"
+                        decoding="async"
+                        fetchpriority={index === 0 ? 'high' : 'auto'} // Приоритет загрузки первого изображения
+                        loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу, другие — лениво
+                      />
                     ) : (
                       <p>Изображение недоступно</p>
                     )}
