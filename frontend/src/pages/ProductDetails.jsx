@@ -94,21 +94,26 @@ function ProductDetails() {
 
   return (
     <div className={styles.productDetails}>
-      {/* Отображаем все изображения товара из массива images */}
-      {product?.images && product.images.length > 0 ? (
-        <div className={styles.imageGallery}>
-          {product.images.map((image, index) => (
-            <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.productImage} />
-          ))}
-        </div>
-      ) : (
-        <div className={styles.noImage}>Изображения отсутствуют</div>
-      )}
+      {/* Отображаем главное изображение */}
+      <div className={styles.mainImage}>
+        {product?.images && product.images.length > 0 ? (
+          <img src={previousImage || product.images[0]} alt="Main Product Image" className={styles.mainImageDisplay} />
+        ) : (
+          <div className={styles.noImage}>Изображения отсутствуют</div>
+        )}
+      </div>
 
       <h1>{selectedProduct?.name}</h1>
       <p>Цена: {selectedProduct?.price} грн</p>
       <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
       <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
+
+      {/* Галерея миниатюр */}
+      <div className={styles.imageGallery}>
+        {product?.images.map((image, index) => (
+          <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.thumbnailImage} onClick={() => setPreviousImage(image)} />
+        ))}
+      </div>
 
       {/* Выбор размера комплекта */}
       <div className={styles.sizeTypeSection}>

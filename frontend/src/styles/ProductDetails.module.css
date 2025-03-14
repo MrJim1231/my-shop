@@ -2,24 +2,77 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px;
+  padding: 20px;
 }
 
-.productInfo {
+.mainImage {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
-  max-width: 1200px;
-  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.productImage {
-  max-width: 300px;
+.mainImageDisplay {
+  width: 100%;
+  max-width: 600px;
   height: auto;
   border-radius: 8px;
+  object-fit: cover;
 }
 
-.productDescription {
-  max-width: 600px;
+.imageGallery {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.thumbnailImage {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  transition: border 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.thumbnailImage:hover {
+  border: 2px solid #333;
+}
+
+.noImage {
+  font-size: 16px;
+  color: #999;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.sizeTypeSection {
+  margin-top: 30px;
+}
+
+.sizeTypeButtons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.sizeTypeButtons button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.sizeTypeButtons button.active {
+  background-color: #333;
+  color: white;
 }
 
 .addToCartButton {
@@ -30,49 +83,27 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  margin-top: 20px;
 }
 
 .addToCartButton:hover {
   background-color: #218838;
 }
 
-.sizeTypeButtons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 20px 0;
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 24px;
 }
 
-.sizeTypeButtons button {
-  padding: 10px 20px;
-  border: 1px solid #ccc;
-  background-color: #f4f4f4;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  border-radius: 4px;
+p {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
 }
 
-.sizeTypeButtons button.active {
-  background-color: #333;
-  color: white;
-}
-
-.sizeButtons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.sizeButtons button {
-  padding: 10px 20px;
-  border: 1px solid #ccc;
-  background-color: #f4f4f4;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.sizeButtons button.active {
-  background-color: #333;
-  color: white;
+.sizeTypeSection h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center;
 }
