@@ -127,28 +127,27 @@ function ProductDetails() {
   if (error) return <div>{error}</div>
 
   return (
-    <div className={styles.productDetails}>
-      <div className={styles.container}>
-        <nav className={styles.breadcrumb}>
-          <Link to="/" className={styles.breadcrumbLink}>
-            Главная
-          </Link>
-          <span className={styles.separator}>/</span>
-          <Link to="/categories" className={styles.breadcrumbLink}>
-            Категории
-          </Link>
-          <span className={styles.separator}>/</span>
-          {categoryId && (
-            <>
-              <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
-                {categoryName || 'Категория'}
-              </Link>
-              <span className={styles.separator}>/</span>
-            </>
-          )}
-          <span className={styles.breadcrumbText}>{selectedProduct?.name || product?.name || 'Товар'}</span>
-        </nav>
-
+    <div className={styles.container}>
+      <nav className={styles.breadcrumb}>
+        <Link to="/" className={styles.breadcrumbLink}>
+          Главная
+        </Link>
+        <span className={styles.separator}>/</span>
+        <Link to="/categories" className={styles.breadcrumbLink}>
+          Категории
+        </Link>
+        <span className={styles.separator}>/</span>
+        {categoryId && (
+          <>
+            <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
+              {categoryName || 'Категория'}
+            </Link>
+            <span className={styles.separator}>/</span>
+          </>
+        )}
+        <span className={styles.breadcrumbText}>{selectedProduct?.name || product?.name || 'Товар'}</span>
+      </nav>
+      <div className={styles.productDetails}>
         <div className={styles.productInfo}>
           {product?.images && product.images.length > 1 && (
             <div className={styles.thumbnailContainer}>
