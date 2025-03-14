@@ -18,14 +18,17 @@ function ProductDetails() {
 
   useEffect(() => {
     if (id) {
+      // console.log(`Загрузка товара с ID: ${id}`)
       axios
         .get(`${API_URL}product-details.php?id=${id}`)
         .then((response) => {
+          // console.log('Товар успешно загружен:', response.data)
           setProduct(response.data)
           initializeSelection(response.data)
           setLoading(false)
         })
         .catch((error) => {
+          console.error('Ошибка при загрузке товара:', error)
           setError('Ошибка при загрузке товара')
           setLoading(false)
         })
@@ -84,7 +87,15 @@ function ProductDetails() {
 
   const handleAddToCart = () => {
     if (!selectedProduct) return
-    addToCart(selectedProduct)
+
+    // Добавляем изображение из данных товара
+    const productToAdd = {
+      ...selectedProduct,
+      image: previousImage, // Добавляем изображение в объект товара
+    }
+
+    // console.log('Добавление товара в корзину:', productToAdd)
+    addToCart(productToAdd)
   }
 
   if (loading) return <div>Загрузка...</div>
