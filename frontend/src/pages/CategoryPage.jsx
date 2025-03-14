@@ -47,17 +47,27 @@ function CategoryPage() {
             products.map((product, index) => (
               <div className={styles.productItem} key={product.id}>
                 <Link to={`/product/${product.id}`} className={styles.productLink}>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className={styles.productImage}
-                    width="250"
-                    height="250"
-                    decoding="async"
-                    fetchpriority={index === 0 ? 'high' : 'auto'} // Приоритет загрузки первого изображения
-                    loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу, другие — лениво
-                    // style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
-                  />
+                  {/* Отображаем все изображения товара */}
+                  <div className={styles.productImages}>
+                    {product.images && product.images.length > 0 ? (
+                      product.images.map((image, imgIndex) => (
+                        <img
+                          key={imgIndex}
+                          src={image}
+                          alt={product.name}
+                          className={styles.productImage}
+                          width="250"
+                          height="250"
+                          decoding="async"
+                          fetchpriority={imgIndex === 0 ? 'high' : 'auto'} // Приоритет загрузки первого изображения
+                          loading={imgIndex === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу, другие — лениво
+                        />
+                      ))
+                    ) : (
+                      <p>Изображение недоступно</p>
+                    )}
+                  </div>
+
                   <h2 className={styles.productName}>{product.name}</h2>
                   <p className={styles.productPrice}>Цена: {product.price} грн</p>
                 </Link>

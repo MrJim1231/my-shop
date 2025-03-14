@@ -50,7 +50,25 @@ if ($category_id > 0) {
     while ($row = $result->fetch_assoc()) {
         // Фильтруем товары, исключая те, у которых размер в списке исключенных
         if (!in_array($row['size'], $exclude_sizes)) {
-            $products[] = $row; // Добавляем товар в список, если его размер не из исключенного списка
+            // Получаем изображения для товара
+            $product_id = $row['id'];
+            $images_query = "SELECT image FROM product_images WHERE product_id = ?";
+            $images_stmt = $conn->prepare($images_query);
+            $images_stmt->bind_param('s', $product_id);
+            $images_stmt->execute();
+            $images_result = $images_stmt->get_result();
+
+            // Собираем все изображения для товара в массив
+            $images = [];
+            while ($image_row = $images_result->fetch_assoc()) {
+                $images[] = $image_row['image'];
+            }
+
+            // Добавляем изображения к товару
+            $row['images'] = $images;
+
+            // Добавляем товар в список
+            $products[] = $row;
         }
     }
 
