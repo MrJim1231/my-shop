@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useCart } from '../context/CartContext'
 import styles from '../styles/ProductDetails.module.css'
 import { API_URL } from '../api/config'
+import ViewedProducts from '../components/ViewedProducts'
 
 function ProductDetails() {
   const { id } = useParams()
@@ -17,7 +18,15 @@ function ProductDetails() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [previousImage, setPreviousImage] = useState(null)
+  const [viewedProducts, setViewedProducts] = useState([])
 
+  // Загружаем просмотренные товары из localStorage
+  useEffect(() => {
+    const viewedItems = JSON.parse(localStorage.getItem('viewedProducts')) || []
+    setViewedProducts(viewedItems)
+  }, [])
+
+  // Загрузка данных о товаре
   useEffect(() => {
     if (id) {
       axios
@@ -201,6 +210,7 @@ function ProductDetails() {
           </button>
         </div>
       </div>
+      <ViewedProducts viewedProducts={viewedProducts} />
     </div>
   )
 }
