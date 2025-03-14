@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 import { useCart } from '../context/CartContext'
 import styles from '../styles/ProductDetails.module.css'
@@ -9,22 +9,27 @@ function ProductDetails() {
   const { id } = useParams()
   const { addToCart } = useCart()
   const [product, setProduct] = useState(null)
+  const [categoryName, setCategoryName] = useState('')
+  const [categoryId, setCategoryId] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
-  const [selectedSizeType, setSelectedSizeType] = useState(null) // Размер наволочки
-  const [selectedSetSize, setSelectedSetSize] = useState(null) // Размер комплекта
+  const [selectedSizeType, setSelectedSizeType] = useState(null)
+  const [selectedSetSize, setSelectedSetSize] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [previousImage, setPreviousImage] = useState(null) // Состояние для хранения изображения
+  const [previousImage, setPreviousImage] = useState(null)
 
   useEffect(() => {
     if (id) {
-      // console.log(`Загрузка товара с ID: ${id}`)
       axios
         .get(`${API_URL}product-details.php?id=${id}`)
         .then((response) => {
-          // console.log('Товар успешно загружен:', response.data)
           setProduct(response.data)
           initializeSelection(response.data)
+
+          if (response.data.category_id) {
+            fetchCategory(response.data.category_id)
+          }
+
           setLoading(false)
         })
         .catch((error) => {
@@ -35,7 +40,19 @@ function ProductDetails() {
     }
   }, [id])
 
-  // Функция для установки первого доступного комплекта и наволочки
+  const fetchCategory = (catId) => {
+    axios
+      .get(`${API_URL}get_category_by_id.php?category_id=${catId}`)
+      .then((res) => {
+        setCategoryName(res.data.name)
+        setCategoryId(catId)
+      })
+      .catch(() => {
+        setCategoryName('Неизвестная категория')
+        setCategoryId(null)
+      })
+  }
+
   const initializeSelection = (productData) => {
     if (!productData.sizes) return
 
@@ -58,9 +75,11 @@ function ProductDetails() {
       .find((item) => item.size.includes(availableSetSize) && item.size.includes(availableSizeType) && item.availability && item.quantity_in_stock > 0)
 
     setSelectedProduct(firstAvailableProduct || null)
-
-    // Устанавливаем первое изображение из массива
     setPreviousImage(productData?.images?.[0] || null)
+
+    if (firstAvailableProduct?.category_id && firstAvailableProduct.category_id !== categoryId) {
+      fetchCategory(firstAvailableProduct.category_id)
+    }
   }
 
   const handleSetSizeChange = (setSize) => {
@@ -72,6 +91,10 @@ function ProductDetails() {
 
     setSelectedProduct(availableProduct || null)
     setPreviousImage(availableProduct?.image || previousImage)
+
+    if (availableProduct?.category_id && availableProduct.category_id !== categoryId) {
+      fetchCategory(availableProduct.category_id)
+    }
   }
 
   const handleSizeTypeChange = (sizeType) => {
@@ -83,18 +106,20 @@ function ProductDetails() {
 
     setSelectedProduct(availableProduct || null)
     setPreviousImage(availableProduct?.image || previousImage)
+
+    if (availableProduct?.category_id && availableProduct.category_id !== categoryId) {
+      fetchCategory(availableProduct.category_id)
+    }
   }
 
   const handleAddToCart = () => {
     if (!selectedProduct) return
 
-    // Добавляем изображение из данных товара
     const productToAdd = {
       ...selectedProduct,
-      image: previousImage, // Добавляем изображение в объект товара
+      image: previousImage,
     }
 
-    // console.log('Добавление товара в корзину:', productToAdd)
     addToCart(productToAdd)
   }
 
@@ -104,8 +129,27 @@ function ProductDetails() {
   return (
     <div className={styles.productDetails}>
       <div className={styles.container}>
+        <nav className={styles.breadcrumb}>
+          <Link to="/" className={styles.breadcrumbLink}>
+            Главная
+          </Link>
+          <span className={styles.separator}>/</span>
+          <Link to="/categories" className={styles.breadcrumbLink}>
+            Категории
+          </Link>
+          <span className={styles.separator}>/</span>
+          {categoryId && (
+            <>
+              <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
+                {categoryName || 'Категория'}
+              </Link>
+              <span className={styles.separator}>/</span>
+            </>
+          )}
+          <span className={styles.breadcrumbText}>{selectedProduct?.name || product?.name || 'Товар'}</span>
+        </nav>
+
         <div className={styles.productInfo}>
-          {/* Маленькие картинки слева */}
           {product?.images && product.images.length > 1 && (
             <div className={styles.thumbnailContainer}>
               {product.images.map((image, index) => (
@@ -114,7 +158,6 @@ function ProductDetails() {
             </div>
           )}
 
-          {/* Основное изображение справа */}
           <div className={styles.mainImage}>
             {previousImage ? <img src={previousImage} alt="Main Product Image" className={styles.mainImageDisplay} /> : <div className={styles.noImage}>Изображения отсутствуют</div>}
           </div>
@@ -126,7 +169,6 @@ function ProductDetails() {
           <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
           <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
 
-          {/* Выбор размера комплекта */}
           <div className={styles.sizeTypeSection}>
             <h3>Выбор размера комплекта:</h3>
             <div className={styles.sizeTypeButtons}>
@@ -144,25 +186,17 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* Выбор размера наволочки */}
           <div className={styles.sizeTypeSection}>
             <h3>Выбор размера наволочки подушки:</h3>
             <div className={styles.sizeTypeButtons}>
-              {['50*70', '70*70'].map((size) => {
-                const isAvailable = Object.values(product.sizes)
-                  .flat()
-                  .some((item) => item.size.includes(size) && item.availability && item.quantity_in_stock > 0)
-
-                return (
-                  <button key={size} className={selectedSizeType === size ? styles.active : ''} onClick={() => handleSizeTypeChange(size)} disabled={!isAvailable}>
-                    {size}
-                  </button>
-                )
-              })}
+              {['50*70', '70*70'].map((size) => (
+                <button key={size} className={selectedSizeType === size ? styles.active : ''} onClick={() => handleSizeTypeChange(size)}>
+                  {size}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Кнопка "Добавить в корзину" */}
           <button onClick={handleAddToCart} className={styles.addToCartButton} disabled={!selectedProduct || !selectedProduct.availability || selectedProduct.quantity_in_stock <= 0}>
             Добавить в корзину
           </button>

@@ -40,7 +40,7 @@ if ($result->num_rows > 0) {
     }
 
     // Получаем все товары с таким же именем и parent_id, включая group_id и image
-    $sizes_query = "SELECT products.id, products.name, products.size, products.price, products.availability, products.quantity_in_stock, products.group_id
+    $sizes_query = "SELECT products.id, products.name, products.size, products.price, products.availability, products.quantity_in_stock, products.group_id, products.category_id
                     FROM products 
                     JOIN categories ON products.category_id = categories.id 
                     WHERE products.name = ? 
@@ -77,10 +77,12 @@ if ($result->num_rows > 0) {
         $_SESSION['cart'] = $cart;
         echo json_encode(["message" => "Product added to cart"]);
     } else {
-        // Возвращаем товар, его размеры, изображения и другие данные
+        // Добавляем категорию и размеры
         $product['sizes'] = $sizes;
         $product['images'] = $images;  // Добавляем изображения
         $product['name'] = $product_name;  // Добавляем название товара
+        $product['category_id'] = $product['category_id'];  // Добавляем ID категории товара
+        $product['category_name'] = $product['category_name'];  // Добавляем название категории
         echo json_encode($product, JSON_UNESCAPED_UNICODE);
     }
 } else {
