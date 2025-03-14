@@ -119,25 +119,20 @@
 
 /* Стили для цен в ProductDetails.module.css */
 
-/* Старая цена */
 .oldPrice {
-  text-decoration: line-through; /* Перечеркнутый текст */
-  color: #999; /* Цвет для старой цены (серый) */
-  font-size: 1.2em; /* Размер шрифта для старой цены */
-  margin-right: 10px; /* Отступ между старой и новой ценой */
+  color: #999;
+  font-size: 16px;
+  text-decoration: line-through;
+  padding-right: 6px;
 }
 
-/* Новая цена */
 .newPrice {
-  color: #e74c3c; /* Цвет для новой цены (красный, чтобы привлечь внимание) */
-  font-size: 1.4em; /* Размер шрифта для новой цены */
-  font-weight: bold; /* Жирный шрифт для выделения новой цены */
+  color: #e60000;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-/* Мобильные стили для цен */
-@media (max-width: 768px) {
-  .oldPrice,
-  .newPrice {
-    font-size: 1em; /* Меньший размер шрифта на мобильных устройствах */
-  }
+.noDiscount {
+  text-decoration: none; /* Убираем зачеркнутый текст */
+  /* font-weight: bold; */
 }

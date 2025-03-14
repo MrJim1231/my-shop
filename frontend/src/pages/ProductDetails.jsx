@@ -203,9 +203,17 @@ function ProductDetails() {
           <h1>{selectedProduct?.name}</h1>
           {/* Показ старой и новой цены */}
           <p>
-            Цена: <span className={styles.oldPrice}>{selectedProduct?.price} грн</span>
-            <span className={styles.newPrice}>{applyDiscount(selectedProduct?.price)} грн</span>
+            Цена:{' '}
+            {applyDiscount(selectedProduct?.price) !== selectedProduct?.price ? (
+              <>
+                <span className={styles.oldPrice}>{selectedProduct?.price} грн</span>
+                <span className={styles.newPrice}>{applyDiscount(selectedProduct?.price)} грн</span>
+              </>
+            ) : (
+              <span className={styles.noDiscount}>{selectedProduct?.price} грн</span>
+            )}
           </p>
+
           <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
           <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
 
