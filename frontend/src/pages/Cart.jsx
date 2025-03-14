@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom' // Для ссылок в хлебных крошках
 import { useCart } from '../context/CartContext'
 import cartStyles from '../styles/Cart.module.css'
 import OrderForm from '../components/OrderForm'
@@ -8,7 +9,23 @@ function Cart() {
   const [isOrdering, setIsOrdering] = useState(false)
 
   return (
-    <div className={cartStyles.cart}>
+    <div className={cartStyles.container}>
+      {/* Хлебные крошки */}
+      <nav className={cartStyles.breadcrumb}>
+        <Link to="/" className={cartStyles.breadcrumbLink}>
+          Главная
+        </Link>
+        <span className={cartStyles.separator}>/</span>
+
+        {/* Ссылка на категорию товаров */}
+        <Link to="/categories" className={cartStyles.breadcrumbLink}>
+          Категории
+        </Link>
+        <span className={cartStyles.separator}>/</span>
+
+        <span className={cartStyles.breadcrumbText}>Корзина</span>
+      </nav>
+
       <h1>Корзина</h1>
       {cart.length === 0 ? (
         <p>Корзина пуста</p>

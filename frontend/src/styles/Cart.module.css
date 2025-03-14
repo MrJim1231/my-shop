@@ -1,12 +1,13 @@
 /* cart.module.css */
 
-.cart {
-  max-width: 1200px;
+.container {
+  /* max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+  padding: 20px;
 }
 
 .cart h1 {
@@ -125,5 +126,23 @@
 .cartSummary p {
   font-size: 1.3rem;
   font-weight: bold;
+  color: #333;
+}
+
+.breadcrumb {
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.breadcrumbLink {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.separator {
+  margin: 0 5px;
+}
+
+.breadcrumbText {
   color: #333;
 }
