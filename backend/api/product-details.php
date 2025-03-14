@@ -13,7 +13,7 @@ session_start();
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 // Получаем информацию о товаре
-$query = "SELECT products.*, categories.name AS category_name, categories.parent_id, products.image 
+$query = "SELECT products.*, categories.name AS category_name, categories.parent_id 
           FROM products
           JOIN categories ON products.category_id = categories.id
           WHERE products.id = ?";
@@ -27,8 +27,20 @@ if ($result->num_rows > 0) {
     $product_name = $conn->real_escape_string($product['name']);
     $parent_id = $product['parent_id'];
 
+    // Получаем все изображения товара из таблицы product_images
+    $images_query = "SELECT image FROM product_images WHERE product_id = ?";
+    $images_stmt = $conn->prepare($images_query);
+    $images_stmt->bind_param('s', $product_id);
+    $images_stmt->execute();
+    $images_result = $images_stmt->get_result();
+
+    $images = [];
+    while ($image_row = $images_result->fetch_assoc()) {
+        $images[] = $image_row['image'];
+    }
+
     // Получаем все товары с таким же именем и parent_id, включая group_id и image
-    $sizes_query = "SELECT products.id, products.name, products.size, products.price, products.availability, products.quantity_in_stock, products.group_id, products.image
+    $sizes_query = "SELECT products.id, products.name, products.size, products.price, products.availability, products.quantity_in_stock, products.group_id
                     FROM products 
                     JOIN categories ON products.category_id = categories.id 
                     WHERE products.name = ? 
@@ -65,8 +77,9 @@ if ($result->num_rows > 0) {
         $_SESSION['cart'] = $cart;
         echo json_encode(["message" => "Product added to cart"]);
     } else {
-        // Возвращаем товар, его размеры и изображение, включая group_id и name
+        // Возвращаем товар, его размеры, изображения и другие данные
         $product['sizes'] = $sizes;
+        $product['images'] = $images;  // Добавляем изображения
         $product['name'] = $product_name;  // Добавляем название товара
         echo json_encode($product, JSON_UNESCAPED_UNICODE);
     }

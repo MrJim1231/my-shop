@@ -21,11 +21,12 @@ function ProductDetails() {
       axios
         .get(`${API_URL}product-details.php?id=${id}`)
         .then((response) => {
+          console.log('Ответ от сервера:', response.data) // Логирование ответа от сервера
           setProduct(response.data)
           initializeSelection(response.data) // Устанавливаем доступные значения
           setLoading(false)
         })
-        .catch(() => {
+        .catch((error) => {
           setError('Ошибка при загрузке товара')
           setLoading(false)
         })
@@ -41,7 +42,6 @@ function ProductDetails() {
         .flat()
         .some((item) => item.size.includes(size) && item.availability && item.quantity_in_stock > 0)
     )
-
     const availableSizeType = ['50*70', '70*70'].find((size) =>
       Object.values(productData.sizes)
         .flat()
@@ -87,7 +87,6 @@ function ProductDetails() {
 
     // Используем функцию addToCart из контекста для добавления товара в корзину
     addToCart(selectedProduct)
-    // alert('Товар добавлен в корзину')
   }
 
   if (loading) return <div>Загрузка...</div>
@@ -95,12 +94,17 @@ function ProductDetails() {
 
   return (
     <div className={styles.productDetails}>
-      {/* Отображаем изображение, если оно есть, или используем сохраненное */}
-      {selectedProduct?.image || previousImage ? (
-        <img src={selectedProduct?.image || previousImage} alt={selectedProduct?.name} className={styles.productImage} />
+      {/* Отображаем все изображения товара из массива images */}
+      {product?.images && product.images.length > 0 ? (
+        <div className={styles.imageGallery}>
+          {product.images.map((image, index) => (
+            <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.productImage} />
+          ))}
+        </div>
       ) : (
-        <div className={styles.noImage}>Изображение отсутствует</div>
+        <div className={styles.noImage}>Изображения отсутствуют</div>
       )}
+
       <h1>{selectedProduct?.name}</h1>
       <p>Цена: {selectedProduct?.price} грн</p>
       <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
