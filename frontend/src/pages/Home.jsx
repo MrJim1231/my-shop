@@ -66,7 +66,7 @@ function Home() {
               <div className={styles.productItem} key={product.id}>
                 <Link to={`/product/${product.id}`} className={styles.productLink}>
                   <img
-                    src={product.image}
+                    src={`http://localhost/my-shop/backend/${product.image.replace(/^(\.\.\/)+/, '')}`} // Используем правильный путь
                     alt={product.name}
                     className={styles.productImage}
                     width="250"

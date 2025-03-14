@@ -97,7 +97,7 @@ function ProductDetails() {
     <div className={styles.productDetails}>
       {/* Отображаем изображение, если оно есть, или используем сохраненное */}
       {selectedProduct?.image || previousImage ? (
-        <img src={selectedProduct?.image || previousImage} alt={selectedProduct?.name} className={styles.productImage} />
+        <img src={`http://localhost/my-shop/backend/${(selectedProduct?.image || previousImage).replace(/^(\.\.\/)+/, '')}`} alt={selectedProduct?.name} className={styles.productImage} />
       ) : (
         <div className={styles.noImage}>Изображение отсутствует</div>
       )}

@@ -48,7 +48,7 @@ function Categories() {
             categories.map((category, index) => (
               <Link to={`/category/${category.id}`} key={category.id} className={styles.categoryItem}>
                 <img
-                  src={category.image}
+                  src={`http://localhost/my-shop/backend/${category.image.replace(/^(\.\.\/)+/, '')}`} // Формируем правильный путь
                   alt={`Изображение категории ${category.name}`} // Описательное alt-описание
                   className={styles.categoryImage}
                   width="250"
@@ -56,7 +56,6 @@ function Categories() {
                   decoding="async"
                   fetchpriority={index === 0 ? 'high' : 'auto'} // Оптимизация LCP
                   loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу
-                  // style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
                 />
                 <h2 className={styles.categoryName}>{category.name}</h2>
               </Link>

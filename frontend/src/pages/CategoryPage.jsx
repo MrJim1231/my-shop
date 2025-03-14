@@ -48,7 +48,7 @@ function CategoryPage() {
               <div className={styles.productItem} key={product.id}>
                 <Link to={`/product/${product.id}`} className={styles.productLink}>
                   <img
-                    src={product.image}
+                    src={`http://localhost/my-shop/backend/${product.image.replace(/^(\.\.\/)+/, '')}`} // Формируем правильный путь к изображению
                     alt={product.name}
                     className={styles.productImage}
                     width="250"
@@ -56,7 +56,6 @@ function CategoryPage() {
                     decoding="async"
                     fetchpriority={index === 0 ? 'high' : 'auto'} // Приоритет загрузки первого изображения
                     loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу, другие — лениво
-                    // style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
                   />
                   <h2 className={styles.productName}>{product.name}</h2>
                   <p className={styles.productPrice}>Цена: {product.price} грн</p>

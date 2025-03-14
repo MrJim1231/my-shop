@@ -1,5 +1,5 @@
 /* Подключение шрифта Montserrat через Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap'); */
 
 /* Сброс базовых стилей */
 * {
@@ -39,7 +39,7 @@ html,
 body {
   width: 100%;
   height: 100%;
-  font-family: 'Montserrat', sans-serif;
+  /* font-family: 'Montserrat', sans-serif; */
 }
 
 /* Унифицированный стиль для `input` и `textarea` */
