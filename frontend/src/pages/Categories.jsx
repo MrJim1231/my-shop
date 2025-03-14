@@ -3,11 +3,14 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import styles from '../styles/Categories.module.css'
 import { API_URL } from '../api/config'
+import ViewedProducts from '../components/ViewedProducts' // Импортируем компонент просмотренных товаров
 
 function Categories() {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
+  const [viewedProducts, setViewedProducts] = useState([])
 
+  // Загружаем категории
   useEffect(() => {
     axios
       .get(`${API_URL}categories.php`)
@@ -25,6 +28,12 @@ function Categories() {
       .finally(() => {
         setLoading(false)
       })
+  }, [])
+
+  // Загружаем просмотренные товары из localStorage
+  useEffect(() => {
+    const viewedItems = JSON.parse(localStorage.getItem('viewedProducts')) || []
+    setViewedProducts(viewedItems)
   }, [])
 
   return (
@@ -49,14 +58,13 @@ function Categories() {
               <Link to={`/category/${category.id}`} key={category.id} className={styles.categoryItem}>
                 <img
                   src={category.image}
-                  alt={`Изображение категории ${category.name}`} // Описательное alt-описание
+                  alt={`Изображение категории ${category.name}`}
                   className={styles.categoryImage}
                   width="250"
                   height="250"
                   decoding="async"
-                  fetchpriority={index === 0 ? 'high' : 'auto'} // Оптимизация LCP
-                  loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу
-                  // style={{ minHeight: '250px', backgroundColor: '#f0f0f0' }}
+                  fetchpriority={index === 0 ? 'high' : 'auto'}
+                  loading={index === 0 ? 'eager' : 'lazy'}
                 />
                 <h2 className={styles.categoryName}>{category.name}</h2>
               </Link>
@@ -66,6 +74,9 @@ function Categories() {
           )}
         </div>
       )}
+
+      {/* Добавляем компонент для отображения товаров, которые были просмотрены */}
+      <ViewedProducts viewedProducts={viewedProducts} />
     </div>
   )
 }

@@ -3,11 +3,13 @@ import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
 import styles from '../styles/CategoryPage.module.css'
 import { API_URL } from '../api/config'
+import ViewedProducts from '../components/ViewedProducts' // импорт компонента для отображения просмотренных товаров
 
 function CategoryPage() {
   const { categoryId } = useParams()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [viewedProducts, setViewedProducts] = useState([])
 
   useEffect(() => {
     // Загружаем данные о товарах для конкретной категории
@@ -23,6 +25,10 @@ function CategoryPage() {
         console.error('Ошибка при получении товаров:', error)
         setLoading(false)
       })
+
+    // Загружаем просмотренные товары из localStorage
+    const storedViewedProducts = JSON.parse(localStorage.getItem('viewedProducts')) || []
+    setViewedProducts(storedViewedProducts)
   }, [categoryId])
 
   return (
@@ -30,7 +36,6 @@ function CategoryPage() {
       <h1 className={styles.title}>Товары в категории</h1>
 
       {loading ? (
-        // Скелетоны загрузки вместо резких сдвигов контента
         <div className={styles.productGrid}>
           {Array(6)
             .fill(0)
@@ -47,18 +52,17 @@ function CategoryPage() {
             products.map((product, index) => (
               <div className={styles.productItem} key={product.id}>
                 <Link to={`/product/${product.id}`} className={styles.productLink}>
-                  {/* Отображаем только первую картинку товара */}
                   <div className={styles.productImages}>
                     {product.images && product.images.length > 0 ? (
                       <img
-                        src={product.images[0]} // Показываем только первое изображение
+                        src={product.images[0]}
                         alt={product.name}
                         className={styles.productImage}
                         width="250"
                         height="250"
                         decoding="async"
-                        fetchpriority={index === 0 ? 'high' : 'auto'} // Приоритет загрузки первого изображения
-                        loading={index === 0 ? 'eager' : 'lazy'} // Первое изображение загружается сразу, другие — лениво
+                        fetchpriority={index === 0 ? 'high' : 'auto'}
+                        loading={index === 0 ? 'eager' : 'lazy'}
                       />
                     ) : (
                       <p>Изображение недоступно</p>
@@ -75,6 +79,9 @@ function CategoryPage() {
           )}
         </div>
       )}
+
+      {/* Секция с просмотренными товарами */}
+      <ViewedProducts viewedProducts={viewedProducts} />
     </div>
   )
 }
