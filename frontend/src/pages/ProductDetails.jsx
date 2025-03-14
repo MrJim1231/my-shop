@@ -94,13 +94,13 @@ function ProductDetails() {
     <div className={styles.productDetails}>
       <div className={styles.productInfo}>
         {/* Маленькие картинки слева */}
-        <div className={styles.thumbnailContainer}>
-          {product?.images && product.images.length > 0 ? (
-            product.images.map((image, index) => <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.thumbnailImage} onClick={() => setPreviousImage(image)} />)
-          ) : (
-            <div className={styles.noImage}>Изображения отсутствуют</div>
-          )}
-        </div>
+        {product?.images && product.images.length > 1 && (
+          <div className={styles.thumbnailContainer}>
+            {product.images.map((image, index) => (
+              <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.thumbnailImage} onClick={() => setPreviousImage(image)} />
+            ))}
+          </div>
+        )}
 
         {/* Основное изображение справа */}
         <div className={styles.mainImage}>
