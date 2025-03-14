@@ -38,6 +38,15 @@ function Categories() {
 
   return (
     <div className={styles.container}>
+      {/* Хлебные крошки */}
+      <nav className={styles.breadcrumb}>
+        <Link to="/" className={styles.breadcrumbLink}>
+          Главная
+        </Link>
+        <span className={styles.separator}>/</span>
+        <span className={styles.breadcrumbText}>Категории товаров</span>
+      </nav>
+
       <h1 className={styles.title}>Категории товаров</h1>
 
       {loading ? (

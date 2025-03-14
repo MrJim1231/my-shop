@@ -32,6 +32,19 @@ function CategoryPage() {
 
   return (
     <div className={styles.container}>
+      {/* Хлебные крошки */}
+      <nav className={styles.breadcrumb}>
+        <Link to="/" className={styles.breadcrumbLink}>
+          Главная
+        </Link>
+        <span className={styles.separator}>/</span>
+        <Link to="/categories" className={styles.breadcrumbLink}>
+          Категории товаров
+        </Link>
+        <span className={styles.separator}>/</span>
+        <span className={styles.breadcrumbText}>Товары в категории {categoryId}</span>
+      </nav>
+
       <h1 className={styles.title}>Товары в категории</h1>
 
       {loading ? (

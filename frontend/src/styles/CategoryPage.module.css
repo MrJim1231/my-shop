@@ -109,6 +109,24 @@
   }
 }
 
+.breadcrumb {
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.breadcrumbLink {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.separator {
+  margin: 0 5px;
+}
+
+.breadcrumbText {
+  color: #333;
+}
+
 /* Адаптивные стили для мобильных устройств */
 
 /* Для экранов меньше 768px (мобильные устройства) */
