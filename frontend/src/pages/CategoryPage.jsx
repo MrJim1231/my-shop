@@ -4,12 +4,15 @@ import { useParams, Link } from 'react-router-dom'
 import styles from '../styles/CategoryPage.module.css'
 import { API_URL } from '../api/config'
 import ViewedProducts from '../components/ViewedProducts' // импорт компонента для отображения просмотренных товаров
+import useViewedProducts from '../hooks/useViewedProducts' // импорт хука для работы с просмотренными товарами
 
 function CategoryPage() {
   const { categoryId } = useParams()
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]) // Все товары для категории
   const [loading, setLoading] = useState(true)
-  const [viewedProducts, setViewedProducts] = useState([])
+
+  // Используем кастомный хук для работы с просмотренными товарами
+  const { viewedProducts, addViewedProduct } = useViewedProducts()
 
   useEffect(() => {
     // Загружаем данные о товарах для конкретной категории
@@ -25,10 +28,6 @@ function CategoryPage() {
         console.error('Ошибка при получении товаров:', error)
         setLoading(false)
       })
-
-    // Загружаем просмотренные товары из localStorage
-    const storedViewedProducts = JSON.parse(localStorage.getItem('viewedProducts')) || []
-    setViewedProducts(storedViewedProducts)
   }, [categoryId])
 
   return (
@@ -51,7 +50,11 @@ function CategoryPage() {
           {products.length > 0 ? (
             products.map((product, index) => (
               <div className={styles.productItem} key={product.id}>
-                <Link to={`/product/${product.id}`} className={styles.productLink}>
+                <Link
+                  to={`/product/${product.id}`}
+                  className={styles.productLink}
+                  onClick={() => addViewedProduct(product)} // Добавляем товар в список просмотренных
+                >
                   <div className={styles.productImages}>
                     {product.images && product.images.length > 0 ? (
                       <img
