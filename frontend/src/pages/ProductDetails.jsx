@@ -12,6 +12,7 @@ function ProductDetails() {
   const [product, setProduct] = useState(null)
   const [categoryName, setCategoryName] = useState('')
   const [categoryId, setCategoryId] = useState(null)
+  const [parentCategoryName, setParentCategoryName] = useState('') // Для родительской категории
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedSizeType, setSelectedSizeType] = useState(null)
   const [selectedSetSize, setSelectedSetSize] = useState(null)
@@ -53,8 +54,26 @@ function ProductDetails() {
     axios
       .get(`${API_URL}get_category_by_id.php?category_id=${catId}`)
       .then((res) => {
+        // console.log('Категория:', res.data)
         setCategoryName(res.data.name)
         setCategoryId(catId)
+
+        // Проверяем, есть ли родительский ID категории
+        if (res.data.parent_category && res.data.parent_category.id) {
+          // console.log('Родительский ID категории:', res.data.parent_category.id)
+          axios
+            .get(`${API_URL}get_category_by_id.php?category_id=${res.data.parent_category.id}`)
+            .then((parentRes) => {
+              // console.log('Родительская категория:', parentRes.data)
+              setParentCategoryName(parentRes.data.name)
+            })
+            .catch(() => {
+              setParentCategoryName('Неизвестная родительская категория')
+            })
+        } else {
+          console.log('Категория без родителя')
+          setParentCategoryName('Нет родительской категории')
+        }
       })
       .catch(() => {
         setCategoryName('Неизвестная категория')
@@ -146,6 +165,14 @@ function ProductDetails() {
           Категории
         </Link>
         <span className={styles.separator}>/</span>
+        {parentCategoryName && (
+          <>
+            <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
+              {parentCategoryName}
+            </Link>
+            <span className={styles.separator}>/</span>
+          </>
+        )}
         {categoryId && (
           <>
             <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
