@@ -19,14 +19,15 @@ while ($row = $result->fetch_assoc()) {
     $category = $row;
     $category_id = $row['id'];
 
-    // Логируем, что обрабатываем категорию
+    // Логируем обработку категории
     error_log("Обрабатываем категорию ID: " . $category_id);
 
-    // Запрос к базе данных для получения изображения первого товара этой категории или подкатегорий
+    // Запрос к базе данных для получения изображения из product_images
     $sql_product = "
-        SELECT image 
-        FROM products 
-        WHERE category_id IN (SELECT id FROM categories WHERE parent_id = ?) 
+        SELECT pi.image 
+        FROM product_images pi
+        JOIN products p ON pi.product_id = p.id
+        WHERE p.category_id IN (SELECT id FROM categories WHERE parent_id = ?) 
         LIMIT 1
     ";
     $stmt = $conn->prepare($sql_product);
