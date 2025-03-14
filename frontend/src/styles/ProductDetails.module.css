@@ -95,12 +95,8 @@
 }
 
 .section {
-  /* margin-top: 30px; */
   width: 100%;
   padding-left: 20px;
-  /* padding: 20px; */
-  /* background-color: #f9f9f9; */
-  /* border-radius: 8px; */
 }
 
 .breadcrumb {
@@ -119,4 +115,29 @@
 
 .breadcrumbText {
   color: #333;
+}
+
+/* Стили для цен в ProductDetails.module.css */
+
+/* Старая цена */
+.oldPrice {
+  text-decoration: line-through; /* Перечеркнутый текст */
+  color: #999; /* Цвет для старой цены (серый) */
+  font-size: 1.2em; /* Размер шрифта для старой цены */
+  margin-right: 10px; /* Отступ между старой и новой ценой */
+}
+
+/* Новая цена */
+.newPrice {
+  color: #e74c3c; /* Цвет для новой цены (красный, чтобы привлечь внимание) */
+  font-size: 1.4em; /* Размер шрифта для новой цены */
+  font-weight: bold; /* Жирный шрифт для выделения новой цены */
+}
+
+/* Мобильные стили для цен */
+@media (max-width: 768px) {
+  .oldPrice,
+  .newPrice {
+    font-size: 1em; /* Меньший размер шрифта на мобильных устройствах */
+  }
 }

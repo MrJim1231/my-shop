@@ -54,24 +54,20 @@ function ProductDetails() {
     axios
       .get(`${API_URL}get_category_by_id.php?category_id=${catId}`)
       .then((res) => {
-        // console.log('Категория:', res.data)
         setCategoryName(res.data.name)
         setCategoryId(catId)
 
         // Проверяем, есть ли родительский ID категории
         if (res.data.parent_category && res.data.parent_category.id) {
-          // console.log('Родительский ID категории:', res.data.parent_category.id)
           axios
             .get(`${API_URL}get_category_by_id.php?category_id=${res.data.parent_category.id}`)
             .then((parentRes) => {
-              // console.log('Родительская категория:', parentRes.data)
               setParentCategoryName(parentRes.data.name)
             })
             .catch(() => {
               setParentCategoryName('Неизвестная родительская категория')
             })
         } else {
-          console.log('Категория без родителя')
           setParentCategoryName('Нет родительской категории')
         }
       })
@@ -110,6 +106,14 @@ function ProductDetails() {
     }
   }
 
+  // Применение скидки на товар, если категория родительская категория "Бязь"
+  const applyDiscount = (price) => {
+    if (parentCategoryName === 'Бязь') {
+      return price - 500 // Скидка 500 грн
+    }
+    return price
+  }
+
   const handleSetSizeChange = (setSize) => {
     setSelectedSetSize(setSize)
 
@@ -146,6 +150,7 @@ function ProductDetails() {
     const productToAdd = {
       ...selectedProduct,
       image: previousImage,
+      price: applyDiscount(selectedProduct.price), // Применяем скидку при добавлении товара в корзину
     }
 
     addToCart(productToAdd)
@@ -166,21 +171,17 @@ function ProductDetails() {
         </Link>
         <span className={styles.separator}>/</span>
         {parentCategoryName && (
-          <>
-            <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
-              {parentCategoryName}
-            </Link>
-            <span className={styles.separator}>/</span>
-          </>
+          <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
+            {parentCategoryName}
+          </Link>
         )}
+        <span className={styles.separator}>/</span>
         {categoryId && (
-          <>
-            <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
-              {categoryName || 'Категория'}
-            </Link>
-            <span className={styles.separator}>/</span>
-          </>
+          <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
+            {categoryName || 'Категория'}
+          </Link>
         )}
+        <span className={styles.separator}>/</span>
         <span className={styles.breadcrumbText}>{selectedProduct?.name || product?.name || 'Товар'}</span>
       </nav>
       <div className={styles.productDetails}>
@@ -200,7 +201,11 @@ function ProductDetails() {
 
         <div className={styles.section}>
           <h1>{selectedProduct?.name}</h1>
-          <p>Цена: {selectedProduct?.price} грн</p>
+          {/* Показ старой и новой цены */}
+          <p>
+            Цена: <span className={styles.oldPrice}>{selectedProduct?.price} грн</span>
+            <span className={styles.newPrice}>{applyDiscount(selectedProduct?.price)} грн</span>
+          </p>
           <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
           <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
 
