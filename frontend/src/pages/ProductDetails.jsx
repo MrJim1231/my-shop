@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { useCart } from '../context/CartContext' // Импортируем useCart
+import { useCart } from '../context/CartContext'
 import styles from '../styles/ProductDetails.module.css'
 import { API_URL } from '../api/config'
 
 function ProductDetails() {
   const { id } = useParams()
-  const { addToCart } = useCart() // Получаем функцию addToCart из контекста
+  const { addToCart } = useCart()
   const [product, setProduct] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedSizeType, setSelectedSizeType] = useState(null) // Размер наволочки
@@ -21,9 +21,8 @@ function ProductDetails() {
       axios
         .get(`${API_URL}product-details.php?id=${id}`)
         .then((response) => {
-          console.log('Ответ от сервера:', response.data) // Логирование ответа от сервера
           setProduct(response.data)
-          initializeSelection(response.data) // Устанавливаем доступные значения
+          initializeSelection(response.data)
           setLoading(false)
         })
         .catch((error) => {
@@ -51,13 +50,14 @@ function ProductDetails() {
     setSelectedSetSize(availableSetSize || null)
     setSelectedSizeType(availableSizeType || null)
 
-    // Устанавливаем первый доступный товар в качестве выбранного
     const firstAvailableProduct = Object.values(productData.sizes)
       .flat()
       .find((item) => item.size.includes(availableSetSize) && item.size.includes(availableSizeType) && item.availability && item.quantity_in_stock > 0)
 
     setSelectedProduct(firstAvailableProduct || null)
-    setPreviousImage(firstAvailableProduct?.image || null) // Сохраняем изображение первого доступного товара
+
+    // Устанавливаем первое изображение из массива
+    setPreviousImage(productData?.images?.[0] || null)
   }
 
   const handleSetSizeChange = (setSize) => {
@@ -68,7 +68,7 @@ function ProductDetails() {
       .find((item) => item.size.includes(setSize) && item.size.includes(selectedSizeType) && item.availability && item.quantity_in_stock > 0)
 
     setSelectedProduct(availableProduct || null)
-    setPreviousImage(availableProduct?.image || previousImage) // Обновляем изображение или сохраняем прежнее
+    setPreviousImage(availableProduct?.image || previousImage)
   }
 
   const handleSizeTypeChange = (sizeType) => {
@@ -79,13 +79,11 @@ function ProductDetails() {
       .find((item) => item.size.includes(selectedSetSize) && item.size.includes(sizeType) && item.availability && item.quantity_in_stock > 0)
 
     setSelectedProduct(availableProduct || null)
-    setPreviousImage(availableProduct?.image || previousImage) // Обновляем изображение или сохраняем прежнее
+    setPreviousImage(availableProduct?.image || previousImage)
   }
 
   const handleAddToCart = () => {
     if (!selectedProduct) return
-
-    // Используем функцию addToCart из контекста для добавления товара в корзину
     addToCart(selectedProduct)
   }
 
@@ -94,26 +92,26 @@ function ProductDetails() {
 
   return (
     <div className={styles.productDetails}>
-      {/* Отображаем главное изображение */}
-      <div className={styles.mainImage}>
-        {product?.images && product.images.length > 0 ? (
-          <img src={previousImage || product.images[0]} alt="Main Product Image" className={styles.mainImageDisplay} />
-        ) : (
-          <div className={styles.noImage}>Изображения отсутствуют</div>
-        )}
+      <div className={styles.productInfo}>
+        {/* Маленькие картинки слева */}
+        <div className={styles.thumbnailContainer}>
+          {product?.images && product.images.length > 0 ? (
+            product.images.map((image, index) => <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.thumbnailImage} onClick={() => setPreviousImage(image)} />)
+          ) : (
+            <div className={styles.noImage}>Изображения отсутствуют</div>
+          )}
+        </div>
+
+        {/* Основное изображение справа */}
+        <div className={styles.mainImage}>
+          {previousImage ? <img src={previousImage} alt="Main Product Image" className={styles.mainImageDisplay} /> : <div className={styles.noImage}>Изображения отсутствуют</div>}
+        </div>
       </div>
 
       <h1>{selectedProduct?.name}</h1>
       <p>Цена: {selectedProduct?.price} грн</p>
       <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
       <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
-
-      {/* Галерея миниатюр */}
-      <div className={styles.imageGallery}>
-        {product?.images.map((image, index) => (
-          <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.thumbnailImage} onClick={() => setPreviousImage(image)} />
-        ))}
-      </div>
 
       {/* Выбор размера комплекта */}
       <div className={styles.sizeTypeSection}>
