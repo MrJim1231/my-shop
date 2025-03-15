@@ -49,11 +49,15 @@
   .productInfo {
     display: flex;
     flex-direction: column-reverse;
+    align-items: center;
   }
 
   .thumbnailContainer {
     display: flex;
     flex-direction: row;
     padding-bottom: 20px;
+  }
+  .mainImageDisplay {
+    width: 200px;
   }
 }
