@@ -5,8 +5,8 @@ import { useCart } from '../context/CartContext'
 import styles from '../styles/ProductDetails.module.css'
 import { API_URL } from '../api/config'
 import ViewedProducts from '../components/ViewedProducts'
-import DiscountPrice, { applyDiscount } from '../components/DiscountPrice' // Импортируем applyDiscount
-import SizeChart from '../components/SizeChart' // Убедитесь, что путь правильный
+import DiscountPrice, { applyDiscount } from '../components/DiscountPrice'
+import SizeChart from '../components/SizeChart' // Импортируем компонент SizeChart
 
 function ProductDetails() {
   const { id } = useParams()
@@ -14,7 +14,7 @@ function ProductDetails() {
   const [product, setProduct] = useState(null)
   const [categoryName, setCategoryName] = useState('')
   const [categoryId, setCategoryId] = useState(null)
-  const [parentCategoryName, setParentCategoryName] = useState('') // Для родительской категории
+  const [parentCategoryName, setParentCategoryName] = useState('')
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedSizeType, setSelectedSizeType] = useState(null)
   const [selectedSetSize, setSelectedSetSize] = useState(null)
@@ -59,7 +59,6 @@ function ProductDetails() {
         setCategoryName(res.data.name)
         setCategoryId(catId)
 
-        // Проверяем, есть ли родительский ID категории
         if (res.data.parent_category && res.data.parent_category.id) {
           axios
             .get(`${API_URL}get_category_by_id.php?category_id=${res.data.parent_category.id}`)
@@ -197,7 +196,6 @@ function ProductDetails() {
 
         <div className={styles.section}>
           <h1>{selectedProduct?.name}</h1>
-          {/* Показ старой и новой цены */}
           <DiscountPrice price={selectedProduct?.price} parentCategoryName={parentCategoryName} categoryName={categoryName} />
           <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
           <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
@@ -229,10 +227,12 @@ function ProductDetails() {
             </div>
           </div>
 
+          {/* Добавляем таблицу с размерами */}
+          {product?.sizes && <SizeChart selectedSetSize={selectedSetSize} />}
+
           <button onClick={handleAddToCart} className={styles.addToCartButton} disabled={!selectedProduct || !selectedProduct.availability || selectedProduct.quantity_in_stock <= 0}>
             Добавить в корзину
           </button>
-          <SizeChart />
         </div>
       </div>
       <ViewedProducts viewedProducts={viewedProducts} />
