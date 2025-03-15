@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext'
 import styles from '../styles/ProductDetails.module.css'
 import { API_URL } from '../api/config'
 import ViewedProducts from '../components/ViewedProducts'
-import DiscountPrice from '../components/DiscountPrice'
+import DiscountPrice, { applyDiscount } from '../components/DiscountPrice' // Импортируем applyDiscount
 
 function ProductDetails() {
   const { id } = useParams()
@@ -140,10 +140,12 @@ function ProductDetails() {
   const handleAddToCart = () => {
     if (!selectedProduct) return
 
+    const discountedPrice = applyDiscount(selectedProduct.price, parentCategoryName, categoryName) // Применяем скидку
+
     const productToAdd = {
       ...selectedProduct,
       image: previousImage,
-      price: applyDiscount(selectedProduct.price), // Применяем скидку при добавлении товара в корзину
+      price: discountedPrice, // Применяем скидку при добавлении товара в корзину
     }
 
     addToCart(productToAdd)
@@ -195,7 +197,7 @@ function ProductDetails() {
         <div className={styles.section}>
           <h1>{selectedProduct?.name}</h1>
           {/* Показ старой и новой цены */}
-          <DiscountPrice price={selectedProduct?.price} parentCategoryName={parentCategoryName} />
+          <DiscountPrice price={selectedProduct?.price} parentCategoryName={parentCategoryName} categoryName={categoryName} />
           <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
           <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
           <div className={styles.sizeTypeSection}>

@@ -1,15 +1,15 @@
 import React from 'react'
 import styles from '../styles/Discount.module.css'
 
-const DiscountPrice = ({ price, parentCategoryName, categoryName }) => {
-  const applyDiscount = (price) => {
-    if (parentCategoryName === 'Бязь' || categoryName === 'Бязь') {
-      return price - 500
-    }
-    return price
+export const applyDiscount = (price, parentCategoryName, categoryName) => {
+  if (parentCategoryName === 'Бязь' || categoryName === 'Бязь') {
+    return price - 500 // Скидка 500 грн на категорию "Бязь"
   }
+  return price
+}
 
-  const discountedPrice = applyDiscount(price)
+const DiscountPrice = ({ price, parentCategoryName, categoryName }) => {
+  const discountedPrice = applyDiscount(price, parentCategoryName, categoryName) // Используем applyDiscount
 
   return (
     <p>
