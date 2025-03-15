@@ -75,4 +75,19 @@
     display: flex;
     flex-direction: column;
   }
+  .section {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Выравнивание по центру по горизонтали */
+    text-align: center; /* Выравнивание текста по центру */
+  }
+
+  .sizeTypeButtons {
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .sizeTypeSection {
+    margin-top: 10px;
+  }
 }

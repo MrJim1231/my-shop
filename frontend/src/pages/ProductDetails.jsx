@@ -185,7 +185,7 @@ function ProductDetails() {
         {product?.images && <ImageGallery images={product.images} setPreviousImage={setPreviousImage} previousImage={previousImage} />}
 
         <div className={styles.section}>
-          <h1>{selectedProduct?.name}</h1>
+          <h2>{selectedProduct?.name}</h2>
           <DiscountPrice price={selectedProduct?.price} parentCategoryName={parentCategoryName} categoryName={categoryName} />
           <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
           <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
