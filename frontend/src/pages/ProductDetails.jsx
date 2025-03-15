@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext'
 import styles from '../styles/ProductDetails.module.css'
 import { API_URL } from '../api/config'
 import ViewedProducts from '../components/ViewedProducts'
+import DiscountPrice from '../components/DiscountPrice'
 
 function ProductDetails() {
   const { id } = useParams()
@@ -106,14 +107,6 @@ function ProductDetails() {
     }
   }
 
-  // Применение скидки на товар, если категория родительская категория "Бязь"
-  const applyDiscount = (price) => {
-    if (parentCategoryName === 'Бязь') {
-      return price - 500 // Скидка 500 грн
-    }
-    return price
-  }
-
   const handleSetSizeChange = (setSize) => {
     setSelectedSetSize(setSize)
 
@@ -202,21 +195,9 @@ function ProductDetails() {
         <div className={styles.section}>
           <h1>{selectedProduct?.name}</h1>
           {/* Показ старой и новой цены */}
-          <p>
-            Цена:{' '}
-            {applyDiscount(selectedProduct?.price) !== selectedProduct?.price ? (
-              <>
-                <span className={styles.oldPrice}>{selectedProduct?.price} грн</span>
-                <span className={styles.newPrice}>{applyDiscount(selectedProduct?.price)} грн</span>
-              </>
-            ) : (
-              <span className={styles.noDiscount}>{selectedProduct?.price} грн</span>
-            )}
-          </p>
-
+          <DiscountPrice price={selectedProduct?.price} parentCategoryName={parentCategoryName} />
           <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
           <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
-
           <div className={styles.sizeTypeSection}>
             <h3>Выбор размера комплекта:</h3>
             <div className={styles.sizeTypeButtons}>

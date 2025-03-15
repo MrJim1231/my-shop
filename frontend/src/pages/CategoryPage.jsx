@@ -5,6 +5,7 @@ import styles from '../styles/CategoryPage.module.css'
 import { API_URL } from '../api/config'
 import ViewedProducts from '../components/ViewedProducts' // импорт компонента для отображения просмотренных товаров
 import useViewedProducts from '../hooks/useViewedProducts' // импорт хука для работы с просмотренными товарами
+import DiscountPrice from '../components/DiscountPrice'
 
 function CategoryPage() {
   const { categoryId } = useParams()
@@ -105,7 +106,7 @@ function CategoryPage() {
                   </div>
 
                   <h2 className={styles.productName}>{product.name}</h2>
-                  <p className={styles.productPrice}>Цена: {product.price} грн</p>
+                  <DiscountPrice price={product.price} parentCategoryName={categoryName} categoryName={categoryName} />
                 </Link>
               </div>
             ))

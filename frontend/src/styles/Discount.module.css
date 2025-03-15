@@ -1,0 +1,17 @@
+.oldPrice {
+  color: #999;
+  font-size: 16px;
+  text-decoration: line-through;
+  padding-right: 6px;
+}
+
+.newPrice {
+  color: #e60000;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.noDiscount {
+  text-decoration: none; /* Убираем зачеркнутый текст */
+  /* font-weight: bold; */
+}
