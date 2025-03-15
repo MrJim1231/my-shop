@@ -61,9 +61,9 @@ function Orders() {
               <p className={styles.orderDetail}>Ім'я: {order.name}</p>
               <p className={styles.orderDetail}>Телефон: {order.phone}</p>
               <p className={styles.orderDetail}>Адреса: {order.address}</p>
+              <p className={styles.orderDetail}>Email: {order.email}</p> {/* Відображаємо email */}
               <p className={styles.orderDetail}>Коментар: {order.comment}</p>
               <p className={styles.orderTotal}>Загальна сума: {parseFloat(order.total_price).toFixed(2)} грн.</p>
-
               <h4 className={styles.itemHeader}>Товари:</h4>
               <ul className={styles.itemList}>
                 {order.items.map((item) => (
