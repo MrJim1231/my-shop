@@ -7,6 +7,7 @@ import { API_URL } from '../api/config'
 import ViewedProducts from '../components/ViewedProducts'
 import DiscountPrice, { applyDiscount } from '../components/DiscountPrice'
 import SizeChart from '../components/SizeChart' // Импортируем компонент SizeChart
+import ImageGallery from '../components/ImageGallery' // Импортируем компонент ImageGallery
 
 function ProductDetails() {
   const { id } = useParams()
@@ -180,19 +181,8 @@ function ProductDetails() {
         <span className={styles.breadcrumbText}>{selectedProduct?.name || product?.name || 'Товар'}</span>
       </nav>
       <div className={styles.productDetails}>
-        <div className={styles.productInfo}>
-          {product?.images && product.images.length > 1 && (
-            <div className={styles.thumbnailContainer}>
-              {product.images.map((image, index) => (
-                <img key={index} src={image} alt={`Product Image ${index + 1}`} className={styles.thumbnailImage} onClick={() => setPreviousImage(image)} />
-              ))}
-            </div>
-          )}
-
-          <div className={styles.mainImage}>
-            {previousImage ? <img src={previousImage} alt="Main Product Image" className={styles.mainImageDisplay} /> : <div className={styles.noImage}>Изображения отсутствуют</div>}
-          </div>
-        </div>
+        {/* Используем компонент ImageGallery */}
+        {product?.images && <ImageGallery images={product.images} setPreviousImage={setPreviousImage} previousImage={previousImage} />}
 
         <div className={styles.section}>
           <h1>{selectedProduct?.name}</h1>
