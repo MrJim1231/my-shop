@@ -1,5 +1,6 @@
 .sizeChart {
   padding-bottom: 15px;
+  text-align: center;
 }
 
 .sizeChart h2 {
@@ -9,7 +10,7 @@
   text-align: center;
 }
 
-/* Обычная таблица для десктопа */
+/* Горизонтальная таблица для десктопа */
 .desktopTable {
   display: block;
 }
@@ -47,7 +48,29 @@
 
 /* Вертикальный вид для мобильных */
 .mobileView {
-  display: none; /* По умолчанию скрыто */
+  display: none;
+}
+
+/* Кнопка показать/скрыть размеры */
+.toggleButton {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: background 0.3s ease;
+}
+
+.toggleButton:hover {
+  background-color: #2980b9;
+}
+
+/* Контейнер с вертикальным списком размеров */
+.sizeContainer {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .sizeBlock {
@@ -59,13 +82,30 @@
   border: 1px solid #ddd;
 }
 
-/* Для мобильных устройств */
+/* Анимация появления */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптация для мобильных */
 @media (max-width: 600px) {
   .desktopTable {
-    display: none; /* Прячем таблицу */
+    display: none; /* Скрываем горизонтальную таблицу */
   }
 
   .mobileView {
     display: block; /* Показываем мобильный вид */
+  }
+
+  .toggleButton {
+    width: 100%;
+    font-size: 14px;
   }
 }

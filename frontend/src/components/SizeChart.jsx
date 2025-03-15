@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import styles from '../styles/SizeChart.module.css'
 
 const SizeChart = ({ selectedSetSize }) => {
+  const [isOpen, setIsOpen] = useState(false) // Состояние для открытия/закрытия таблицы на мобильных
+
   const [sizeData] = useState({
     '1,5сп': {
       sheet: '160x220 см - 1 шт',
@@ -35,7 +37,7 @@ const SizeChart = ({ selectedSetSize }) => {
 
   return (
     <div className={styles.sizeChart}>
-      {/* Обычная таблица для десктопов */}
+      {/* Горизонтальная таблица для десктопа */}
       <div className={styles.desktopTable}>
         <table className={styles.table}>
           <thead>
@@ -57,20 +59,27 @@ const SizeChart = ({ selectedSetSize }) => {
         </table>
       </div>
 
-      {/* Вертикальный вид для мобильных */}
+      {/* Кнопка + вертикальный список для мобильных */}
       <div className={styles.mobileView}>
-        <div className={styles.sizeBlock}>
-          <strong>Размер:</strong> {selectedSetSize}
-        </div>
-        <div className={styles.sizeBlock}>
-          <strong>Простыня:</strong> {currentSizeData.sheet}
-        </div>
-        <div className={styles.sizeBlock}>
-          <strong>Пододеяльник:</strong> {currentSizeData.duvetCover}
-        </div>
-        <div className={styles.sizeBlock}>
-          <strong>Наволочки:</strong> {currentSizeData.pillowcases}
-        </div>
+        <button className={styles.toggleButton} onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? 'Скрыть размеры' : 'Показать размеры'}
+        </button>
+        {isOpen && (
+          <div className={styles.sizeContainer}>
+            <div className={styles.sizeBlock}>
+              <strong>Размер:</strong> {selectedSetSize}
+            </div>
+            <div className={styles.sizeBlock}>
+              <strong>Простыня:</strong> {currentSizeData.sheet}
+            </div>
+            <div className={styles.sizeBlock}>
+              <strong>Пододеяльник:</strong> {currentSizeData.duvetCover}
+            </div>
+            <div className={styles.sizeBlock}>
+              <strong>Наволочки:</strong> {currentSizeData.pillowcases}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
