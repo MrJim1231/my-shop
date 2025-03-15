@@ -1,11 +1,5 @@
-/* SizeChart.module.css */
-
 .sizeChart {
   padding-bottom: 15px;
-  /* margin-top: 20px; */
-  /* padding: 15px; */
-  /* background-color: #f8f8f8; */
-  /* border-radius: 8px; */
 }
 
 .sizeChart h2 {
@@ -13,6 +7,11 @@
   font-weight: bold;
   margin-bottom: 10px;
   text-align: center;
+}
+
+/* Обычная таблица для десктопа */
+.desktopTable {
+  display: block;
 }
 
 .table {
@@ -35,6 +34,7 @@
 
 .table td {
   background-color: #fff;
+  font-size: 14px;
 }
 
 .table tr:nth-child(even) {
@@ -45,12 +45,27 @@
   background-color: #f1f1f1;
 }
 
-.table td {
-  font-size: 14px;
+/* Вертикальный вид для мобильных */
+.mobileView {
+  display: none; /* По умолчанию скрыто */
 }
 
-.sizeChart .active {
-  background-color: #3498db;
-  color: #fff;
-  border: 1px solid #3498db;
+.sizeBlock {
+  background: #f9f9f9;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 600px) {
+  .desktopTable {
+    display: none; /* Прячем таблицу */
+  }
+
+  .mobileView {
+    display: block; /* Показываем мобильный вид */
+  }
 }

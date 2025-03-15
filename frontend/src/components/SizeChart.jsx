@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from '../styles/SizeChart.module.css'
 
 const SizeChart = ({ selectedSetSize }) => {
-  const [sizeData, setSizeData] = useState({
+  const [sizeData] = useState({
     '1,5сп': {
       sheet: '160x220 см - 1 шт',
       duvetCover: '150x220 см - 1 шт',
@@ -25,11 +25,9 @@ const SizeChart = ({ selectedSetSize }) => {
     },
   })
 
-  // Для обновления данных при смене размера комплекта
   const [currentSizeData, setCurrentSizeData] = useState(sizeData[selectedSetSize])
 
   useEffect(() => {
-    // Обновляем текущие данные, если изменился выбранный размер
     if (selectedSetSize && sizeData[selectedSetSize]) {
       setCurrentSizeData(sizeData[selectedSetSize])
     }
@@ -37,24 +35,43 @@ const SizeChart = ({ selectedSetSize }) => {
 
   return (
     <div className={styles.sizeChart}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Размер</th>
-            <th>Простирадло</th>
-            <th>Подковдра</th>
-            <th>Наволочки</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{selectedSetSize}</td>
-            <td>{currentSizeData.sheet}</td>
-            <td>{currentSizeData.duvetCover}</td>
-            <td>{currentSizeData.pillowcases}</td>
-          </tr>
-        </tbody>
-      </table>
+      {/* Обычная таблица для десктопов */}
+      <div className={styles.desktopTable}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Размер</th>
+              <th>Простыня</th>
+              <th>Пододеяльник</th>
+              <th>Наволочки</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{selectedSetSize}</td>
+              <td>{currentSizeData.sheet}</td>
+              <td>{currentSizeData.duvetCover}</td>
+              <td>{currentSizeData.pillowcases}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Вертикальный вид для мобильных */}
+      <div className={styles.mobileView}>
+        <div className={styles.sizeBlock}>
+          <strong>Размер:</strong> {selectedSetSize}
+        </div>
+        <div className={styles.sizeBlock}>
+          <strong>Простыня:</strong> {currentSizeData.sheet}
+        </div>
+        <div className={styles.sizeBlock}>
+          <strong>Пододеяльник:</strong> {currentSizeData.duvetCover}
+        </div>
+        <div className={styles.sizeBlock}>
+          <strong>Наволочки:</strong> {currentSizeData.pillowcases}
+        </div>
+      </div>
     </div>
   )
 }
