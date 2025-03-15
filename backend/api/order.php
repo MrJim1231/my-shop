@@ -15,7 +15,7 @@ require_once __DIR__ . '/../includes/db.php'; // Подключение к ба�
 $data = json_decode(file_get_contents("php://input"), true);
 
 // Проверяем, что данные получены корректно
-if (!isset($data['name'], $data['phone'], $data['address'], $data['items'])) {
+if (!isset($data['name'], $data['phone'], $data['address'], $data['email'], $data['items'])) {
     echo json_encode(["status" => "error", "message" => "Отсутствуют обязательные данные"]);
     exit();
 }
@@ -23,15 +23,16 @@ if (!isset($data['name'], $data['phone'], $data['address'], $data['items'])) {
 $name = $data['name'];
 $phone = $data['phone'];
 $address = $data['address'];
+$email = $data['email']; // Получаем email из запроса
 $comment = isset($data['comment']) ? $data['comment'] : '';
 $items = $data['items'];
 $totalPrice = $data['totalPrice'];
 $userId = $data['userId'];
 
 // Вставляем заказ в таблицу orders (user_id может быть NULL)
-$sql = "INSERT INTO orders (name, phone, address, comment, total_price, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO orders (name, phone, address, email, comment, total_price, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssdi", $name, $phone, $address, $comment, $totalPrice, $userId);
+$stmt->bind_param("ssssdis", $name, $phone, $address, $email, $comment, $totalPrice, $userId);
 
 // Если заказ успешно вставлен
 if ($stmt->execute()) {

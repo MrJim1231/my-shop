@@ -10,6 +10,7 @@ function OrderForm({ onClose }) {
     name: '',
     phone: '',
     address: '',
+    email: '', // Додаємо email до стану
     comment: '',
   })
   const [loading, setLoading] = useState(false) // Для стану завантаження
@@ -26,7 +27,7 @@ function OrderForm({ onClose }) {
     e.preventDefault()
 
     // Перевіряємо валідність даних
-    if (!formData.name || !formData.phone || !formData.address) {
+    if (!formData.name || !formData.phone || !formData.address || !formData.email) {
       setError("Усі поля, окрім коментаря, обов'язкові для заповнення.")
       return
     }
@@ -90,6 +91,7 @@ function OrderForm({ onClose }) {
           <input type="text" name="name" placeholder="Ваше ім'я" value={formData.name} onChange={handleChange} required />
           <input type="tel" name="phone" placeholder="Телефон" value={formData.phone} onChange={handleChange} required />
           <input type="text" name="address" placeholder="Адреса доставки" value={formData.address} onChange={handleChange} required />
+          <input type="email" name="email" placeholder="Електронна пошта" value={formData.email} onChange={handleChange} required /> {/* Поле для email */}
           <textarea name="comment" placeholder="Коментар до замовлення" value={formData.comment} onChange={handleChange} />
           {error && <p className={styles.error}>{error}</p>} {/* Відображаємо помилку, якщо є */}
           <button type="submit" disabled={loading}>

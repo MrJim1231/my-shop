@@ -71,3 +71,7 @@ FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 ALTER TABLE products DROP COLUMN image;
+
+---
+
+ALTER TABLE orders ADD COLUMN email VARCHAR(255) NOT NULL;
