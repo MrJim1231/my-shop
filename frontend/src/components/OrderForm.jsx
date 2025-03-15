@@ -11,8 +11,7 @@ function OrderForm({ onClose }) {
     phone: '',
     address: '',
     email: '', // Добавляем email в состояние
-    comment: '',
-    comment2: '', // Добавляем comment2 в состояние
+    comment: '', // Убираем comment2
   })
   const [loading, setLoading] = useState(false) // Для состояния загрузки
   const [error, setError] = useState(null) // Для отображения ошибки
@@ -91,7 +90,6 @@ function OrderForm({ onClose }) {
           <input type="text" name="address" placeholder="Адрес доставки" value={formData.address} onChange={handleChange} required />
           <input type="email" name="email" placeholder="Электронная почта" value={formData.email} onChange={handleChange} required />
           <textarea name="comment" placeholder="Комментарий к заказу" value={formData.comment} onChange={handleChange} />
-          <textarea name="comment2" placeholder="Второй комментарий к заказу" value={formData.comment2} onChange={handleChange} /> {/* Новое поле для comment2 */}
           {error && <p className={styles.error}>{error}</p>} {/* Отображаем ошибку, если она есть */}
           <button type="submit" disabled={loading}>
             {loading ? 'Отправка заказа...' : 'Отправить заказ'}
