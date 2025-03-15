@@ -2,28 +2,28 @@ import React, { useState, useEffect } from 'react'
 import styles from '../styles/SizeChart.module.css'
 
 const SizeChart = ({ selectedSetSize }) => {
-  const [isOpen, setIsOpen] = useState(false) // Состояние для открытия/закрытия таблицы на мобильных
+  const [isOpen, setIsOpen] = useState(false) // Стан для відкриття/закриття таблиці на мобільних
 
   const [sizeData] = useState({
     '1,5сп': {
       sheet: '160x220 см - 1 шт',
       duvetCover: '150x220 см - 1 шт',
-      pillowcases: '70x70 см или 50x70 см - 2 шт',
+      pillowcases: '70x70 см або 50x70 см - 2 шт',
     },
     '2сп': {
       sheet: '200x220 см - 1 шт',
       duvetCover: '180x220 см - 1 шт',
-      pillowcases: '70x70 см или 50x70 см - 2 шт',
+      pillowcases: '70x70 см або 50x70 см - 2 шт',
     },
     Євро: {
       sheet: '220x220 см - 1 шт',
       duvetCover: '200x220 см - 1 шт',
-      pillowcases: '70x70 см или 50x70 см - 2 шт',
+      pillowcases: '70x70 см або 50x70 см - 2 шт',
     },
     Сімейний: {
       sheet: '220x220 см - 1 шт',
       duvetCover: '150x220 см - 2 шт',
-      pillowcases: '70x70 см или 50x70 см - 2 шт',
+      pillowcases: '70x70 см або 50x70 см - 2 шт',
     },
   })
 
@@ -37,14 +37,17 @@ const SizeChart = ({ selectedSetSize }) => {
 
   return (
     <div className={styles.sizeChart}>
-      {/* Горизонтальная таблица для десктопа */}
+      {/* Горизонтальна таблиця для десктопу */}
       <div className={styles.desktopTable}>
+        <div className={styles.title}>
+          <h3>Таблиця розміру:</h3>
+        </div>
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Размер</th>
-              <th>Простыня</th>
-              <th>Пододеяльник</th>
+              <th>Розмір</th>
+              <th>Простирадло</th>
+              <th>Пододіяльник</th>
               <th>Наволочки</th>
             </tr>
           </thead>
@@ -59,21 +62,21 @@ const SizeChart = ({ selectedSetSize }) => {
         </table>
       </div>
 
-      {/* Кнопка + вертикальный список для мобильных */}
+      {/* Кнопка + вертикальний список для мобільних */}
       <div className={styles.mobileView}>
         <button className={styles.toggleButton} onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? 'Скрыть размеры' : 'Показать размеры'}
+          {isOpen ? 'Сховати розміри' : 'Показати розміри'}
         </button>
         {isOpen && (
           <div className={styles.sizeContainer}>
             <div className={styles.sizeBlock}>
-              <strong>Размер:</strong> {selectedSetSize}
+              <strong>Розмір:</strong> {selectedSetSize}
             </div>
             <div className={styles.sizeBlock}>
-              <strong>Простыня:</strong> {currentSizeData.sheet}
+              <strong>Простирадло:</strong> {currentSizeData.sheet}
             </div>
             <div className={styles.sizeBlock}>
-              <strong>Пододеяльник:</strong> {currentSizeData.duvetCover}
+              <strong>Пододіяльник:</strong> {currentSizeData.duvetCover}
             </div>
             <div className={styles.sizeBlock}>
               <strong>Наволочки:</strong> {currentSizeData.pillowcases}

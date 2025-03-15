@@ -10,6 +10,11 @@
   text-align: center;
 }
 
+.title {
+  display: flex;
+  margin-top: 20px;
+}
+
 /* Горизонтальная таблица для десктопа */
 .desktopTable {
   display: block;
