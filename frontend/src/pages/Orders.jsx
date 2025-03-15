@@ -57,7 +57,7 @@ function Orders() {
         {orders.length > 0 ? (
           orders.map((order) => (
             <li key={order.id} className={styles.orderItem}>
-              <h3 className={styles.orderTitle}>Замовлення №{order.id}</h3>
+              <h3 className={styles.orderTitle}>Замовлення №{order.order_number}</h3> {/* Отображаем order_number */}
               <p className={styles.orderDetail}>Ім'я: {order.name}</p>
               <p className={styles.orderDetail}>Телефон: {order.phone}</p>
               <p className={styles.orderDetail}>Адреса: {order.address}</p>

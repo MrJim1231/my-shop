@@ -2,10 +2,9 @@ CREATE TABLE categories (
 id INT PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(255) NOT NULL,
 parent_id INT DEFAULT NULL,
+image VARCHAR(255) NULL,
 FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE SET NULL
 );
-
-ALTER TABLE categories ADD COLUMN image VARCHAR(255) NULL;
 
 ---
 
@@ -16,7 +15,6 @@ category_id INT,
 name VARCHAR(255) NOT NULL,
 description TEXT,
 price DECIMAL(10,2) NOT NULL,
-image VARCHAR(255),
 size VARCHAR(255),
 availability BOOLEAN DEFAULT 1,
 quantity_in_stock INT DEFAULT 0,
@@ -42,10 +40,11 @@ phone VARCHAR(50),
 address TEXT,
 comment TEXT,
 total_price DECIMAL(10, 2),
-created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+user_id INT NOT NULL,
+email VARCHAR(255) NOT NULL,
+order_number VARCHAR(255) NOT NULL
 );
-
-ALTER TABLE orders ADD user_id INT NOT NULL;
 
 CREATE TABLE order_items (
 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -53,13 +52,11 @@ order_id INT,
 product_id VARCHAR(50),
 quantity INT,
 price DECIMAL(10, 2),
+image VARCHAR(255) NOT NULL,
+size VARCHAR(50) NOT NULL,
 FOREIGN KEY (order_id) REFERENCES orders(id),
 FOREIGN KEY (product_id) REFERENCES products(id)
 );
-
-ALTER TABLE order_items
-ADD COLUMN image VARCHAR(255) NOT NULL,
-ADD COLUMN size VARCHAR(50) NOT NULL;
 
 ---
 
@@ -70,8 +67,4 @@ image VARCHAR(255),
 FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
-ALTER TABLE products DROP COLUMN image;
-
 ---
-
-ALTER TABLE orders ADD COLUMN email VARCHAR(255) NOT NULL;

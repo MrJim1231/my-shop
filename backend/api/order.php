@@ -38,11 +38,14 @@ $items = $data['items'];
 $totalPrice = $data['totalPrice'];
 $userId = $data['userId'];
 
+// Генерируем случайный номер заказа
+$orderNumber = strtoupper(uniqid('ORD-', true)); // Используем uniqid для генерации уникального ID
+
 // Вставляем заказ в таблицу orders (без comment2)
-$sql = "INSERT INTO orders (name, phone, address, email, comment, total_price, user_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO orders (order_number, name, phone, address, email, comment, total_price, user_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssssi", $name, $phone, $address, $email, $comment, $totalPrice, $userId);
+$stmt->bind_param("ssssssii", $orderNumber, $name, $phone, $address, $email, $comment, $totalPrice, $userId);
 
 // Если заказ успешно вставлен
 if ($stmt->execute()) {
@@ -78,10 +81,10 @@ if ($stmt->execute()) {
 
         // Тема и тело письма
         $mail->isHTML(true);
-        $mail->Subject = "Ваше замовлення №$orderId";
+        $mail->Subject = "Ваше замовлення №$orderNumber";
         $mail->Body = "
             <h2>Дякуємо за ваше замовлення!</h2>
-            <p><strong>Номер замовлення:</strong> $orderId</p>
+            <p><strong>Номер замовлення:</strong> $orderNumber</p>
             <p><strong>Ім'я:</strong> $name</p>
             <p><strong>Телефон:</strong> $phone</p>
             <p><strong>Адреса:</strong> $address</p>
