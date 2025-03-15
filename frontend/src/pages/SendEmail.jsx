@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import styles from '../styles/SendEmail.module.css' // стиль для страницы (опционально)
+import styles from '../styles/SendEmail.module.css' // стиль для страницы
 
 const SendEmail = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -17,13 +18,20 @@ const SendEmail = () => {
       message,
     }
 
+    setLoading(true) // Устанавливаем состояние загрузки
+
     try {
-      const response = await axios.post('/api/send-email', data)
+      // Путь на прямую без API_URL
+      const response = await axios.post('http://localhost/my-shop/backend/api/send_email.php', data)
+
       if (response.status === 200) {
         setStatus('Сообщение успешно отправлено!')
       }
     } catch (error) {
       setStatus('Не удалось отправить сообщение.')
+      console.error('Ошибка при отправке:', error)
+    } finally {
+      setLoading(false) // Снимаем состояние загрузки
     }
   }
 
@@ -43,8 +51,8 @@ const SendEmail = () => {
           <label>Сообщение:</label>
           <textarea value={message} onChange={(e) => setMessage(e.target.value)} required />
         </div>
-        <button type="submit" className={styles.button}>
-          Отправить сообщение
+        <button type="submit" className={styles.button} disabled={loading}>
+          {loading ? 'Отправка...' : 'Отправить сообщение'}
         </button>
       </form>
       {status && <p className={styles.status}>{status}</p>}

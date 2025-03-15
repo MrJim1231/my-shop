@@ -33,3 +33,4 @@ dist-ssr
 
 #Composer
 /backend/vendor/
+.env
