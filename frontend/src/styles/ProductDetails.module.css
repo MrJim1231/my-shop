@@ -117,4 +117,12 @@
   color: #333;
 }
 
-/* Стили для цен в ProductDetails.module.css */
+/* Адаптивность для мобильных устройств */
+
+/* Для экранов меньше 768px (мобильные устройства) */
+@media (max-width: 768px) {
+  .productDetails {
+    display: flex;
+    flex-direction: column;
+  }
+}
