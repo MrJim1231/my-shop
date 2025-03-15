@@ -41,3 +41,19 @@
   font-size: 16px;
   color: #777;
 }
+
+/* Адаптивность для мобильных устройств */
+
+/* Для экранов меньше 768px (мобильные устройства) */
+@media (max-width: 768px) {
+  .productInfo {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .thumbnailContainer {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 20px;
+  }
+}
