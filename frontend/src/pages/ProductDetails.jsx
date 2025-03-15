@@ -6,6 +6,7 @@ import styles from '../styles/ProductDetails.module.css'
 import { API_URL } from '../api/config'
 import ViewedProducts from '../components/ViewedProducts'
 import DiscountPrice, { applyDiscount } from '../components/DiscountPrice' // Импортируем applyDiscount
+import SizeChart from '../components/SizeChart' // Убедитесь, что путь правильный
 
 function ProductDetails() {
   const { id } = useParams()
@@ -231,6 +232,7 @@ function ProductDetails() {
           <button onClick={handleAddToCart} className={styles.addToCartButton} disabled={!selectedProduct || !selectedProduct.availability || selectedProduct.quantity_in_stock <= 0}>
             Добавить в корзину
           </button>
+          <SizeChart />
         </div>
       </div>
       <ViewedProducts viewedProducts={viewedProducts} />
