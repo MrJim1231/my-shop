@@ -1,12 +1,4 @@
-/* cart.module.css */
-
 .container {
-  /* max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
   padding: 20px;
 }
 
@@ -20,6 +12,7 @@
 .cartItem {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Распределяет элементы равномерно */
   margin-bottom: 20px;
   padding: 15px;
   background-color: #ffffff;
@@ -43,12 +36,22 @@
   font-size: 1.2rem;
   margin-bottom: 10px;
   color: #333;
+  text-align: left; /* Выравниваем название влево */
+  white-space: nowrap; /* Запрещаем перенос текста */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Добавляем троеточие, если текст слишком длинный */
 }
 
 .cartItem p {
   margin: 5px 0;
   font-size: 1rem;
   color: #555;
+}
+
+.cartItem .price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
 }
 
 .quantityControl {

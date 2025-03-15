@@ -34,7 +34,7 @@ function Cart() {
           {cart.map((item) => (
             <div key={`${item.id}-${item.size}`} className={cartStyles.cartItem}>
               <img src={item.image} alt={item.name} className={cartStyles.cartItemImage} />
-              <div>
+              <div className={cartStyles.cartDetails}>
                 <h2>{item.name}</h2>
                 <p>Ціна: {item.price} грн</p>
                 <p>Розмір: {item.size}</p>
