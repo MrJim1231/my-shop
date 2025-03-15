@@ -13,6 +13,7 @@ import Orders from './pages/Orders'
 import Footer from './components/Footer'
 import PrivateRoute from './components/PrivateRoute'
 import Auth from './pages/Auth' // Импортируем страницу авторизации
+import SendEmail from './pages/SendEmail'
 import './App.css'
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
               <Route path="/categories" element={<Categories />} />
               <Route path="/products" element={<Products />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/send-email" element={<SendEmail />} />
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/category/:categoryId" element={<CategoryPage />} />
               {/* Новый маршрут для страницы авторизации */}

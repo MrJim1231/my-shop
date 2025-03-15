@@ -45,6 +45,11 @@ function Navbar() {
               Категорії
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/send-email" className={({ isActive }) => (isActive ? styles.active : '')}>
+              Отправка письма
+            </NavLink>
+          </li>
           <li className={styles.cartLink}>
             <NavLink to="/cart" className={({ isActive }) => (isActive ? styles.active : '')}>
               Кошик
