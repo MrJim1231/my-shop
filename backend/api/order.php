@@ -34,14 +34,16 @@ $phone = $data['phone'];
 $address = $data['address'];
 $email = $data['email']; // Получаем email из запроса
 $comment = isset($data['comment']) ? $data['comment'] : '';
+$comment2 = isset($data['comment2']) ? $data['comment2'] : ''; // Получаем comment2 из запроса
 $items = $data['items'];
 $totalPrice = $data['totalPrice'];
 $userId = $data['userId'];
 
-// Вставляем заказ в таблицу orders (user_id может быть NULL)
-$sql = "INSERT INTO orders (name, phone, address, email, comment, total_price, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+// Вставляем заказ в таблицу orders (с добавленным comment2)
+$sql = "INSERT INTO orders (name, phone, address, email, comment, comment2, total_price, user_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssdis", $name, $phone, $address, $email, $comment, $totalPrice, $userId);
+$stmt->bind_param("ssssssdi", $name, $phone, $address, $email, $comment, $comment2, $totalPrice, $userId);
 
 // Если заказ успешно вставлен
 if ($stmt->execute()) {
@@ -85,6 +87,7 @@ if ($stmt->execute()) {
             <p><strong>Телефон:</strong> $phone</p>
             <p><strong>Адреса:</strong> $address</p>
             <p><strong>Коментар:</strong> $comment</p>
+            <p><strong>Другий коментар:</strong> $comment2</p>
             <p><strong>Ітогова сума:</strong> $totalPrice грн</p>
             <h3>Товари у замовленні:</h3>
             <ul>

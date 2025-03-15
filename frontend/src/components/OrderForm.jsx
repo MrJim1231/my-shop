@@ -1,104 +1,103 @@
 import React, { useState } from 'react'
-import { useCart } from '../context/CartContext' // Підключаємо контекст кошика
-import { useNavigate } from 'react-router-dom' // Підключаємо useNavigate
+import { useCart } from '../context/CartContext' // Подключаем контекст корзины
+import { useNavigate } from 'react-router-dom' // Подключаем useNavigate
 import styles from '../styles/OrderForm.module.css'
 import { API_URL } from '../api/config' // URL для API
 
 function OrderForm({ onClose }) {
-  const { cart, getTotalPrice, clearCart } = useCart() // Витягуємо дані з контексту кошика
+  const { cart, getTotalPrice, clearCart } = useCart() // Получаем данные из контекста корзины
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     address: '',
-    email: '', // Додаємо email до стану
+    email: '', // Добавляем email в состояние
     comment: '',
+    comment2: '', // Добавляем comment2 в состояние
   })
-  const [loading, setLoading] = useState(false) // Для стану завантаження
-  const [error, setError] = useState(null) // Для відображення помилки
-  const navigate = useNavigate() // Хук для навігації
+  const [loading, setLoading] = useState(false) // Для состояния загрузки
+  const [error, setError] = useState(null) // Для отображения ошибки
+  const navigate = useNavigate() // Хук для навигации
 
-  // Обробник зміни значень у формі
+  // Обработчик изменения значений в форме
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  // Обробник відправки форми
+  // Обработчик отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Перевіряємо валідність даних
+    // Проверяем валидность данных
     if (!formData.name || !formData.phone || !formData.address || !formData.email) {
-      setError("Усі поля, окрім коментаря, обов'язкові для заповнення.")
+      setError('Все поля, кроме комментария, обязательны для заполнения.')
       return
     }
 
-    // Отримуємо userId з localStorage або ставимо null
+    // Получаем userId из localStorage или ставим null
     const userId = localStorage.getItem('userId') || null
 
-    // Формуємо дані замовлення з картинками та розмірами
+    // Формируем данные для заказа с картинками и размерами
     const orderData = {
       ...formData,
       items: cart.map((item) => ({
-        product_id: item.id, // ID товару
-        quantity: item.quantity, // Кількість товару
-        price: item.price, // Ціна товару
-        image: item.image, // Картинка товару
-        size: item.size, // Розмір товару
+        product_id: item.id,
+        quantity: item.quantity,
+        price: item.price,
+        image: item.image,
+        size: item.size,
       })),
-      totalPrice: getTotalPrice(), // Загальна ціна
-      userId: userId, // Додаємо userId з localStorage або null
+      totalPrice: getTotalPrice(),
+      userId: userId,
     }
 
-    console.log('Дані замовлення:', orderData) // Логуємо дані перед відправкою
-
-    setLoading(true) // Вмикаємо індикатор завантаження
-    setError(null) // Очищаємо можливі попередні помилки
+    setLoading(true) // Включаем индикатор загрузки
+    setError(null) // Очищаем возможные ошибки
 
     try {
       const response = await fetch(`${API_URL}order.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData), // Відправляємо дані
+        body: JSON.stringify(orderData), // Отправляем данные
       })
 
       if (response.ok) {
-        // alert('Замовлення успішно оформлене!')
-        clearCart()
-        onClose()
+        clearCart() // Очищаем корзину
+        onClose() // Закрываем форму
 
-        // Після успішного оформлення замовлення перевіряємо, чи зареєстрований користувач
+        // После успешного оформления заказа проверяем, зарегистрирован ли пользователь
         if (userId) {
-          navigate('/orders') // Перенаправляємо на сторінку замовлень, якщо користувач зареєстрований
+          navigate('/orders') // Перенаправляем на страницу заказов, если пользователь зарегистрирован
         } else {
-          navigate('/') // Перенаправляємо на головну, якщо користувач не зареєстрований
+          navigate('/') // Перенаправляем на главную, если пользователь не зарегистрирован
         }
       } else {
-        throw new Error('Помилка при оформленні замовлення')
+        throw new Error('Ошибка при оформлении заказа')
       }
     } catch (error) {
-      console.error('Помилка:', error)
-      setError("Помилка з'єднання з сервером")
+      console.error('Ошибка:', error)
+      setError('Ошибка соединения с сервером')
     } finally {
-      setLoading(false) // Вимикаємо індикатор завантаження
+      setLoading(false) // Выключаем индикатор загрузки
     }
   }
 
   return (
     <div className={styles.orderFormContainer}>
       <div className={styles.orderForm}>
-        <h2>Оформлення замовлення</h2>
+        <h2>Оформление заказа</h2>
         <form onSubmit={handleSubmit}>
-          <input type="text" name="name" placeholder="Ваше ім'я" value={formData.name} onChange={handleChange} required />
+          <input type="text" name="name" placeholder="Ваше имя" value={formData.name} onChange={handleChange} required />
           <input type="tel" name="phone" placeholder="Телефон" value={formData.phone} onChange={handleChange} required />
-          <input type="text" name="address" placeholder="Адреса доставки" value={formData.address} onChange={handleChange} required />
-          <input type="email" name="email" placeholder="Електронна пошта" value={formData.email} onChange={handleChange} required /> {/* Поле для email */}
-          <textarea name="comment" placeholder="Коментар до замовлення" value={formData.comment} onChange={handleChange} />
-          {error && <p className={styles.error}>{error}</p>} {/* Відображаємо помилку, якщо є */}
+          <input type="text" name="address" placeholder="Адрес доставки" value={formData.address} onChange={handleChange} required />
+          <input type="email" name="email" placeholder="Электронная почта" value={formData.email} onChange={handleChange} required />
+          <textarea name="comment" placeholder="Комментарий к заказу" value={formData.comment} onChange={handleChange} />
+          <textarea name="comment2" placeholder="Второй комментарий к заказу" value={formData.comment2} onChange={handleChange} /> {/* Новое поле для comment2 */}
+          {error && <p className={styles.error}>{error}</p>} {/* Отображаем ошибку, если она есть */}
           <button type="submit" disabled={loading}>
-            {loading ? 'Відправка замовлення...' : 'Відправити замовлення'}
+            {loading ? 'Отправка заказа...' : 'Отправить заказ'}
           </button>
           <button type="button" onClick={onClose}>
-            Скасувати
+            Отменить
           </button>
         </form>
       </div>
