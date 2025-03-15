@@ -27,13 +27,20 @@ const SizeChart = ({ selectedSetSize }) => {
     },
   })
 
-  const [currentSizeData, setCurrentSizeData] = useState(sizeData[selectedSetSize])
+  const [currentSizeData, setCurrentSizeData] = useState(null)
 
   useEffect(() => {
     if (selectedSetSize && sizeData[selectedSetSize]) {
       setCurrentSizeData(sizeData[selectedSetSize])
+    } else {
+      setCurrentSizeData(null) // Если данных для выбранного размера нет, ставим null
     }
   }, [selectedSetSize, sizeData])
+
+  // Если данных для выбранного размера нет, показываем сообщение
+  if (!currentSizeData) {
+    return <div className={styles.sizeChart}>Дані для обраного розміру не знайдено.</div>
+  }
 
   return (
     <div className={styles.sizeChart}>
