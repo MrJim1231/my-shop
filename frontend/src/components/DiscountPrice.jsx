@@ -17,7 +17,7 @@ const DiscountPrice = ({ price, parentCategoryName, categoryName }) => {
 
   return (
     <p>
-      Цена:{' '}
+      Ціна:{' '}
       {discountedPrice !== price ? (
         <>
           <span className={styles.oldPrice}>{price} грн</span>

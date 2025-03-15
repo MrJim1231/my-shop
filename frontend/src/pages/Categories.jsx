@@ -3,14 +3,14 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import styles from '../styles/Categories.module.css'
 import { API_URL } from '../api/config'
-import ViewedProducts from '../components/ViewedProducts' // Импортируем компонент просмотренных товаров
+import ViewedProducts from '../components/ViewedProducts' // Імпортуємо компонент переглянутих товарів
 
 function Categories() {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [viewedProducts, setViewedProducts] = useState([])
 
-  // Загружаем категории
+  // Завантажуємо категорії
   useEffect(() => {
     axios
       .get(`${API_URL}categories.php`)
@@ -18,19 +18,19 @@ function Categories() {
         if (Array.isArray(response.data)) {
           setCategories(response.data)
         } else {
-          console.error('Получены неправильные данные:', response.data)
+          console.error('Отримані неправильні дані:', response.data)
           setCategories([])
         }
       })
       .catch((error) => {
-        console.error('Ошибка при получении категорий:', error)
+        console.error('Помилка при отриманні категорій:', error)
       })
       .finally(() => {
         setLoading(false)
       })
   }, [])
 
-  // Загружаем просмотренные товары из localStorage
+  // Завантажуємо переглянуті товари з localStorage
   useEffect(() => {
     const viewedItems = JSON.parse(localStorage.getItem('viewedProducts')) || []
     setViewedProducts(viewedItems)
@@ -38,16 +38,16 @@ function Categories() {
 
   return (
     <div className={styles.container}>
-      {/* Хлебные крошки */}
+      {/* Хлібні крихти */}
       <nav className={styles.breadcrumb}>
         <Link to="/" className={styles.breadcrumbLink}>
-          Главная
+          Головна
         </Link>
         <span className={styles.separator}>/</span>
-        <span className={styles.breadcrumbText}>Категории товаров</span>
+        <span className={styles.breadcrumbText}>Категорії товарів</span>
       </nav>
 
-      <h1 className={styles.title}>Категории товаров</h1>
+      <h1 className={styles.title}>Категорії товарів</h1>
 
       {loading ? (
         <div className={styles.categoryGrid}>
@@ -67,7 +67,7 @@ function Categories() {
               <Link to={`/category/${category.id}`} key={category.id} className={styles.categoryItem}>
                 <img
                   src={category.image}
-                  alt={`Изображение категории ${category.name}`}
+                  alt={`Зображення категорії ${category.name}`}
                   className={styles.categoryImage}
                   width="250"
                   height="250"
@@ -79,12 +79,12 @@ function Categories() {
               </Link>
             ))
           ) : (
-            <p>Категории не найдены</p>
+            <p>Категорії не знайдено</p>
           )}
         </div>
       )}
 
-      {/* Добавляем компонент для отображения товаров, которые были просмотрены */}
+      {/* Додаємо компонент для відображення товарів, які були переглянуті */}
       <ViewedProducts viewedProducts={viewedProducts} />
     </div>
   )

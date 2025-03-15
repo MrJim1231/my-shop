@@ -3,69 +3,69 @@ import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
 import styles from '../styles/CategoryPage.module.css'
 import { API_URL } from '../api/config'
-import ViewedProducts from '../components/ViewedProducts' // импорт компонента для отображения просмотренных товаров
-import useViewedProducts from '../hooks/useViewedProducts' // импорт хука для работы с просмотренными товарами
+import ViewedProducts from '../components/ViewedProducts' // імпортуємо компонент для відображення переглянутих товарів
+import useViewedProducts from '../hooks/useViewedProducts' // імпортуємо хук для роботи з переглянутими товарами
 import DiscountPrice from '../components/DiscountPrice'
 
 function CategoryPage() {
   const { categoryId } = useParams()
-  const [categoryName, setCategoryName] = useState('Загрузка...') // Имя категории
-  const [products, setProducts] = useState([]) // Все товары для категории
+  const [categoryName, setCategoryName] = useState('Завантаження...') // Назва категорії
+  const [products, setProducts] = useState([]) // Усі товари для категорії
   const [loading, setLoading] = useState(true)
 
-  // Используем кастомный хук для работы с просмотренными товарами
+  // Використовуємо кастомний хук для роботи з переглянутими товарами
   const { viewedProducts, addViewedProduct } = useViewedProducts()
 
-  // Загружаем данные о категории
+  // Завантажуємо дані про категорію
   useEffect(() => {
     axios
-      .get(`${API_URL}get_category_by_id.php?category_id=${categoryId}`) // Исправленный запрос
+      .get(`${API_URL}get_category_by_id.php?category_id=${categoryId}`) // Виправлений запит
       .then((response) => {
         if (response.data.name) {
-          setCategoryName(response.data.name) // Сохраняем имя категории
+          setCategoryName(response.data.name) // Зберігаємо назву категорії
         } else {
-          console.warn('Категория не найдена, ID:', categoryId)
-          setCategoryName('Категория не найдена')
+          console.warn('Категорія не знайдена, ID:', categoryId)
+          setCategoryName('Категорія не знайдена')
         }
       })
       .catch((error) => {
-        console.error('Ошибка при получении данных о категории:', error)
-        setCategoryName('Ошибка загрузки категории')
+        console.error('Помилка при отриманні даних про категорію:', error)
+        setCategoryName('Помилка завантаження категорії')
       })
   }, [categoryId])
 
   useEffect(() => {
-    // Загружаем данные о товарах для конкретной категории
+    // Завантажуємо дані про товари для конкретної категорії
     axios
       .get(`${API_URL}get_products_by_category.php?category_id=${categoryId}`)
       .then((response) => {
-        // Убираем дублирующиеся товары
+        // Видаляємо дублікати товарів
         const uniqueProducts = response.data.filter((product, index, self) => index === self.findIndex((p) => p.name === product.name))
         setProducts(uniqueProducts)
         setLoading(false)
       })
       .catch((error) => {
-        console.error('Ошибка при получении товаров:', error)
+        console.error('Помилка при отриманні товарів:', error)
         setLoading(false)
       })
   }, [categoryId])
 
   return (
     <div className={styles.container}>
-      {/* Хлебные крошки */}
+      {/* Хлібні крихти */}
       <nav className={styles.breadcrumb}>
         <Link to="/" className={styles.breadcrumbLink}>
-          Главная
+          Головна
         </Link>
         <span className={styles.separator}>/</span>
         <Link to="/categories" className={styles.breadcrumbLink}>
-          Категории товаров
+          Категорії товарів
         </Link>
         <span className={styles.separator}>/</span>
-        <span className={styles.breadcrumbText}>Товары в категории {categoryName}</span>
+        <span className={styles.breadcrumbText}>Товари в категорії {categoryName}</span>
       </nav>
 
-      <h1 className={styles.title}>Товары в категории</h1>
+      <h1 className={styles.title}>Товари в категорії</h1>
 
       {loading ? (
         <div className={styles.productGrid}>
@@ -86,7 +86,7 @@ function CategoryPage() {
                 <Link
                   to={`/product/${product.id}`}
                   className={styles.productLink}
-                  onClick={() => addViewedProduct({ ...product, categoryName })} // Добавляем товар в список просмотренных
+                  onClick={() => addViewedProduct({ ...product, categoryName })} // Додаємо товар до списку переглянутих
                 >
                   <div className={styles.productImages}>
                     {product.images && product.images.length > 0 ? (
@@ -101,7 +101,7 @@ function CategoryPage() {
                         loading={index === 0 ? 'eager' : 'lazy'}
                       />
                     ) : (
-                      <p>Изображение недоступно</p>
+                      <p>Зображення недоступне</p>
                     )}
                   </div>
 
@@ -111,12 +111,12 @@ function CategoryPage() {
               </div>
             ))
           ) : (
-            <p className={styles.noProducts}>Нет товаров в этой категории.</p>
+            <p className={styles.noProducts}>Немає товарів у цій категорії.</p>
           )}
         </div>
       )}
 
-      {/* Секция с просмотренными товарами */}
+      {/* Секція з переглянутими товарами */}
       <ViewedProducts viewedProducts={viewedProducts} />
     </div>
   )

@@ -38,7 +38,7 @@ function Home() {
 
         setProducts(allProducts)
       } catch (error) {
-        console.error('Ошибка при загрузке товаров:', error)
+        console.error('Помилка під час завантаження товарів:', error)
       } finally {
         setLoading(false)
       }
@@ -49,7 +49,7 @@ function Home() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Популярные товары</h1>
+      <h1 className={styles.title}>Популярні товари</h1>
 
       {loading ? (
         <div className={styles.productGrid}>
@@ -83,7 +83,7 @@ function Home() {
                         loading={index === 0 ? 'eager' : 'lazy'}
                       />
                     ) : (
-                      <div className={styles.noImage}>Изображение отсутствует</div>
+                      <div className={styles.noImage}>Зображення відсутнє</div>
                     )}
                     <h2 className={styles.productName}>{product.name}</h2>
                     <DiscountPrice price={product.price} categoryName={product.categoryName} />
@@ -92,7 +92,7 @@ function Home() {
               )
             })
           ) : (
-            <p className={styles.noProducts}>Нет товаров.</p>
+            <p className={styles.noProducts}>Немає товарів.</p>
           )}
         </div>
       )}

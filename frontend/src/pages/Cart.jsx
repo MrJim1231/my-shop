@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom' // Для ссылок в хлебных крошках
+import { Link } from 'react-router-dom' // Для посилань в хлібних крихтах
 import { useCart } from '../context/CartContext'
 import cartStyles from '../styles/Cart.module.css'
 import OrderForm from '../components/OrderForm'
@@ -10,25 +10,25 @@ function Cart() {
 
   return (
     <div className={cartStyles.container}>
-      {/* Хлебные крошки */}
+      {/* Хлібні крихти */}
       <nav className={cartStyles.breadcrumb}>
         <Link to="/" className={cartStyles.breadcrumbLink}>
-          Главная
+          Головна
         </Link>
         <span className={cartStyles.separator}>/</span>
 
-        {/* Ссылка на категорию товаров */}
+        {/* Посилання на категорію товарів */}
         <Link to="/categories" className={cartStyles.breadcrumbLink}>
-          Категории
+          Категорії
         </Link>
         <span className={cartStyles.separator}>/</span>
 
-        <span className={cartStyles.breadcrumbText}>Корзина</span>
+        <span className={cartStyles.breadcrumbText}>Кошик</span>
       </nav>
 
-      <h1>Корзина</h1>
+      <h1>Кошик</h1>
       {cart.length === 0 ? (
-        <p>Корзина пуста</p>
+        <p>Кошик порожній</p>
       ) : (
         <div>
           {cart.map((item) => (
@@ -36,10 +36,10 @@ function Cart() {
               <img src={item.image} alt={item.name} className={cartStyles.cartItemImage} />
               <div>
                 <h2>{item.name}</h2>
-                <p>Цена: {item.price} грн</p>
-                <p>Размер: {item.size}</p>
+                <p>Ціна: {item.price} грн</p>
+                <p>Розмір: {item.size}</p>
 
-                {/* Кнопки увеличения и уменьшения количества */}
+                {/* Кнопки збільшення та зменшення кількості */}
                 <div className={cartStyles.quantityControl}>
                   <button onClick={() => decreaseQuantity(item.id, item.size)} className={cartStyles.decreaseButton}>
                     -
@@ -51,15 +51,15 @@ function Cart() {
                 </div>
 
                 <button onClick={() => removeFromCart(item.id, item.size)} className={cartStyles.removeButton}>
-                  Удалить
+                  Видалити
                 </button>
               </div>
             </div>
           ))}
           <div className={cartStyles.cartSummary}>
-            <p>Общая стоимость: {getTotalPrice()} грн</p>
+            <p>Загальна вартість: {getTotalPrice()} грн</p>
             <button onClick={() => setIsOrdering(true)} className={cartStyles.checkoutButton}>
-              Оформить заказ
+              Оформити замовлення
             </button>
           </div>
         </div>

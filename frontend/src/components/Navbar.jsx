@@ -23,7 +23,7 @@ function Navbar() {
           </NavLink>
         </div>
 
-        {/* Мобильная корзина рядом с логотипом */}
+        {/* Мобільний кошик поруч з логотипом */}
         {getTotalItems() > 0 && (
           <div className={`${styles.cartIcon} ${isMenuOpen ? styles.hidden : ''}`}>
             <NavLink to="/cart">
@@ -33,21 +33,21 @@ function Navbar() {
           </div>
         )}
 
-        {/* Десктоп-меню (скрывается на мобильных) */}
+        {/* Десктоп-меню (приховується на мобільних) */}
         <ul className={styles.navLinks}>
           <li>
             <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : '')}>
-              Главная
+              Головна
             </NavLink>
           </li>
           <li>
             <NavLink to="/categories" className={({ isActive }) => (isActive ? styles.active : '')}>
-              Категории
+              Категорії
             </NavLink>
           </li>
           <li className={styles.cartLink}>
             <NavLink to="/cart" className={({ isActive }) => (isActive ? styles.active : '')}>
-              Корзина
+              Кошик
               {getTotalItems() > 0 && <span className={styles.badge}>{getTotalItems()}</span>}
             </NavLink>
           </li>
@@ -55,48 +55,48 @@ function Navbar() {
             <>
               <li>
                 <NavLink to="/orders" className={({ isActive }) => (isActive ? styles.active : '')}>
-                  Заказы
+                  Замовлення
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/" onClick={logout} className={styles.navLink}>
-                  Выйти
+                  Вийти
                 </NavLink>
               </li>
             </>
           ) : (
             <li>
               <NavLink to="/auth" className={({ isActive }) => (isActive ? styles.active : '')}>
-                Личный кабинет
+                Особистий кабінет
               </NavLink>
             </li>
           )}
         </ul>
 
-        {/* Бургер-меню (показывается только на мобильных) */}
+        {/* Бургер-меню (відображається тільки на мобільних) */}
         <div className={styles.burgerIcon} onClick={toggleMenu}>
           {isMenuOpen ? <FiX /> : <FiMenu />}
         </div>
       </nav>
 
-      {/* Мобильное меню (изначально скрыто) */}
+      {/* Мобільне меню (спочатку приховане) */}
       <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ''}`}>
         <ul>
           <li>
             <NavLink to="/" onClick={toggleMenu}>
-              Главная
+              Головна
             </NavLink>
           </li>
           <hr />
           <li>
             <NavLink to="/categories" onClick={toggleMenu}>
-              Категории
+              Категорії
             </NavLink>
           </li>
           <hr />
           <li>
             <NavLink to="/cart" onClick={toggleMenu}>
-              Корзина
+              Кошик
             </NavLink>
           </li>
           <hr />
@@ -104,7 +104,7 @@ function Navbar() {
             <>
               <li>
                 <NavLink to="/orders" onClick={toggleMenu}>
-                  Заказы
+                  Замовлення
                 </NavLink>
               </li>
               <hr />
@@ -117,14 +117,14 @@ function Navbar() {
                   }}
                   className={styles.navLink}
                 >
-                  Выйти
+                  Вийти
                 </NavLink>
               </li>
             </>
           ) : (
             <li>
               <NavLink to="/auth" onClick={toggleMenu}>
-                Личный кабинет
+                Особистий кабінет
               </NavLink>
             </li>
           )}

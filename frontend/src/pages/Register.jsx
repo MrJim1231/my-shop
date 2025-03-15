@@ -1,26 +1,26 @@
 import React, { useState } from 'react'
 import { API_URL } from '../api/config'
 import axios from 'axios'
-import { useAuth } from '../context/AuthContext' // Получаем хук для работы с контекстом
-import { useNavigate } from 'react-router-dom' // Импортируем useNavigate для редиректа
-import styles from '../styles/Auth.module.css' // Используем тот же файл стилей
+import { useAuth } from '../context/AuthContext' // Отримуємо хук для роботи з контекстом
+import { useNavigate } from 'react-router-dom' // Імпортуємо useNavigate для редиректу
+import styles from '../styles/Auth.module.css' // Використовуємо той самий файл стилів
 
 const Register = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState({ text: '', type: '' })
-  const { login } = useAuth() // Получаем функцию login из контекста
-  const navigate = useNavigate() // Хук для навигации
+  const { login } = useAuth() // Отримуємо функцію login з контексту
+  const navigate = useNavigate() // Хук для навігації
 
   const registerUser = async (e) => {
     e.preventDefault()
 
-    console.log('Отправка данных:', { email, password })
+    console.log('Відправка даних:', { email, password })
 
     try {
       const res = await axios.post(`${API_URL}register.php`, { email, password }, { headers: { 'Content-Type': 'application/json' } })
 
-      console.log('Ответ сервера:', res.data)
+      console.log('Відповідь сервера:', res.data)
 
       setMessage({ text: res.data.message, type: res.data.status === 'success' ? 'success' : 'error' })
 
@@ -28,25 +28,25 @@ const Register = () => {
         const { token, userId } = res.data
 
         if (token && userId) {
-          console.log('Полученные данные:', { token, userId })
+          console.log('Отримані дані:', { token, userId })
 
-          // Сохраняем токен и userId в localStorage
+          // Зберігаємо токен і userId в localStorage
           localStorage.setItem('token', token)
           localStorage.setItem('userId', userId)
 
-          // Входим в систему с помощью контекста
+          // Входимо в систему за допомогою контексту
           login({ token, userId })
 
-          // Перенаправляем на главную страницу
-          navigate('/') // Перенаправление на главную
+          // Перенаправляємо на головну сторінку
+          navigate('/') // Перенаправлення на головну
         } else {
-          setMessage({ text: 'Ошибка: данные от сервера неполные', type: 'error' })
-          console.log('Ошибка: токен или userId отсутствует')
+          setMessage({ text: 'Помилка: дані від сервера неповні', type: 'error' })
+          console.log('Помилка: токен або userId відсутній')
         }
       }
     } catch (err) {
-      setMessage({ text: 'Ошибка при регистрации', type: 'error' })
-      console.error('Ошибка запроса:', err)
+      setMessage({ text: 'Помилка при реєстрації', type: 'error' })
+      console.error('Помилка запиту:', err)
     }
   }
 
@@ -56,7 +56,7 @@ const Register = () => {
         <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button className={styles.button} type="submit">
-          Зарегистрироваться
+          Зареєструватися
         </button>
       </form>
       {message.text && <p className={message.type === 'success' ? styles.successMessage : styles.errorMessage}>{message.text}</p>}

@@ -12,16 +12,16 @@ const Auth = () => {
 
   return (
     <div className={styles.authContainer}>
-      {/* Заголовок "Вход" или "Регистрация" */}
-      <h2 className={styles.title}>{isLogin ? 'Вход' : 'Регистрация'}</h2>
+      {/* Заголовок "Вхід" або "Реєстрація" */}
+      <h2 className={styles.title}>{isLogin ? 'Вхід' : 'Реєстрація'}</h2>
 
-      {/* Условный рендеринг форм входа и регистрации */}
+      {/* Умовне відображення форм входу та реєстрації */}
       {isLogin ? <Login /> : <Register />}
 
-      {/* Кнопка для переключения между формами */}
+      {/* Кнопка для перемикання між формами */}
       <div className={styles.toggleContainer}>
         <button className={styles.toggleButton} onClick={toggleForm}>
-          {isLogin ? 'Нет аккаунта? Зарегистрируйтесь' : 'Уже есть аккаунт? Войдите'}
+          {isLogin ? 'Немає акаунта? Зареєструйтесь' : 'Вже є акаунт? Увійдіть'}
         </button>
       </div>
     </div>

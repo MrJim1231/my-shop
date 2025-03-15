@@ -4,12 +4,12 @@ import styles from '../styles/ViewedProducts.module.css'
 import DiscountPrice from '../components/DiscountPrice'
 
 function ViewedProducts({ viewedProducts }) {
-  // Ограничиваем отображение до последних 4 товаров
+  // Обмежуємо відображення до останніх 4 товарів
   const recentViewedProducts = viewedProducts.slice(0, 4)
 
   return (
     <div className={styles.viewedProductsSection}>
-      <h2 className={styles.title}>Товары, которые вы просматривали</h2>
+      <h2 className={styles.title}>Товари, які ви переглядали</h2>
       <div className={styles.productGrid}>
         {recentViewedProducts.length > 0 ? (
           recentViewedProducts.map((product, index) => {
@@ -30,7 +30,7 @@ function ViewedProducts({ viewedProducts }) {
                       loading={index === 0 ? 'eager' : 'lazy'}
                     />
                   ) : (
-                    <div className={styles.noImage}>Изображение отсутствует</div>
+                    <div className={styles.noImage}>Зображення відсутнє</div>
                   )}
                   <h2 className={styles.productName}>{product.name}</h2>
                   <DiscountPrice price={product.price} categoryName={product.categoryName} />
@@ -39,7 +39,7 @@ function ViewedProducts({ viewedProducts }) {
             )
           })
         ) : (
-          <p>Вы еще не просматривали товары.</p>
+          <p>Ви ще не переглядали товари.</p>
         )}
       </div>
     </div>

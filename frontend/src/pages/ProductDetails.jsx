@@ -6,8 +6,8 @@ import styles from '../styles/ProductDetails.module.css'
 import { API_URL } from '../api/config'
 import ViewedProducts from '../components/ViewedProducts'
 import DiscountPrice, { applyDiscount } from '../components/DiscountPrice'
-import SizeChart from '../components/SizeChart' // Импортируем компонент SizeChart
-import ImageGallery from '../components/ImageGallery' // Импортируем компонент ImageGallery
+import SizeChart from '../components/SizeChart' // Імпортуємо компонент SizeChart
+import ImageGallery from '../components/ImageGallery' // Імпортуємо компонент ImageGallery
 
 function ProductDetails() {
   const { id } = useParams()
@@ -24,13 +24,13 @@ function ProductDetails() {
   const [previousImage, setPreviousImage] = useState(null)
   const [viewedProducts, setViewedProducts] = useState([])
 
-  // Загружаем просмотренные товары из localStorage
+  // Завантажуємо переглянуті товари з localStorage
   useEffect(() => {
     const viewedItems = JSON.parse(localStorage.getItem('viewedProducts')) || []
     setViewedProducts(viewedItems)
   }, [])
 
-  // Загрузка данных о товаре
+  // Завантаження даних про товар
   useEffect(() => {
     if (id) {
       axios
@@ -46,8 +46,8 @@ function ProductDetails() {
           setLoading(false)
         })
         .catch((error) => {
-          console.error('Ошибка при загрузке товара:', error)
-          setError('Ошибка при загрузке товара')
+          console.error('Помилка при завантаженні товару:', error)
+          setError('Помилка при завантаженні товару')
           setLoading(false)
         })
     }
@@ -67,14 +67,14 @@ function ProductDetails() {
               setParentCategoryName(parentRes.data.name)
             })
             .catch(() => {
-              setParentCategoryName('Неизвестная родительская категория')
+              setParentCategoryName('Невідома батьківська категорія')
             })
         } else {
-          setParentCategoryName('Нет родительской категории')
+          setParentCategoryName('Немає батьківської категорії')
         }
       })
       .catch(() => {
-        setCategoryName('Неизвестная категория')
+        setCategoryName('Невідома категорія')
         setCategoryId(null)
       })
   }
@@ -141,29 +141,29 @@ function ProductDetails() {
   const handleAddToCart = () => {
     if (!selectedProduct) return
 
-    const discountedPrice = applyDiscount(selectedProduct.price, parentCategoryName, categoryName) // Применяем скидку
+    const discountedPrice = applyDiscount(selectedProduct.price, parentCategoryName, categoryName) // Застосовуємо знижку
 
     const productToAdd = {
       ...selectedProduct,
       image: previousImage,
-      price: discountedPrice, // Применяем скидку при добавлении товара в корзину
+      price: discountedPrice, // Застосовуємо знижку при додаванні товару в кошик
     }
 
     addToCart(productToAdd)
   }
 
-  if (loading) return <div>Загрузка...</div>
+  if (loading) return <div>Завантаження...</div>
   if (error) return <div>{error}</div>
 
   return (
     <div className={styles.container}>
       <nav className={styles.breadcrumb}>
         <Link to="/" className={styles.breadcrumbLink}>
-          Главная
+          Головна
         </Link>
         <span className={styles.separator}>/</span>
         <Link to="/categories" className={styles.breadcrumbLink}>
-          Категории
+          Категорії
         </Link>
         <span className={styles.separator}>/</span>
         {parentCategoryName && (
@@ -174,23 +174,23 @@ function ProductDetails() {
         <span className={styles.separator}>/</span>
         {categoryId && (
           <Link to={`/category/${categoryId}`} className={styles.breadcrumbLink}>
-            {categoryName || 'Категория'}
+            {categoryName || 'Категорія'}
           </Link>
         )}
         <span className={styles.separator}>/</span>
         <span className={styles.breadcrumbText}>{selectedProduct?.name || product?.name || 'Товар'}</span>
       </nav>
       <div className={styles.productDetails}>
-        {/* Используем компонент ImageGallery */}
+        {/* Використовуємо компонент ImageGallery */}
         {product?.images && <ImageGallery images={product.images} setPreviousImage={setPreviousImage} previousImage={previousImage} />}
 
         <div className={styles.section}>
           <h2>{selectedProduct?.name}</h2>
           <DiscountPrice price={selectedProduct?.price} parentCategoryName={parentCategoryName} categoryName={categoryName} />
-          <p>Наличие: {selectedProduct?.availability ? 'В наличии' : 'Нет в наличии'}</p>
-          <p>Количество на складе: {selectedProduct?.quantity_in_stock}</p>
+          <p>Наявність: {selectedProduct?.availability ? 'В наявності' : 'Немає в наявності'}</p>
+          <p>Кількість на складі: {selectedProduct?.quantity_in_stock}</p>
           <div className={styles.sizeTypeSection}>
-            <h3>Выбор размера комплекта:</h3>
+            <h3>Вибір розміру комплекту:</h3>
             <div className={styles.sizeTypeButtons}>
               {['1,5сп', '2сп', 'Євро', 'Сімейний'].map((size) => {
                 const isAvailable = Object.values(product.sizes)
@@ -207,7 +207,7 @@ function ProductDetails() {
           </div>
 
           <div className={styles.sizeTypeSection}>
-            <h3>Выбор размера наволочки подушки:</h3>
+            <h3>Вибір розміру наволочки подушки:</h3>
             <div className={styles.sizeTypeButtons}>
               {['50*70', '70*70'].map((size) => (
                 <button key={size} className={selectedSizeType === size ? styles.active : ''} onClick={() => handleSizeTypeChange(size)}>
@@ -217,11 +217,11 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* Добавляем таблицу с размерами */}
+          {/* Додаємо таблицю з розмірами */}
           {product?.sizes && <SizeChart selectedSetSize={selectedSetSize} />}
 
           <button onClick={handleAddToCart} className={styles.addToCartButton} disabled={!selectedProduct || !selectedProduct.availability || selectedProduct.quantity_in_stock <= 0}>
-            Добавить в корзину
+            Додати в кошик
           </button>
         </div>
       </div>
