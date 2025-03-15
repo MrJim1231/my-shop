@@ -86,7 +86,7 @@ function CategoryPage() {
                 <Link
                   to={`/product/${product.id}`}
                   className={styles.productLink}
-                  onClick={() => addViewedProduct(product)} // Добавляем товар в список просмотренных
+                  onClick={() => addViewedProduct({ ...product, categoryName })} // Добавляем товар в список просмотренных
                 >
                   <div className={styles.productImages}>
                     {product.images && product.images.length > 0 ? (

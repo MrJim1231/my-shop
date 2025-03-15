@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styles from '../styles/ViewedProducts.module.css'
+import DiscountPrice from '../components/DiscountPrice'
 
 function ViewedProducts({ viewedProducts }) {
   // Ограничиваем отображение до последних 4 товаров
@@ -32,7 +33,7 @@ function ViewedProducts({ viewedProducts }) {
                     <div className={styles.noImage}>Изображение отсутствует</div>
                   )}
                   <h2 className={styles.productName}>{product.name}</h2>
-                  <p className={styles.productPrice}>Цена: {product.price} грн</p>
+                  <DiscountPrice price={product.price} categoryName={product.categoryName} />
                 </Link>
               </div>
             )
