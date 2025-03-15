@@ -39,6 +39,9 @@ function Cart() {
                 <p>Ціна: {item.price} грн</p>
                 <p>Розмір: {item.size}</p>
 
+                {/* Количество на складе */}
+                <p>На складі: {item.quantity_in_stock}</p>
+
                 {/* Кнопки збільшення та зменшення кількості */}
                 <div className={cartStyles.quantityControl}>
                   <button onClick={() => decreaseQuantity(item.id, item.size)} className={cartStyles.decreaseButton}>
