@@ -16,7 +16,6 @@ export const CartProvider = ({ children }) => {
     const productIndex = cart.findIndex((item) => item.id === product.id && item.size === product.size)
 
     if (productIndex !== -1) {
-      // Проверка на максимальное количество на складе
       const currentQuantity = cart[productIndex].quantity
       if (currentQuantity < product.quantity_in_stock) {
         const updatedCart = [...cart]
@@ -24,7 +23,7 @@ export const CartProvider = ({ children }) => {
         setCart(updatedCart)
         localStorage.setItem('cart', JSON.stringify(updatedCart))
       } else {
-        alert('Недостатньо товару на складі!') // Выводим предупреждение, если товара на складе недостаточно
+        alert('Недостатньо товару на складі!')
       }
     } else {
       const updatedCart = [...cart, { ...product, quantity: 1 }]
@@ -42,7 +41,6 @@ export const CartProvider = ({ children }) => {
   const increaseQuantity = (productId, size) => {
     const updatedCart = cart.map((item) => {
       if (item.id === productId && item.size === size) {
-        // Проверка на максимальное количество на складе
         if (item.quantity < item.quantity_in_stock) {
           return { ...item, quantity: item.quantity + 1 }
         } else {
@@ -63,7 +61,7 @@ export const CartProvider = ({ children }) => {
   }
 
   const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + (item.price || 0) * (item.quantity || 1), 0)
+    return cart.reduce((total, item) => total + (Number(item.price) || 0) * (item.quantity || 1), 0).toFixed(2)
   }
 
   const getTotalItems = () => {

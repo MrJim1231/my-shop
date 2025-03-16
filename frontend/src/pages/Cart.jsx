@@ -5,7 +5,7 @@ import cartStyles from '../styles/Cart.module.css'
 import OrderForm from '../components/OrderForm'
 
 function Cart() {
-  const { cart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice } = useCart()
+  const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCart()
   const [isOrdering, setIsOrdering] = useState(false)
   const [rubberOption, setRubberOption] = useState({})
 
@@ -17,10 +17,12 @@ function Cart() {
   }
 
   const calculateTotalPrice = () => {
-    return cart.reduce((total, item) => {
-      const itemPrice = item.price + (rubberOption[item.id] ? 100 : 0)
-      return total + itemPrice * item.quantity
-    }, 0)
+    return cart
+      .reduce((total, item) => {
+        const itemPrice = Number(item.price) + (rubberOption[item.id] ? 100 : 0)
+        return total + itemPrice * item.quantity
+      }, 0)
+      .toFixed(2)
   }
 
   return (
@@ -47,7 +49,7 @@ function Cart() {
               <img src={item.image} alt={item.name} className={cartStyles.cartItemImage} />
               <div className={cartStyles.cartDetails}>
                 <h2>{item.name}</h2>
-                <p>Ціна: {item.price + (rubberOption[item.id] ? 100 : 0)} грн</p>
+                <p>Ціна: {(Number(item.price) + (rubberOption[item.id] ? 100 : 0)).toFixed(2)} грн</p>
                 <p>Розмір: {item.size}</p>
                 <p>На складі: {item.quantity_in_stock}</p>
                 <div className={cartStyles.quantityControl}>
@@ -77,7 +79,7 @@ function Cart() {
           </div>
         </div>
       )}
-      {isOrdering && <OrderForm onClose={() => setIsOrdering(false)} cart={cart.map((item) => ({ ...item, rubber: rubberOption[item.id] || false }))} rubberOption={rubberOption} />}
+      {isOrdering && <OrderForm onClose={() => setIsOrdering(false)} cart={cart.map((item) => ({ ...item, rubber: rubberOption[item.id] || false }))} />}
     </div>
   )
 }
