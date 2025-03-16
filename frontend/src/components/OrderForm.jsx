@@ -36,12 +36,12 @@ function OrderForm({ onClose, rubberOption }) {
       items: cart.map((item) => ({
         product_id: item.id,
         quantity: item.quantity,
-        price: item.price + (rubberOption[item.id] ? 100 : 0),
+        price: Number(item.price) + (rubberOption[item.id] ? 100 : 0), // Добавлен Number() для надежности
         image: item.image,
         size: item.size,
         rubber: rubberOption[item.id] || false,
       })),
-      totalPrice: getTotalPrice() + Object.values(rubberOption).filter(Boolean).length * 100,
+      totalPrice: getTotalPrice() + Object.values(rubberOption || {}).filter(Boolean).length * 100, // Проверка на null/undefined
       userId: userId,
     }
 
