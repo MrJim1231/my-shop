@@ -17,7 +17,7 @@ if ($mysqli->connect_error) {
     die("Ошибка подключения: " . $mysqli->connect_error);
 }
 
-// === ДОБАВЛЕНИЕ КАТЕГОРИЙ ===
+// === ДОБАВЛЕНИЕ И ОБНОВЛЕНИЕ КАТЕГОРИЙ ===
 foreach ($xml->shop->categories->category as $category) {
     $category_id = (string)$category['id'];
     $category_name = $mysqli->real_escape_string((string)$category);
@@ -50,8 +50,9 @@ foreach ($xml->shop->categories->category as $category) {
     }
 }
 
-// === ДОБАВЛЕНИЕ ТОВАРОВ ===
+// === ДОБАВЛЕНИЕ И ОБНОВЛЕНИЕ ТОВАРОВ ===
 $totalProducts = 0;
+$updatedProducts = 0; // Переменная для подсчета обновленных товаров
 
 foreach ($xml->shop->offers->offer as $offer) {
     $product_id = (string)$offer['id'];
@@ -73,15 +74,26 @@ foreach ($xml->shop->offers->offer as $offer) {
         }
     }
 
-    // Проверяем, есть ли товар в базе
-    $checkQuery = "SELECT id FROM products WHERE id = '$product_id'";
+    // Проверка, существует ли товар в базе данных
+    $checkQuery = "SELECT id, price, quantity_in_stock FROM products WHERE id = '$product_id'";
     $result = $mysqli->query($checkQuery);
 
     if ($result->num_rows == 0) {
-        // Вставляем товар в базу
+        // Если товара нет в базе, добавляем его
         $mysqli->query("INSERT INTO products (id, group_id, category_id, name, description, price, size, availability, quantity_in_stock, weight) 
                         VALUES ('$product_id', " . ($group_id ? "'$group_id'" : "NULL") . ", '$category_id', '$name', '$description', $price, '$size', $availability, $quantity_in_stock, $weight)");
         $totalProducts++;
+    } else {
+        // Если товар есть в базе, проверяем обновления
+        $existingProduct = $result->fetch_assoc();
+        
+        // Обновление товара, если цена или количество изменились
+        if ($existingProduct['price'] != $price || $existingProduct['quantity_in_stock'] != $quantity_in_stock) {
+            $mysqli->query("UPDATE products 
+                            SET price = $price, quantity_in_stock = $quantity_in_stock, weight = $weight 
+                            WHERE id = '$product_id'");
+            $updatedProducts++; // Увеличиваем счетчик обновленных товаров
+        }
     }
 
     // Вставка изображений
@@ -96,7 +108,9 @@ foreach ($xml->shop->offers->offer as $offer) {
 
 $mysqli->close();
 
+// Выводим статистику
 echo "Общее количество товаров: " . count($xml->shop->offers->offer) . "<br>";
 echo "Добавлено в базу: " . $totalProducts . "<br>";
+echo "Обновлено товаров: " . $updatedProducts . "<br>";
 echo "Категории и товары обновлены!";
 ?>
