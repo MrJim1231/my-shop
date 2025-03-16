@@ -5,7 +5,7 @@ import cartStyles from '../styles/Cart.module.css'
 import OrderForm from '../components/OrderForm'
 
 function Cart() {
-  const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCart()
+  const { cart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice } = useCart()
   const [isOrdering, setIsOrdering] = useState(false)
   const [rubberOption, setRubberOption] = useState({})
 
@@ -16,32 +16,23 @@ function Cart() {
     }))
   }
 
-  const calculateTotalPrice = () => {
-    return cart
-      .reduce((total, item) => {
-        const itemPrice = Number(item.price) + (rubberOption[item.id] ? 100 : 0)
-        return total + itemPrice * item.quantity
-      }, 0)
-      .toFixed(2)
-  }
-
   return (
     <div className={cartStyles.container}>
       <nav className={cartStyles.breadcrumb}>
         <Link to="/" className={cartStyles.breadcrumbLink}>
-          Головна
+          Главная
         </Link>
         <span className={cartStyles.separator}>/</span>
         <Link to="/categories" className={cartStyles.breadcrumbLink}>
-          Категорії
+          Категории
         </Link>
         <span className={cartStyles.separator}>/</span>
-        <span className={cartStyles.breadcrumbText}>Кошик</span>
+        <span className={cartStyles.breadcrumbText}>Корзина</span>
       </nav>
 
-      <h1>Кошик</h1>
+      <h1>Корзина</h1>
       {cart.length === 0 ? (
-        <p>Кошик порожній</p>
+        <p>Корзина пуста</p>
       ) : (
         <div>
           {cart.map((item) => (
@@ -49,9 +40,9 @@ function Cart() {
               <img src={item.image} alt={item.name} className={cartStyles.cartItemImage} />
               <div className={cartStyles.cartDetails}>
                 <h2>{item.name}</h2>
-                <p>Ціна: {(Number(item.price) + (rubberOption[item.id] ? 100 : 0)).toFixed(2)} грн</p>
-                <p>Розмір: {item.size}</p>
-                <p>На складі: {item.quantity_in_stock}</p>
+                <p>Цена: {(Number(item.price) + (rubberOption[item.id] ? 100 : 0)).toFixed(2)} грн</p>
+                <p>Размер: {item.size}</p>
+                <p>На складе: {item.quantity_in_stock}</p>
                 <div className={cartStyles.quantityControl}>
                   <button onClick={() => decreaseQuantity(item.id, item.size)} className={cartStyles.decreaseButton}>
                     -
@@ -66,20 +57,20 @@ function Cart() {
                   На резинке (+100 грн)
                 </label>
                 <button onClick={() => removeFromCart(item.id, item.size)} className={cartStyles.removeButton}>
-                  Видалити
+                  Удалить
                 </button>
               </div>
             </div>
           ))}
           <div className={cartStyles.cartSummary}>
-            <p>Загальна вартість: {calculateTotalPrice()} грн</p>
+            <p>Общая стоимость: {getTotalPrice(rubberOption)} грн</p> {/* Используем getTotalPrice */}
             <button onClick={() => setIsOrdering(true)} className={cartStyles.checkoutButton}>
-              Оформити замовлення
+              Оформить заказ
             </button>
           </div>
         </div>
       )}
-      {isOrdering && <OrderForm onClose={() => setIsOrdering(false)} cart={cart.map((item) => ({ ...item, rubber: rubberOption[item.id] || false }))} rubberOption={rubberOption || {}} />}
+      {isOrdering && <OrderForm onClose={() => setIsOrdering(false)} rubberOption={rubberOption} totalPrice={getTotalPrice(rubberOption)} />}
     </div>
   )
 }

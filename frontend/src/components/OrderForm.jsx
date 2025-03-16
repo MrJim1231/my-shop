@@ -31,17 +31,20 @@ function OrderForm({ onClose, rubberOption }) {
 
     const userId = localStorage.getItem('userId') || null
 
+    // Вычисляем общую сумму
+    const totalPrice = getTotalPrice(rubberOption) // Используем getTotalPrice с rubberOption
+
     const orderData = {
       ...formData,
       items: cart.map((item) => ({
         product_id: item.id,
         quantity: item.quantity,
-        price: Number(item.price) + (rubberOption[item.id] ? 100 : 0), // Добавлен Number() для надежности
+        price: Number(item.price) + (rubberOption[item.id] ? 100 : 0),
         image: item.image,
         size: item.size,
         rubber: rubberOption[item.id] || false,
       })),
-      totalPrice: getTotalPrice() + Object.values(rubberOption || {}).filter(Boolean).length * 100, // Проверка на null/undefined
+      totalPrice, // Используем переданный totalPrice
       userId: userId,
     }
 

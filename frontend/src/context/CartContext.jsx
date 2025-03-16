@@ -23,7 +23,7 @@ export const CartProvider = ({ children }) => {
         setCart(updatedCart)
         localStorage.setItem('cart', JSON.stringify(updatedCart))
       } else {
-        alert('Недостатньо товару на складі!')
+        alert('Недостаточно товара на складе!')
       }
     } else {
       const updatedCart = [...cart, { ...product, quantity: 1 }]
@@ -44,7 +44,7 @@ export const CartProvider = ({ children }) => {
         if (item.quantity < item.quantity_in_stock) {
           return { ...item, quantity: item.quantity + 1 }
         } else {
-          alert('Не можна додати більше товару, ніж є на складі!')
+          alert('Невозможно добавить больше товара, чем есть на складе!')
           return item
         }
       }
@@ -60,8 +60,13 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(updatedCart))
   }
 
-  const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + (Number(item.price) || 0) * (item.quantity || 1), 0).toFixed(2)
+  const getTotalPrice = (rubberOption = {}) => {
+    return cart
+      .reduce((total, item) => {
+        const itemPrice = Number(item.price) + (rubberOption[item.id] ? 100 : 0)
+        return total + itemPrice * item.quantity
+      }, 0)
+      .toFixed(2)
   }
 
   const getTotalItems = () => {
@@ -73,5 +78,20 @@ export const CartProvider = ({ children }) => {
     localStorage.removeItem('cart')
   }
 
-  return <CartContext.Provider value={{ cart, addToCart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice, getTotalItems, clearCart }}>{children}</CartContext.Provider>
+  return (
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        increaseQuantity,
+        decreaseQuantity,
+        getTotalPrice,
+        getTotalItems,
+        clearCart,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  )
 }
