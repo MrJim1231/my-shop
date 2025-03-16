@@ -1,12 +1,14 @@
 .container {
   padding: 20px;
-  font-family: Arial, sans-serif;
 }
 
 .header {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 30px;
+  margin-bottom: 25px;
+  color: #444;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .orderList {
@@ -16,33 +18,40 @@
 
 .orderItem {
   border: 1px solid #ddd;
-  margin-bottom: 20px;
-  padding: 15px;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  margin-bottom: 25px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .orderTitle {
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: #444;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .orderDetail {
   font-size: 16px;
-  margin: 5px 0;
+  margin: 8px 0;
+  color: #555;
 }
 
 .orderTotal {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
-  color: green;
-  margin-top: 10px;
+  color: #28a745;
+  margin-top: 15px;
 }
 
 .itemHeader {
-  font-size: 18px;
-  margin-top: 20px;
+  font-size: 20px;
+  margin-top: 25px;
   margin-bottom: 10px;
+  color: #333;
+  font-weight: 600;
 }
 
 .itemList {
@@ -51,30 +60,35 @@
 }
 
 .item {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
 }
 
 .itemDetail {
   font-size: 16px;
-  margin-right: 20px;
+  color: #666;
+  margin-right: 25px;
+  line-height: 1.6;
 }
 
 .itemImage {
-  width: 100px;
+  width: 150px;
   height: auto;
-  border-radius: 5px;
+  border-radius: 8px;
+  margin-left: 25px;
 }
 
 .noOrders {
   text-align: center;
   font-size: 18px;
-  color: red;
+  color: #e74c3c;
 }
 
 .loading,
 .error {
   text-align: center;
   font-size: 18px;
-  color: #f00;
+  color: #e74c3c;
   margin-top: 20px;
 }
