@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styles from '../styles/Orders.module.css' // Підключення стилів
+import styles from '../styles/Orders.module.css'
 
 function Orders() {
   const [orders, setOrders] = useState([])
@@ -8,7 +8,7 @@ function Orders() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const userId = localStorage.getItem('userId') // Отримуємо userId з localStorage
+      const userId = localStorage.getItem('userId')
 
       if (!userId) {
         setError('Будь ласка, увійдіть в систему, щоб побачити ваші замовлення.')
@@ -25,11 +25,10 @@ function Orders() {
 
         const data = await response.json()
 
-        // Якщо немає замовлень, повертаємо порожній масив
         if (Array.isArray(data)) {
           setOrders(data)
         } else {
-          setOrders([]) // Якщо немає замовлень, встановлюємо порожній масив
+          setOrders([])
           setError('Немає замовлень')
         }
       } catch (err) {
@@ -57,11 +56,11 @@ function Orders() {
         {orders.length > 0 ? (
           orders.map((order) => (
             <li key={order.id} className={styles.orderItem}>
-              <h3 className={styles.orderTitle}>Замовлення №{order.order_number}</h3> {/* Отображаем order_number */}
+              <h3 className={styles.orderTitle}>Замовлення №{order.order_number}</h3>
               <p className={styles.orderDetail}>Ім'я: {order.name}</p>
               <p className={styles.orderDetail}>Телефон: {order.phone}</p>
               <p className={styles.orderDetail}>Адреса: {order.address}</p>
-              <p className={styles.orderDetail}>Email: {order.email}</p> {/* Відображаємо email */}
+              <p className={styles.orderDetail}>Email: {order.email}</p>
               <p className={styles.orderDetail}>Коментар: {order.comment}</p>
               <p className={styles.orderTotal}>Загальна сума: {parseFloat(order.total_price).toFixed(2)} грн.</p>
               <h4 className={styles.itemHeader}>Товари:</h4>
@@ -71,6 +70,7 @@ function Orders() {
                     <p className={styles.itemDetail}>Кількість: {parseInt(item.quantity, 10)}</p>
                     <p className={styles.itemDetail}>Ціна: {parseFloat(item.price).toFixed(2)} грн.</p>
                     <p className={styles.itemDetail}>Розмір: {item.size}</p>
+                    <p className={styles.itemDetail}>На резинці: {Number(item.rubber) ? 'Так' : 'Ні'}</p>
                     <img src={item.image} alt="Product" className={styles.itemImage} />
                   </li>
                 ))}
