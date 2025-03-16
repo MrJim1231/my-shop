@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom' // Подключаем useNaviga
 import styles from '../styles/OrderForm.module.css'
 import { API_URL } from '../api/config' // URL для API
 
-function OrderForm({ onClose }) {
+function OrderForm({ onClose, rubberOption }) {
   const { cart, getTotalPrice, clearCart } = useCart() // Получаем данные из контекста корзины
   const [formData, setFormData] = useState({
     name: '',
@@ -17,57 +17,52 @@ function OrderForm({ onClose }) {
   const [error, setError] = useState(null) // Для отображения ошибки
   const navigate = useNavigate() // Хук для навигации
 
-  // Обработчик изменения значений в форме
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  // Обработчик отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Проверяем валидность данных
     if (!formData.name || !formData.phone || !formData.address || !formData.email) {
       setError('Все поля, кроме комментария, обязательны для заполнения.')
       return
     }
 
-    // Получаем userId из localStorage или ставим null
     const userId = localStorage.getItem('userId') || null
 
-    // Формируем данные для заказа с картинками и размерами
     const orderData = {
       ...formData,
       items: cart.map((item) => ({
         product_id: item.id,
         quantity: item.quantity,
-        price: item.price,
+        price: item.price + (rubberOption[item.id] ? 100 : 0),
         image: item.image,
         size: item.size,
+        rubber: rubberOption[item.id] || false,
       })),
-      totalPrice: getTotalPrice(),
+      totalPrice: getTotalPrice() + Object.values(rubberOption).filter(Boolean).length * 100,
       userId: userId,
     }
 
-    setLoading(true) // Включаем индикатор загрузки
-    setError(null) // Очищаем возможные ошибки
+    setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch(`${API_URL}order.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData), // Отправляем данные
+        body: JSON.stringify(orderData),
       })
 
       if (response.ok) {
-        clearCart() // Очищаем корзину
-        onClose() // Закрываем форму
+        clearCart()
+        onClose()
 
-        // После успешного оформления заказа проверяем, зарегистрирован ли пользователь
         if (userId) {
-          navigate('/orders') // Перенаправляем на страницу заказов, если пользователь зарегистрирован
+          navigate('/orders')
         } else {
-          navigate('/') // Перенаправляем на главную, если пользователь не зарегистрирован
+          navigate('/')
         }
       } else {
         throw new Error('Ошибка при оформлении заказа')
@@ -76,7 +71,7 @@ function OrderForm({ onClose }) {
       console.error('Ошибка:', error)
       setError('Ошибка соединения с сервером')
     } finally {
-      setLoading(false) // Выключаем индикатор загрузки
+      setLoading(false)
     }
   }
 
@@ -90,7 +85,7 @@ function OrderForm({ onClose }) {
           <input type="text" name="address" placeholder="Адрес доставки" value={formData.address} onChange={handleChange} required />
           <input type="email" name="email" placeholder="Электронная почта" value={formData.email} onChange={handleChange} required />
           <textarea name="comment" placeholder="Комментарий к заказу" value={formData.comment} onChange={handleChange} />
-          {error && <p className={styles.error}>{error}</p>} {/* Отображаем ошибку, если она есть */}
+          {error && <p className={styles.error}>{error}</p>}
           <button type="submit" disabled={loading}>
             {loading ? 'Отправка заказа...' : 'Отправить заказ'}
           </button>

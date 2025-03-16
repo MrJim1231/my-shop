@@ -77,7 +77,7 @@ function Cart() {
           </div>
         </div>
       )}
-      {isOrdering && <OrderForm onClose={() => setIsOrdering(false)} />}
+      {isOrdering && <OrderForm onClose={() => setIsOrdering(false)} cart={cart.map((item) => ({ ...item, rubber: rubberOption[item.id] || false }))} rubberOption={rubberOption} />}
     </div>
   )
 }

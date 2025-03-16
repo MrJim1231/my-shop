@@ -58,6 +58,8 @@ FOREIGN KEY (order_id) REFERENCES orders(id),
 FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
+ALTER TABLE order_items ADD COLUMN rubber TINYINT(1) NOT NULL DEFAULT 0;
+
 ---
 
 CREATE TABLE product_images (
