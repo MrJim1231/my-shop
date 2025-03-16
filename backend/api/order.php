@@ -20,11 +20,12 @@ $dotenv->load();
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (!isset($data['name'], $data['phone'], $data['address'], $data['email'], $data['items'])) {
+if (!isset($data['name'], $data['phone'], $data['address'], $data['email'], $data['items'], $data['totalPrice'])) {
     echo json_encode(["status" => "error", "message" => "Відсутні обов'язкові дані"]);
     exit();
 }
 
+// Получаем данные заказа
 $name = $data['name'];
 $phone = $data['phone'];
 $address = $data['address'];
@@ -33,16 +34,23 @@ $comment = isset($data['comment']) ? $data['comment'] : '';
 $items = $data['items'];
 $totalPrice = $data['totalPrice'];
 
-$userId = isset($data['userId']) ? $data['userId'] : NULL;
+// Проверка, если userId не передан, генерируем его
+$userId = isset($data['userId']) ? $data['userId'] : 'guest-' . uniqid('', true);
 $orderNumber = strtoupper(uniqid('ORD-', true));
 
+// Генерация номера заказа
+$orderNumber = strtoupper(uniqid('ORD-', true));
+
+// Вставка заказа в базу данных
 $sql = "INSERT INTO orders (order_number, name, phone, address, email, comment, total_price, user_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssssdi", $orderNumber, $name, $phone, $address, $email, $comment, $totalPrice, $userId);
+$stmt->bind_param("ssssssds", $orderNumber, $name, $phone, $address, $email, $comment, $totalPrice, $userId);
 
 if ($stmt->execute()) {
     $orderId = $stmt->insert_id;
+
+    // Вставка товаров в заказ
     $sql_item = "INSERT INTO order_items (order_id, product_id, name, quantity, price, image, size, rubber) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt_item = $conn->prepare($sql_item);
@@ -60,6 +68,7 @@ if ($stmt->execute()) {
         $stmt_item->execute();
     }
 
+    // Отправка письма покупателю
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
@@ -98,10 +107,7 @@ if ($stmt->execute()) {
 
         foreach ($items as $item) {
             $rubberText = isset($item['rubber']) && $item['rubber'] ? 'Так' : 'Ні';
-            $imageHtml = "";
-            if (!empty($item['image'])) {
-                $imageHtml = "<img src='" . $item['image'] . "' alt='" . $product_name . "' style='max-width: 100px; display: block; margin: 0 auto;'>";
-            }
+            $imageHtml = !empty($item['image']) ? "<img src='{$item['image']}' alt='{$product_name}' style='max-width: 100px; display: block; margin: 0 auto;'>" : "";
 
             $mail->Body .= "<tr>
                                 <td style='text-align: center;'>$imageHtml</td>
@@ -116,12 +122,17 @@ if ($stmt->execute()) {
         $mail->Body .= "</tbody></table>";
         $mail->send();
         
+        // Отправка уведомления администратору
         $mail->clearAddresses();
         $mail->addAddress($_ENV['ADMIN_EMAIL'], 'Admin');
         $mail->Subject = "Нове замовлення №$orderNumber";
         $mail->send();
         
-        echo json_encode(["status" => "success", "message" => "Замовлення успішно додано і лист надіслано"]);
+        echo json_encode([
+            "status" => "success",
+            "message" => "Замовлення успішно додано і лист надіслано",
+            "userId" => $userId
+        ]);
     } catch (Exception $e) {
         echo json_encode(["status" => "error", "message" => "Помилка при надсиланні листа: {$mail->ErrorInfo}"]);
     }

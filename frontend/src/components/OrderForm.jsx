@@ -19,19 +19,24 @@ function OrderForm({ onClose, rubberOption }) {
   const [error, setError] = useState(null) // Для отображения ошибки
   const navigate = useNavigate() // Хук для навигации
 
+  // Обработчик изменения значений формы
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   // Функция для получения или создания userId для незарегистрированного пользователя
-  const getUserId = () => {
+  const getUserId = async () => {
     let userId = localStorage.getItem('userId')
 
     if (!userId) {
-      userId = `guest-${Date.now()}` // Генерируем уникальный идентификатор
-      localStorage.setItem('userId', userId)
+      // Если userId нет в localStorage, получаем его с сервера
+      const response = await fetch(`${API_URL}order.php?generate_user_id=true`) // Сделайте новый endpoint на сервере для получения userId
+      const data = await response.json()
+      userId = data.userId // Получаем userId из ответа сервера
+      localStorage.setItem('userId', userId) // Сохраняем в localStorage для дальнейшего использования
     }
 
+    console.log('Generated userId:', userId) // Логирование сгенерированного userId
     return userId
   }
 
@@ -44,22 +49,24 @@ function OrderForm({ onClose, rubberOption }) {
       return
     }
 
-    // Получаем userId из localStorage (если он есть, иначе генерируем новый)
-    const userId = getUserId()
+    // Получаем userId из localStorage или с сервера, если он не был сохранен
+    const userId = await getUserId()
+
+    console.log('Submitting order with userId:', userId) // Логирование перед отправкой заказа
 
     // Вычисляем общую сумму
     const totalPrice = getTotalPrice(rubberOption) // Используем getTotalPrice с rubberOption
 
-    // Собираем данные для отправки на сервер, исключая userId, если его нет
+    // Собираем данные для отправки на сервер
     const orderData = {
       ...formData,
       items: cart.map((item) => ({
         product_id: item.id,
         quantity: item.quantity,
-        price: Number(item.price) + (rubberOption[item.id] ? 100 : 0),
+        price: Number(item.price) + (rubberOption[item.id] ? 100 : 0), // Если есть опция rubber, добавляем стоимость
         image: item.image,
         size: item.size,
-        rubber: rubberOption[item.id] || false,
+        rubber: rubberOption[item.id] || false, // Проверяем опцию rubber для каждого товара
       })),
       totalPrice, // Используем переданный totalPrice
       userId, // Передаем userId
@@ -76,15 +83,18 @@ function OrderForm({ onClose, rubberOption }) {
         body: JSON.stringify(orderData),
       })
 
+      const responseData = await response.json()
+      console.log('Server response:', responseData) // Логирование ответа от сервера
+
       if (response.ok) {
-        clearCart()
+        clearCart() // Очищаем корзину после успешного оформления
         toast.success("Дякуємо за замовлення! Деталі замовлення були відправлені вам на пошту, очікуйте. Менеджер з вами зв'яжеться.", {
           autoClose: false, // Убираем автоматическое закрытие
           closeButton: true, // Показываем кнопку для закрытия уведомления
         })
         onClose()
 
-        // Если пользователь зарегистрирован, перенаправляем на страницу заказов
+        // Если пользователь зарегистрирован, перенаправляем на страницу заказов, иначе на главную
         navigate(userId ? '/orders' : '/')
       } else {
         throw new Error('Ошибка при оформлении заказа')
