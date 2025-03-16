@@ -24,6 +24,15 @@ FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 
 ---
 
+CREATE TABLE product_images (
+id INT AUTO_INCREMENT PRIMARY KEY,
+product_id VARCHAR(50),
+image VARCHAR(255),
+FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+---
+
 CREATE TABLE users (
 id INT AUTO_INCREMENT PRIMARY KEY,
 email VARCHAR(100) NOT NULL,
@@ -59,14 +68,3 @@ rubber TINYINT(1) NOT NULL DEFAULT 0,
 FOREIGN KEY (order_id) REFERENCES orders(id),
 FOREIGN KEY (product_id) REFERENCES products(id)
 );
-
----
-
-CREATE TABLE product_images (
-id INT AUTO_INCREMENT PRIMARY KEY,
-product_id VARCHAR(50),
-image VARCHAR(255),
-FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
-);
-
----
