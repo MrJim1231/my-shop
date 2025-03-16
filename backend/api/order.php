@@ -72,7 +72,7 @@ if ($stmt->execute()) {
         $mail->Password = $_ENV['MAIL_PASSWORD'];
         $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
         $mail->Port = $_ENV['MAIL_PORT'];
-        $mail->setFrom($_ENV['MAIL_USERNAME'], 'Ваш магазин');
+        $mail->setFrom($_ENV['MAIL_USERNAME'], 'Інтернет магазин постільної білизни Sleep & Dream');
         $mail->addAddress($email, $name);
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
@@ -83,7 +83,7 @@ if ($stmt->execute()) {
                        <p><strong>Телефон:</strong> $phone</p>
                        <p><strong>Адреса:</strong> $address</p>
                        <p><strong>Коментар:</strong> $comment</p>
-                       <p><strong>Ітогова сума:</strong> $totalPrice грн</p>
+                       <p><strong>Підсумкова сума:</strong> $totalPrice грн</p>
                        <h3>Товари у замовленні:</h3>
                        <table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
                            <thead>
