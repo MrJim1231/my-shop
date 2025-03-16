@@ -32,13 +32,15 @@ $email = $data['email'];
 $comment = isset($data['comment']) ? $data['comment'] : '';
 $items = $data['items'];
 $totalPrice = $data['totalPrice'];
-$userId = $data['userId'];
+
+// Если пользователь не зарегистрирован, устанавливаем user_id в NULL
+$userId = isset($data['userId']) ? $data['userId'] : NULL;
 $orderNumber = strtoupper(uniqid('ORD-', true));
 
 $sql = "INSERT INTO orders (order_number, name, phone, address, email, comment, total_price, user_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssssii", $orderNumber, $name, $phone, $address, $email, $comment, $totalPrice, $userId);
+$stmt->bind_param("ssssssdi", $orderNumber, $name, $phone, $address, $email, $comment, $totalPrice, $userId);
 
 if ($stmt->execute()) {
     $orderId = $stmt->insert_id;
@@ -98,5 +100,6 @@ if ($stmt->execute()) {
 } else {
     echo json_encode(["status" => "error", "message" => "Помилка при додаванні замовлення"]);
 }
+
 $conn->close();
 ?>

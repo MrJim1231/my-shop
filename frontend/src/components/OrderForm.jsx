@@ -21,19 +21,34 @@ function OrderForm({ onClose, rubberOption }) {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  // Функция для получения или создания userId для незарегистрированного пользователя
+  const getUserId = () => {
+    let userId = localStorage.getItem('userId')
+
+    if (!userId) {
+      userId = `guest-${Date.now()}` // Генерируем уникальный идентификатор
+      localStorage.setItem('userId', userId)
+    }
+
+    return userId
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Проверка на обязательные поля
     if (!formData.name || !formData.phone || !formData.address || !formData.email) {
       setError('Все поля, кроме комментария, обязательны для заполнения.')
       return
     }
 
-    const userId = localStorage.getItem('userId') || null
+    // Получаем userId из localStorage (если он есть, иначе генерируем новый)
+    const userId = getUserId()
 
     // Вычисляем общую сумму
     const totalPrice = getTotalPrice(rubberOption) // Используем getTotalPrice с rubberOption
 
+    // Собираем данные для отправки на сервер, исключая userId, если его нет
     const orderData = {
       ...formData,
       items: cart.map((item) => ({
@@ -45,13 +60,14 @@ function OrderForm({ onClose, rubberOption }) {
         rubber: rubberOption[item.id] || false,
       })),
       totalPrice, // Используем переданный totalPrice
-      userId: userId,
+      userId, // Передаем userId
     }
 
     setLoading(true)
     setError(null)
 
     try {
+      // Отправляем запрос на сервер
       const response = await fetch(`${API_URL}order.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -62,9 +78,11 @@ function OrderForm({ onClose, rubberOption }) {
         clearCart()
         onClose()
 
+        // Если пользователь зарегистрирован, перенаправляем на страницу заказов
         if (userId) {
           navigate('/orders')
         } else {
+          // Для незарегистрированных пользователей на главную страницу
           navigate('/')
         }
       } else {
