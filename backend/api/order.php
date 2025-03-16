@@ -33,7 +33,6 @@ $comment = isset($data['comment']) ? $data['comment'] : '';
 $items = $data['items'];
 $totalPrice = $data['totalPrice'];
 
-// Если пользователь не зарегистрирован, устанавливаем user_id в NULL
 $userId = isset($data['userId']) ? $data['userId'] : NULL;
 $orderNumber = strtoupper(uniqid('ORD-', true));
 
@@ -49,7 +48,6 @@ if ($stmt->execute()) {
     $stmt_item = $conn->prepare($sql_item);
     
     foreach ($items as $item) {
-        // Извлекаем название товара из таблицы products
         $sql_product_name = "SELECT name FROM products WHERE id = ?";
         $stmt_product = $conn->prepare($sql_product_name);
         $stmt_product->bind_param("i", $item['product_id']);
@@ -57,7 +55,6 @@ if ($stmt->execute()) {
         $result = $stmt_product->get_result();
         $product_name = $result->fetch_assoc()['name'];
 
-        // Вставляем данные в таблицу order_items, включая имя товара
         $rubber = isset($item['rubber']) && $item['rubber'] ? 1 : 0;
         $stmt_item->bind_param("iisisssi", $orderId, $item['product_id'], $product_name, $item['quantity'], $item['price'], $item['image'], $item['size'], $rubber);
         $stmt_item->execute();
@@ -77,6 +74,7 @@ if ($stmt->execute()) {
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
         $mail->Subject = "Ваше замовлення №$orderNumber";
+        
         $mail->Body = "<h2>Дякуємо за ваше замовлення!</h2>
                        <p><strong>Номер замовлення:</strong> $orderNumber</p>
                        <p><strong>Ім'я:</strong> $name</p>
@@ -100,8 +98,6 @@ if ($stmt->execute()) {
 
         foreach ($items as $item) {
             $rubberText = isset($item['rubber']) && $item['rubber'] ? 'Так' : 'Ні';
-            
-            // Добавляем изображение товара
             $imageHtml = "";
             if (!empty($item['image'])) {
                 $imageHtml = "<img src='" . $item['image'] . "' alt='" . $product_name . "' style='max-width: 100px; display: block; margin: 0 auto;'>";
@@ -118,12 +114,14 @@ if ($stmt->execute()) {
         }
 
         $mail->Body .= "</tbody></table>";
+        $mail->send();
         
-        if ($mail->send()) {
-            echo json_encode(["status" => "success", "message" => "Замовлення успішно додано і лист надіслано"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Не вдалося надіслати лист"]);
-        }
+        $mail->clearAddresses();
+        $mail->addAddress($_ENV['ADMIN_EMAIL'], 'Admin');
+        $mail->Subject = "Нове замовлення №$orderNumber";
+        $mail->send();
+        
+        echo json_encode(["status" => "success", "message" => "Замовлення успішно додано і лист надіслано"]);
     } catch (Exception $e) {
         echo json_encode(["status" => "error", "message" => "Помилка при надсиланні листа: {$mail->ErrorInfo}"]);
     }
