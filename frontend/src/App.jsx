@@ -13,6 +13,8 @@ import Orders from './pages/Orders'
 import Footer from './components/Footer'
 import PrivateRoute from './components/PrivateRoute'
 import Auth from './pages/Auth' // Импортируем страницу авторизации
+import { ToastContainer } from 'react-toastify' // Импортируем ToastContainer
+import 'react-toastify/dist/ReactToastify.css' // Подключаем стили для уведомлений
 import './App.css'
 
 function App() {
@@ -39,6 +41,7 @@ function App() {
           </main>
           <Footer />
         </div>
+        <ToastContainer position="top-right" autoClose={3000} /> {/* Добавлен ToastContainer */}
       </Router>
     </AuthProvider>
   )

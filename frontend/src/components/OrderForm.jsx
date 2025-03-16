@@ -3,6 +3,8 @@ import { useCart } from '../context/CartContext' // Подключаем кон�
 import { useNavigate } from 'react-router-dom' // Подключаем useNavigate
 import styles from '../styles/OrderForm.module.css'
 import { API_URL } from '../api/config' // URL для API
+import { toast } from 'react-toastify' // Импортируем toast
+import 'react-toastify/dist/ReactToastify.css' // Подключаем стили для уведомлений
 
 function OrderForm({ onClose, rubberOption }) {
   const { cart, getTotalPrice, clearCart } = useCart() // Получаем данные из контекста корзины
@@ -76,15 +78,14 @@ function OrderForm({ onClose, rubberOption }) {
 
       if (response.ok) {
         clearCart()
+        toast.success("Дякуємо за замовлення! Деталі замовлення були відправлені вам на пошту, очікуйте. Менеджер з вами зв'яжеться.", {
+          autoClose: false, // Убираем автоматическое закрытие
+          closeButton: true, // Показываем кнопку для закрытия уведомления
+        })
         onClose()
 
         // Если пользователь зарегистрирован, перенаправляем на страницу заказов
-        if (userId) {
-          navigate('/orders')
-        } else {
-          // Для незарегистрированных пользователей на главную страницу
-          navigate('/')
-        }
+        navigate(userId ? '/orders' : '/')
       } else {
         throw new Error('Ошибка при оформлении заказа')
       }
