@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { toast } from 'react-toastify' // Импортируем toast
+import 'react-toastify/dist/ReactToastify.css' // Подключаем стили для уведомлений
 
 const CartContext = createContext()
 
@@ -23,7 +25,8 @@ export const CartProvider = ({ children }) => {
         setCart(updatedCart)
         localStorage.setItem('cart', JSON.stringify(updatedCart))
       } else {
-        alert('Недостаточно товара на складе!')
+        // Заменяем alert на toast.error
+        toast.error('Недостаточно товара на складе!')
       }
     } else {
       const updatedCart = [...cart, { ...product, quantity: 1 }]
@@ -44,7 +47,8 @@ export const CartProvider = ({ children }) => {
         if (item.quantity < item.quantity_in_stock) {
           return { ...item, quantity: item.quantity + 1 }
         } else {
-          alert('Невозможно добавить больше товара, чем есть на складе!')
+          // Заменяем alert на toast.error
+          toast.error('Невозможно добавить больше товара, чем есть на складе!')
           return item
         }
       }
