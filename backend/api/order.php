@@ -47,10 +47,10 @@ if ($stmt->execute()) {
     
     foreach ($items as $item) {
         $rubber = isset($item['rubber']) && $item['rubber'] ? 1 : 0;
-        $item['price'] += $rubber ? 100 : 0;
         $stmt_item->bind_param("iiisssi", $orderId, $item['product_id'], $item['quantity'], $item['price'], $item['image'], $item['size'], $rubber);
         $stmt_item->execute();
     }
+    
 
     $mail = new PHPMailer(true);
     try {
