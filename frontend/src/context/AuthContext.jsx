@@ -23,7 +23,8 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logout = () => {
-    localStorage.removeItem('token')
+    localStorage.removeItem('token') // Удаляем токен
+    localStorage.removeItem('userId') // Удаляем userId
     setIsAuthenticated(false) // Обновляем состояние немедленно после выхода
   }
 

@@ -10,7 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState({ text: '', type: '' })
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const { login } = useAuth() // Отримуємо функцію login з AuthContext
+  const { login, logout } = useAuth() // Отримуємо функцію login та logout з AuthContext
   const navigate = useNavigate() // Хук для навігації
 
   // Перевірка наявності токена при монтуванні компонента
@@ -67,6 +67,14 @@ const Login = () => {
     }
   }
 
+  const logoutUser = () => {
+    // Викликаємо logout з контексту
+    logout()
+
+    // Перенаправляємо на сторінку входу
+    navigate('/login')
+  }
+
   return (
     <div className={styles.loginContainer}>
       {/* Якщо користувач не авторизований, показуємо форму входу */}
@@ -78,6 +86,16 @@ const Login = () => {
             Увійти
           </button>
         </form>
+      )}
+
+      {/* Якщо користувач авторизований, показуємо кнопку для виходу */}
+      {isLoggedIn && (
+        <div>
+          <p>Ви авторизовані</p>
+          <button className={styles.button} type="button" onClick={logoutUser}>
+            Вийти
+          </button>
+        </div>
       )}
 
       {message.text && <p className={message.type === 'success' ? styles.successMessage : styles.errorMessage}>{message.text}</p>}
