@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom' // Для посилань в хлібних крихтах
+import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import cartStyles from '../styles/Cart.module.css'
 import OrderForm from '../components/OrderForm'
@@ -7,22 +7,33 @@ import OrderForm from '../components/OrderForm'
 function Cart() {
   const { cart, removeFromCart, increaseQuantity, decreaseQuantity, getTotalPrice } = useCart()
   const [isOrdering, setIsOrdering] = useState(false)
+  const [rubberOption, setRubberOption] = useState({})
+
+  const handleRubberChange = (itemId, isChecked) => {
+    setRubberOption((prev) => ({
+      ...prev,
+      [itemId]: isChecked,
+    }))
+  }
+
+  const calculateTotalPrice = () => {
+    return cart.reduce((total, item) => {
+      const itemPrice = item.price + (rubberOption[item.id] ? 100 : 0)
+      return total + itemPrice * item.quantity
+    }, 0)
+  }
 
   return (
     <div className={cartStyles.container}>
-      {/* Хлібні крихти */}
       <nav className={cartStyles.breadcrumb}>
         <Link to="/" className={cartStyles.breadcrumbLink}>
           Головна
         </Link>
         <span className={cartStyles.separator}>/</span>
-
-        {/* Посилання на категорію товарів */}
         <Link to="/categories" className={cartStyles.breadcrumbLink}>
           Категорії
         </Link>
         <span className={cartStyles.separator}>/</span>
-
         <span className={cartStyles.breadcrumbText}>Кошик</span>
       </nav>
 
@@ -36,13 +47,9 @@ function Cart() {
               <img src={item.image} alt={item.name} className={cartStyles.cartItemImage} />
               <div className={cartStyles.cartDetails}>
                 <h2>{item.name}</h2>
-                <p>Ціна: {item.price} грн</p>
+                <p>Ціна: {item.price + (rubberOption[item.id] ? 100 : 0)} грн</p>
                 <p>Розмір: {item.size}</p>
-
-                {/* Количество на складе */}
                 <p>На складі: {item.quantity_in_stock}</p>
-
-                {/* Кнопки збільшення та зменшення кількості */}
                 <div className={cartStyles.quantityControl}>
                   <button onClick={() => decreaseQuantity(item.id, item.size)} className={cartStyles.decreaseButton}>
                     -
@@ -52,7 +59,10 @@ function Cart() {
                     +
                   </button>
                 </div>
-
+                <label>
+                  <input type="checkbox" checked={rubberOption[item.id] || false} onChange={(e) => handleRubberChange(item.id, e.target.checked)} />
+                  На резинке (+100 грн)
+                </label>
                 <button onClick={() => removeFromCart(item.id, item.size)} className={cartStyles.removeButton}>
                   Видалити
                 </button>
@@ -60,7 +70,7 @@ function Cart() {
             </div>
           ))}
           <div className={cartStyles.cartSummary}>
-            <p>Загальна вартість: {getTotalPrice()} грн</p>
+            <p>Загальна вартість: {calculateTotalPrice()} грн</p>
             <button onClick={() => setIsOrdering(true)} className={cartStyles.checkoutButton}>
               Оформити замовлення
             </button>
