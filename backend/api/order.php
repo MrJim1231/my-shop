@@ -62,7 +62,6 @@ if ($stmt->execute()) {
         $stmt_item->bind_param("iisisssi", $orderId, $item['product_id'], $product_name, $item['quantity'], $item['price'], $item['image'], $item['size'], $rubber);
         $stmt_item->execute();
     }
-    
 
     $mail = new PHPMailer(true);
     try {
@@ -78,16 +77,47 @@ if ($stmt->execute()) {
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
         $mail->Subject = "Ваше замовлення №$orderNumber";
-        $mail->Body = "<h2>Дякуємо за ваше замовлення!</h2><p><strong>Номер замовлення:</strong> $orderNumber</p><p><strong>Ім'я:</strong> $name</p><p><strong>Телефон:</strong> $phone</p><p><strong>Адреса:</strong> $address</p><p><strong>Коментар:</strong> $comment</p><p><strong>Ітогова сума:</strong> $totalPrice грн</p><h3>Товари у замовленні:</h3><ul>";
-        
+        $mail->Body = "<h2>Дякуємо за ваше замовлення!</h2>
+                       <p><strong>Номер замовлення:</strong> $orderNumber</p>
+                       <p><strong>Ім'я:</strong> $name</p>
+                       <p><strong>Телефон:</strong> $phone</p>
+                       <p><strong>Адреса:</strong> $address</p>
+                       <p><strong>Коментар:</strong> $comment</p>
+                       <p><strong>Ітогова сума:</strong> $totalPrice грн</p>
+                       <h3>Товари у замовленні:</h3>
+                       <table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
+                           <thead>
+                               <tr>
+                                   <th style='text-align: center;'>Фото</th>
+                                   <th style='text-align: center;'>Назва</th>
+                                   <th style='text-align: center;'>Кількість</th>
+                                   <th style='text-align: center;'>Ціна</th>
+                                   <th style='text-align: center;'>Розмір</th>
+                                   <th style='text-align: center;'>На резинці</th>
+                               </tr>
+                           </thead>
+                           <tbody>";
+
         foreach ($items as $item) {
             $rubberText = isset($item['rubber']) && $item['rubber'] ? 'Так' : 'Ні';
             
-            // Теперь имя товара доступно в $product_name
-            $mail->Body .= "<li><strong>Назва:</strong> {$product_name}<br><strong>Кількість:</strong> {$item['quantity']}<br><strong>Ціна:</strong> {$item['price']} грн<br><strong>Розмір:</strong> {$item['size']}<br><strong>На резинці:</strong> $rubberText</li>";
+            // Добавляем изображение товара
+            $imageHtml = "";
+            if (!empty($item['image'])) {
+                $imageHtml = "<img src='" . $item['image'] . "' alt='" . $product_name . "' style='max-width: 100px; display: block; margin: 0 auto;'>";
+            }
+
+            $mail->Body .= "<tr>
+                                <td style='text-align: center;'>$imageHtml</td>
+                                <td style='text-align: center;'>{$product_name}</td>
+                                <td style='text-align: center;'>{$item['quantity']}</td>
+                                <td style='text-align: center;'>{$item['price']} грн</td>
+                                <td style='text-align: center;'>{$item['size']}</td>
+                                <td style='text-align: center;'>$rubberText</td>
+                            </tr>";
         }
-        
-        $mail->Body .= "</ul>";
+
+        $mail->Body .= "</tbody></table>";
         
         if ($mail->send()) {
             echo json_encode(["status" => "success", "message" => "Замовлення успішно додано і лист надіслано"]);
