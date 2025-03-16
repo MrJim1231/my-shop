@@ -18,6 +18,12 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+// Генерация userId при GET-запросе
+if (isset($_GET['generate_user_id'])) {
+    echo json_encode(["userId" => "guest-" . uniqid('', true)]);
+    exit();
+}
+
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($data['name'], $data['phone'], $data['address'], $data['email'], $data['items'], $data['totalPrice'])) {
@@ -34,11 +40,8 @@ $comment = isset($data['comment']) ? $data['comment'] : '';
 $items = $data['items'];
 $totalPrice = $data['totalPrice'];
 
-// Проверка, если userId не передан, генерируем его
+// Генерация userId, если его нет
 $userId = isset($data['userId']) ? $data['userId'] : 'guest-' . uniqid('', true);
-$orderNumber = strtoupper(uniqid('ORD-', true));
-
-// Генерация номера заказа
 $orderNumber = strtoupper(uniqid('ORD-', true));
 
 // Вставка заказа в базу данных
