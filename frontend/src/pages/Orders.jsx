@@ -67,10 +67,22 @@ function Orders() {
               <ul className={styles.itemList}>
                 {order.items.map((item) => (
                   <li key={item.id} className={styles.item}>
-                    <p className={styles.itemDetail}>Кількість: {parseInt(item.quantity, 10)}</p>
-                    <p className={styles.itemDetail}>Ціна: {parseFloat(item.price).toFixed(2)} грн.</p>
-                    <p className={styles.itemDetail}>Розмір: {item.size}</p>
-                    <p className={styles.itemDetail}>На резинці: {Number(item.rubber) ? 'Так' : 'Ні'}</p>
+                    <p className={styles.itemDetail}>
+                      <strong>Назва товару:</strong> {item.name}
+                    </p>{' '}
+                    {/* Добавляем название товара */}
+                    <p className={styles.itemDetail}>
+                      <strong>Кількість:</strong> {parseInt(item.quantity, 10)}
+                    </p>
+                    <p className={styles.itemDetail}>
+                      <strong>Ціна:</strong> {parseFloat(item.price).toFixed(2)} грн.
+                    </p>
+                    <p className={styles.itemDetail}>
+                      <strong>Розмір:</strong> {item.size}
+                    </p>
+                    <p className={styles.itemDetail}>
+                      <strong>На резинці:</strong> {Number(item.rubber) ? 'Так' : 'Ні'}
+                    </p>
                     <img src={item.image} alt="Product" className={styles.itemImage} />
                   </li>
                 ))}

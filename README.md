@@ -50,15 +50,15 @@ CREATE TABLE order_items (
 id INT AUTO_INCREMENT PRIMARY KEY,
 order_id INT,
 product_id VARCHAR(50),
+name VARCHAR(255),
 quantity INT,
 price DECIMAL(10, 2),
 image VARCHAR(255) NOT NULL,
 size VARCHAR(50) NOT NULL,
+rubber TINYINT(1) NOT NULL DEFAULT 0,
 FOREIGN KEY (order_id) REFERENCES orders(id),
 FOREIGN KEY (product_id) REFERENCES products(id)
 );
-
-ALTER TABLE order_items ADD COLUMN rubber TINYINT(1) NOT NULL DEFAULT 0;
 
 ---
 

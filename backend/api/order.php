@@ -42,12 +42,22 @@ $stmt->bind_param("ssssssii", $orderNumber, $name, $phone, $address, $email, $co
 
 if ($stmt->execute()) {
     $orderId = $stmt->insert_id;
-    $sql_item = "INSERT INTO order_items (order_id, product_id, quantity, price, image, size, rubber) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql_item = "INSERT INTO order_items (order_id, product_id, name, quantity, price, image, size, rubber) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt_item = $conn->prepare($sql_item);
     
     foreach ($items as $item) {
+        // Извлекаем название товара из таблицы products
+        $sql_product_name = "SELECT name FROM products WHERE id = ?";
+        $stmt_product = $conn->prepare($sql_product_name);
+        $stmt_product->bind_param("i", $item['product_id']);
+        $stmt_product->execute();
+        $result = $stmt_product->get_result();
+        $product_name = $result->fetch_assoc()['name'];
+
+        // Вставляем данные в таблицу order_items, включая имя товара
         $rubber = isset($item['rubber']) && $item['rubber'] ? 1 : 0;
-        $stmt_item->bind_param("iiisssi", $orderId, $item['product_id'], $item['quantity'], $item['price'], $item['image'], $item['size'], $rubber);
+        $stmt_item->bind_param("iisisssi", $orderId, $item['product_id'], $product_name, $item['quantity'], $item['price'], $item['image'], $item['size'], $rubber);
         $stmt_item->execute();
     }
     
@@ -70,7 +80,9 @@ if ($stmt->execute()) {
         
         foreach ($items as $item) {
             $rubberText = isset($item['rubber']) && $item['rubber'] ? 'Так' : 'Ні';
-            $mail->Body .= "<li><strong>Назва:</strong> {$item['name']}<br><strong>Кількість:</strong> {$item['quantity']}<br><strong>Ціна:</strong> {$item['price']} грн<br><strong>Розмір:</strong> {$item['size']}<br><strong>На резинке:</strong> $rubberText</li>";
+            
+            // Теперь имя товара доступно в $product_name
+            $mail->Body .= "<li><strong>Назва:</strong> {$product_name}<br><strong>Кількість:</strong> {$item['quantity']}<br><strong>Ціна:</strong> {$item['price']} грн<br><strong>Розмір:</strong> {$item['size']}<br><strong>На резинці:</strong> $rubberText</li>";
         }
         
         $mail->Body .= "</ul>";
