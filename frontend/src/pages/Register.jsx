@@ -47,8 +47,18 @@ const Register = () => {
           // Входимо в систему за допомогою контексту
           login({ token, userId })
 
-          // Перенаправляємо на головну сторінку
-          navigate('/') // Перенаправлення на головну
+          // Проверка наличия заказов
+          const ordersRes = await axios.get(`${API_URL}get_orders.php?userId=${userId}`)
+          console.log('Ответ сервера с заказами:', ordersRes.data)
+
+          // Убедимся, что сервер возвращает массив заказов
+          if (ordersRes.data && Array.isArray(ordersRes.data) && ordersRes.data.length > 0) {
+            // Если есть заказы, перенаправляем на страницу заказов
+            navigate('/orders')
+          } else {
+            // Если заказов нет, перенаправляем на главную страницу
+            navigate('/')
+          }
         } else {
           setMessage({ text: 'Помилка: дані від сервера неповні', type: 'error' })
           console.log('Помилка: токен або userId відсутній')
