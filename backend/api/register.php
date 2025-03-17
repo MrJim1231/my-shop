@@ -45,18 +45,19 @@ if ($stmt_check->num_rows > 0) {
     exit();
 }
 
+// Генерация уникального ID
+$user_id = uniqid();
+
 // Хеширование пароля
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 // Вставка нового пользователя в базу данных
-$sql = "INSERT INTO users (email, password) VALUES (?, ?)";
+$sql = "INSERT INTO users (id, email, password) VALUES (?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $email, $hashed_password);
+$stmt->bind_param("sss", $user_id, $email, $hashed_password);
 
 try {
     if ($stmt->execute()) {
-        // Получаем ID нового пользователя
-        $user_id = $stmt->insert_id;
         $secret_key = "your_secret_key";  // Секретный ключ для JWT
         $issued_at = time();
         $expiration_time = $issued_at + 3600;  // Токен действует 1 час
