@@ -22,7 +22,7 @@ if (!$userId) {
 // Получаем список заказов для текущего пользователя
 $sql = "SELECT * FROM orders WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $userId);
+$stmt->bind_param("s", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
 
