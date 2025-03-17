@@ -17,12 +17,22 @@ const Register = () => {
 
     console.log('Відправка даних:', { email, password })
 
+    // Получаем userId из localStorage, если он есть
+    const userId = localStorage.getItem('userId') || null
+
     try {
-      const res = await axios.post(`${API_URL}register.php`, { email, password }, { headers: { 'Content-Type': 'application/json' } })
+      const res = await axios.post(
+        `${API_URL}register.php`,
+        { email, password, userId }, // Передаем userId, если он есть
+        { headers: { 'Content-Type': 'application/json' } }
+      )
 
       console.log('Відповідь сервера:', res.data)
 
-      setMessage({ text: res.data.message, type: res.data.status === 'success' ? 'success' : 'error' })
+      setMessage({
+        text: res.data.message,
+        type: res.data.status === 'success' ? 'success' : 'error',
+      })
 
       if (res.data.status === 'success') {
         const { token, userId } = res.data

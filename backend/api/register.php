@@ -23,6 +23,9 @@ if (!isset($data['email']) || !isset($data['password'])) {
 $email = trim($data['email']);
 $password = trim($data['password']);
 
+// Проверяем, передан ли userId, если нет - генерируем новый
+$user_id = isset($data['userId']) ? $data['userId'] : uniqid();
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(["status" => "error", "message" => "Некорректный email"]);
     exit();
@@ -44,9 +47,6 @@ if ($stmt_check->num_rows > 0) {
     echo json_encode(["status" => "error", "message" => "Email уже зарегистрирован"]);
     exit();
 }
-
-// Генерация уникального ID
-$user_id = uniqid();
 
 // Хеширование пароля
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -88,3 +88,4 @@ try {
 
 $stmt->close();
 $conn->close();
+?>
