@@ -9,9 +9,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../vendor/autoload.php';  // Подключаем Composer autoload
+require_once __DIR__ . '/../vendor/autoload.php';
 
-use \Firebase\JWT\JWT;
+use Firebase\JWT\JWT;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Загружаем переменные окружения из .env файла
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../api'); // Указываем путь к папке, где находится .env
+$dotenv->load();
+
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -37,55 +44,79 @@ if (strlen($password) < 6) {
 }
 
 // Проверка на существующий email
-$sql_check = "SELECT id FROM users WHERE email = ?";
+$sql_check = "SELECT id, is_verified FROM users WHERE email = ?";
 $stmt_check = $conn->prepare($sql_check);
 $stmt_check->bind_param("s", $email);
 $stmt_check->execute();
 $stmt_check->store_result();
+$stmt_check->bind_result($existing_id, $is_verified);
+$stmt_check->fetch();
 
 if ($stmt_check->num_rows > 0) {
-    echo json_encode(["status" => "error", "message" => "Email уже зарегистрирован"]);
+    if ($is_verified) {
+        echo json_encode(["status" => "error", "message" => "Email уже зарегистрирован и подтвержден"]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Email уже зарегистрирован, но не подтвержден. Проверьте почту"]);
+    }
     exit();
 }
 
-// Хеширование пароля
+// Хешируем пароль
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-// Вставка нового пользователя в базу данных
-$sql = "INSERT INTO users (id, email, password) VALUES (?, ?, ?)";
+// Генерируем код подтверждения (6 цифр)
+$verification_code = random_int(100000, 999999);
+
+// Вставляем нового пользователя в базу
+$sql = "INSERT INTO users (id, email, password, verification_code, is_verified) VALUES (?, ?, ?, ?, 0)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("sss", $user_id, $email, $hashed_password);
+$stmt->bind_param("sssi", $user_id, $email, $hashed_password, $verification_code);
 
 try {
     if ($stmt->execute()) {
-        $secret_key = "your_secret_key";  // Секретный ключ для JWT
-        $issued_at = time();
-        $expiration_time = $issued_at + 3600;  // Токен действует 1 час
-
-        // Плейлоуд для JWT
-        $payload = array(
-            "iat" => $issued_at,
-            "exp" => $expiration_time,
-            "user_id" => $user_id
-        );
-
-        // Генерация токена
-        $jwt = JWT::encode($payload, $secret_key, 'HS256');
-
-        // Отправка токена и userId пользователю
-        echo json_encode([
-            "status" => "success",
-            "message" => "Регистрация прошла успешно",
-            "token" => $jwt,
-            "userId" => $user_id
-        ]);
+        // Отправляем код на почту
+        if (sendVerificationEmail($email, $verification_code)) {
+            echo json_encode([
+                "status" => "success",
+                "message" => "Регистрация прошла успешно. Проверьте почту для подтверждения",
+                "userId" => $user_id
+            ]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Ошибка при отправке письма с кодом подтверждения"]);
+        }
     } else {
         echo json_encode(["status" => "error", "message" => "Ошибка при регистрации"]);
     }
 } catch (Exception $e) {
-    echo json_encode(["status" => "error", "message" => "Ошибка при генерации токена: " . $e->getMessage()]);
+    echo json_encode(["status" => "error", "message" => "Ошибка при регистрации: " . $e->getMessage()]);
 }
 
 $stmt->close();
 $conn->close();
+
+// Функция отправки письма
+function sendVerificationEmail($email, $verification_code)
+{
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host = $_ENV['MAIL_HOST'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $_ENV['MAIL_USERNAME'];
+        $mail->Password = $_ENV['MAIL_PASSWORD'];
+        $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
+        $mail->Port = $_ENV['MAIL_PORT'];
+
+        $mail->setFrom($_ENV['ADMIN_EMAIL'], 'Your Website');
+        $mail->addAddress($email);
+
+        $mail->isHTML(true);
+        $mail->Subject = "Код подтверждения регистрации";
+        $mail->Body = "Ваш код подтверждения: <b>$verification_code</b>";
+
+        return $mail->send();
+    } catch (Exception $e) {
+        return false;
+    }
+}
 ?>

@@ -40,6 +40,9 @@ password VARCHAR(255) NOT NULL,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE users ADD COLUMN verification_code INT NOT NULL;
+ALTER TABLE users ADD COLUMN is_verified TINYINT(1) DEFAULT 0;
+
 ---
 
 CREATE TABLE orders (
