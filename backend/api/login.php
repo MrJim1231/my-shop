@@ -13,6 +13,10 @@ require_once __DIR__ . '/../vendor/autoload.php';  // Путь к autoload фа�
 
 use \Firebase\JWT\JWT;
 
+// Загружаем переменные окружения из .env файла
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../api'); // Указываем путь к папке, где находится .env
+$dotenv->load();
+
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($data['email']) || !isset($data['password'])) {
@@ -45,7 +49,13 @@ if (!password_verify($password, $hashed_password)) {
 }
 
 // Генерация JWT
-$secret_key = "your_secret_key";  // Жестко заданный секретный ключ
+$secret_key = $_ENV['JWT_SECRET_KEY'];  // Используем секретный ключ из .env файла
+
+if (!$secret_key) {
+    echo json_encode(["status" => "error", "message" => "JWT_SECRET_KEY не задан в .env файле"]);
+    exit();
+}
+
 $issued_at = time();
 $expiration_time = $issued_at + 3600;  // Время истечения (1 час)
 
