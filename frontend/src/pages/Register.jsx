@@ -11,9 +11,10 @@ const Register = () => {
   const [verificationCode, setVerificationCode] = useState('')
   const [isCodeSent, setIsCodeSent] = useState(false)
   const [message, setMessage] = useState({ text: '', type: '' })
-  const { login } = useAuth()
+  const { login } = useAuth() // Контекст аутентификации
   const navigate = useNavigate()
 
+  // Функция для отправки данных на сервер для регистрации
   const registerUser = async (e) => {
     e.preventDefault()
     const userId = localStorage.getItem('userId') || null
@@ -22,7 +23,6 @@ const Register = () => {
 
     try {
       const res = await axios.post(`${API_URL}register.php`, { email, password, userId }, { headers: { 'Content-Type': 'application/json' } })
-
       console.log('Відповідь сервера:', res.data)
 
       setMessage({
@@ -32,7 +32,7 @@ const Register = () => {
 
       if (res.data.status === 'success') {
         localStorage.setItem('userId', res.data.userId)
-        setIsCodeSent(true)
+        setIsCodeSent(true) // Переключаем на форму ввода кода подтверждения
       }
     } catch (err) {
       console.error('Помилка запиту на реєстрацію:', err)
@@ -40,6 +40,7 @@ const Register = () => {
     }
   }
 
+  // Функция для проверки кода подтверждения
   const verifyCode = async (e) => {
     e.preventDefault()
     const userId = localStorage.getItem('userId')
@@ -57,7 +58,17 @@ const Register = () => {
       })
 
       if (res.data.status === 'success') {
-        navigate('/')
+        console.log('Токен:', res.data.token) // Выводим токен в консоль
+
+        // Проверяем наличие токена
+        if (res.data.token) {
+          localStorage.setItem('token', res.data.token)
+          login({ token: res.data.token }) // Передаем объект с токеном
+          navigate('/') // Перенаправление на домашнюю страницу или другую страницу
+        } else {
+          console.error('Токен отсутствует в ответе сервера')
+          setMessage({ text: 'Не вдалося отримати токен', type: 'error' })
+        }
       }
     } catch (err) {
       console.error('Помилка запиту на перевірку коду:', err)
@@ -69,15 +80,15 @@ const Register = () => {
     <div className={styles.loginContainer}>
       {!isCodeSent ? (
         <form className={styles.form} onSubmit={registerUser}>
-          <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button className={styles.button} type="submit">
             Зареєструватися
           </button>
         </form>
       ) : (
         <form className={styles.form} onSubmit={verifyCode}>
-          <input className={styles.input} type="text" placeholder="Код підтвердження" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
+          <input className={styles.input} type="text" placeholder="Код підтвердження" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required />
           <button className={styles.button} type="submit">
             Підтвердити Email
           </button>
