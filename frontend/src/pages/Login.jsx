@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '../context/AuthContext' // Імпортуємо хук useAuth
+import { useAuth } from '../context/AuthContext'
 import axios from 'axios'
 import { API_URL } from '../api/config'
-import { useNavigate } from 'react-router-dom' // Використовуємо useNavigate
-import styles from '../styles/Auth.module.css' // Використовуємо той самий файл стилів
+import { useNavigate } from 'react-router-dom'
+import styles from '../styles/Auth.module.css'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [code, setCode] = useState('')
   const [message, setMessage] = useState({ text: '', type: '' })
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const { login, logout } = useAuth() // Отримуємо функцію login та logout з AuthContext
-  const navigate = useNavigate() // Хук для навігації
+  const [requiresVerification, setRequiresVerification] = useState(false)
+  const { login, logout } = useAuth()
+  const navigate = useNavigate()
 
-  // Перевірка наявності токена при монтуванні компонента
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
@@ -24,61 +25,70 @@ const Login = () => {
 
   const loginUser = async (e) => {
     e.preventDefault()
-
-    console.log('Відправка даних:', { email, password })
-
+    console.log('Попытка входа с email:', email)
     try {
       const res = await axios.post(
         `${API_URL}login.php`,
         { email, password },
         {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         }
       )
-
-      console.log('Відповідь сервера:', res.data)
-
+      console.log('Ответ сервера:', res.data)
       setMessage({ text: res.data.message, type: 'success' })
-
       if (res.data.status === 'success') {
-        // Перевіряємо, що токен і userId присутні в відповіді
         if (res.data.token && res.data.userId) {
-          // Зберігаємо токен і userId в localStorage
           localStorage.setItem('token', res.data.token)
-          localStorage.setItem('userId', res.data.userId) // Додаємо збереження userId
-
-          // Оновлюємо контекст автентифікації за допомогою хука useAuth
+          localStorage.setItem('userId', res.data.userId)
           login({ email, token: res.data.token, userId: res.data.userId })
-
           setIsLoggedIn(true)
-          console.log('Токен та UserId збережено:', res.data.token, res.data.userId)
-
-          // Перенаправляємо на сторінку замовлень після успішного входу
+          console.log('Успешный вход. Перенаправление на заказы')
           navigate('/orders')
         } else {
-          setMessage({ text: 'Токен або userId не був отриманий від сервера', type: 'error' })
+          console.log('Токен или userId отсутствует в ответе сервера')
         }
+      } else if (res.data.status === 'verification_required') {
+        setRequiresVerification(true)
+        console.log('Требуется верификация email')
       }
     } catch (err) {
+      console.error('Ошибка авторизации:', err)
       setMessage({ text: 'Помилка при авторизації', type: 'error' })
-      console.error('Помилка:', err)
     }
   }
 
-  const logoutUser = () => {
-    // Викликаємо logout з контексту
-    logout()
-
-    // Перенаправляємо на сторінку входу
-    navigate('/login')
+  const verifyCode = async (e) => {
+    e.preventDefault()
+    console.log('Отправка кода подтверждения:', code)
+    try {
+      const res = await axios.post(
+        `${API_URL}verify_email.php`,
+        { email, code },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+      console.log('Ответ сервера на верификацию:', res.data)
+      if (res.data.status === 'success') {
+        localStorage.setItem('token', res.data.token)
+        localStorage.setItem('userId', res.data.userId)
+        login({ email, token: res.data.token, userId: res.data.userId })
+        setIsLoggedIn(true)
+        setRequiresVerification(false)
+        console.log('Код подтвержден, вход выполнен')
+        navigate('/orders')
+      } else {
+        setMessage({ text: 'Неверный код подтверждения', type: 'error' })
+      }
+    } catch (err) {
+      console.error('Ошибка при подтверждении кода:', err)
+      setMessage({ text: 'Ошибка при подтверждении кода', type: 'error' })
+    }
   }
 
   return (
     <div className={styles.loginContainer}>
-      {/* Якщо користувач не авторизований, показуємо форму входу */}
-      {!isLoggedIn && (
+      {!isLoggedIn && !requiresVerification && (
         <form className={styles.form} onSubmit={loginUser}>
           <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -88,11 +98,19 @@ const Login = () => {
         </form>
       )}
 
-      {/* Якщо користувач авторизований, показуємо кнопку для виходу */}
+      {requiresVerification && (
+        <form className={styles.form} onSubmit={verifyCode}>
+          <input className={styles.input} type="text" placeholder="Введите код" value={code} onChange={(e) => setCode(e.target.value)} />
+          <button className={styles.button} type="submit">
+            Подтвердить
+          </button>
+        </form>
+      )}
+
       {isLoggedIn && (
         <div>
           <p>Ви авторизовані</p>
-          <button className={styles.button} type="button" onClick={logoutUser}>
+          <button className={styles.button} type="button" onClick={logout}>
             Вийти
           </button>
         </div>
