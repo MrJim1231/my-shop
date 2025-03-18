@@ -111,12 +111,17 @@ function sendVerificationEmail($email, $verification_code)
         $mail->addAddress($email);
 
         $mail->isHTML(true);
+        $mail->CharSet = 'UTF-8';  // Устанавливаем правильную кодировку
         $mail->Subject = "Код подтверждения регистрации";
         $mail->Body = "Ваш код подтверждения: <b>$verification_code</b>";
+
+        // Убедитесь, что тело письма в кодировке UTF-8
+        $mail->Body = mb_convert_encoding($mail->Body, 'UTF-8', 'auto');
 
         return $mail->send();
     } catch (Exception $e) {
         return false;
     }
 }
+
 ?>

@@ -57,7 +57,7 @@ const Register = () => {
       })
 
       if (res.data.status === 'success') {
-        navigate('/login')
+        navigate('/')
       }
     } catch (err) {
       console.error('Помилка запиту на перевірку коду:', err)
