@@ -64,7 +64,8 @@ if ($stored_code == $code) {
     echo json_encode([
         "status" => "success",
         "message" => "Email успешно подтвержден",
-        "token" => $jwt
+        "token" => $jwt,
+        "userId" => $user_id  // Возвращаем userId
     ]);
 } else {
     echo json_encode(["status" => "error", "message" => "Неверный код"]);

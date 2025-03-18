@@ -31,7 +31,7 @@ const Register = () => {
       })
 
       if (res.data.status === 'success') {
-        localStorage.setItem('userId', res.data.userId)
+        localStorage.setItem('userId', res.data.userId) // Сохраняем userId в localStorage
         setIsCodeSent(true) // Переключаем на форму ввода кода подтверждения
       }
     } catch (err) {
@@ -63,7 +63,8 @@ const Register = () => {
         // Проверяем наличие токена
         if (res.data.token) {
           localStorage.setItem('token', res.data.token)
-          login({ token: res.data.token }) // Передаем объект с токеном
+          localStorage.setItem('userId', res.data.userId) // Сохраняем userId в localStorage
+          login(res.data) // Передаем весь объект данных, включая токен
           navigate('/') // Перенаправление на домашнюю страницу или другую страницу
         } else {
           console.error('Токен отсутствует в ответе сервера')
@@ -80,15 +81,15 @@ const Register = () => {
     <div className={styles.loginContainer}>
       {!isCodeSent ? (
         <form className={styles.form} onSubmit={registerUser}>
-          <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button className={styles.button} type="submit">
             Зареєструватися
           </button>
         </form>
       ) : (
         <form className={styles.form} onSubmit={verifyCode}>
-          <input className={styles.input} type="text" placeholder="Код підтвердження" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} required />
+          <input className={styles.input} type="text" placeholder="Код підтвердження" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
           <button className={styles.button} type="submit">
             Підтвердити Email
           </button>
