@@ -65,12 +65,12 @@ if ($stmt_check->num_rows > 0) {
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 // Генерируем код подтверждения (6 цифр)
-$verification_code = random_int(100000, 999999);
+$verification_code = (string) random_int(100000, 999999);
 
 // Вставляем нового пользователя в базу
 $sql = "INSERT INTO users (id, email, password, verification_code, is_verified) VALUES (?, ?, ?, ?, 0)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("sssi", $user_id, $email, $hashed_password, $verification_code);
+$stmt->bind_param("ssss", $user_id, $email, $hashed_password, $verification_code);
 
 try {
     if ($stmt->execute()) {
