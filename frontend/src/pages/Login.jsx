@@ -95,6 +95,9 @@ const Login = () => {
           <button className={styles.button} type="submit">
             Увійти
           </button>
+          <p className={styles.forgotPassword} onClick={() => navigate('/reset-password')}>
+            Забыли пароль?
+          </p>
         </form>
       )}
 

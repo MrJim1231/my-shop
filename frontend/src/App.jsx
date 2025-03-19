@@ -13,6 +13,7 @@ import Orders from './pages/Orders'
 import Footer from './components/Footer'
 import PrivateRoute from './components/PrivateRoute'
 import Auth from './pages/Auth' // Импортируем страницу авторизации
+import ResetPassword from './pages/ResetPassword' // Импортируем страницу сброса пароля
 import { ToastContainer } from 'react-toastify' // Импортируем ToastContainer
 import 'react-toastify/dist/ReactToastify.css' // Подключаем стили для уведомлений
 import './App.css'
@@ -36,6 +37,8 @@ function App() {
               <Route path="/category/:categoryId" element={<CategoryPage />} />
               {/* Новый маршрут для страницы авторизации */}
               <Route path="/auth" element={<Auth />} />
+              {/* Новый маршрут для сброса пароля */}
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/orders" element={<PrivateRoute element={Orders} />} />
             </Routes>
           </main>
