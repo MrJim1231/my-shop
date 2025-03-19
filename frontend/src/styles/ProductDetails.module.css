@@ -89,6 +89,8 @@
   .mobileTitle {
     display: flex;
     justify-content: center;
+    text-align: center;
+    padding-bottom: 10px;
   }
 
   .desktopTitle {
