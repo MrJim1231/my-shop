@@ -181,11 +181,14 @@ function ProductDetails() {
         <span className={styles.breadcrumbText}>{selectedProduct?.name || product?.name || 'Товар'}</span>
       </nav>
       <div className={styles.productDetails}>
+        {/* Заголовок для мобильных */}
+        <h3 className={`${styles.productTitle} ${styles.mobileTitle}`}>Комплект постільної білизни {selectedProduct?.name}</h3>
         {/* Використовуємо компонент ImageGallery */}
         {product?.images && <ImageGallery images={product.images} setPreviousImage={setPreviousImage} previousImage={previousImage} />}
 
         <div className={styles.section}>
-          <h2>{selectedProduct?.name}</h2>
+          {/* Заголовок для десктопа */}
+          <h2 className={`${styles.productTitle} ${styles.desktopTitle}`}>Комплект постільної білизни {selectedProduct?.name}</h2>
           <DiscountPrice price={selectedProduct?.price} parentCategoryName={parentCategoryName} categoryName={categoryName} />
           <p>Наявність: {selectedProduct?.availability ? 'В наявності' : 'Немає в наявності'}</p>
           <p>Кількість на складі: {selectedProduct?.quantity_in_stock}</p>

@@ -70,11 +70,31 @@
   color: #333;
 }
 
+/* Стили для заголовка на мобильных */
+
+.mobileTitle {
+  display: none; /* Показываем заголовок для мобильных */
+}
+
+.desktopTitle {
+  display: flex; /* Скрываем заголовок для мобильных */
+}
+
 @media (max-width: 768px) {
   .productDetails {
     display: flex;
     flex-direction: column;
   }
+
+  .mobileTitle {
+    display: flex;
+    justify-content: center;
+  }
+
+  .desktopTitle {
+    display: none; /* Показываем заголовок для десктопа */
+  }
+
   .section {
     margin-top: 10px;
     display: flex;
