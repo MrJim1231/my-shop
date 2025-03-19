@@ -15,35 +15,34 @@ use Firebase\JWT\JWT;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Загружаем переменные окружения из .env файла
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../api'); // Указываем путь к папке, где находится .env
+// Завантажуємо змінні середовища з файлу .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../api'); // Вказуємо шлях до папки, де знаходиться .env
 $dotenv->load();
-
 
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($data['email']) || !isset($data['password'])) {
-    echo json_encode(["status" => "error", "message" => "Email и пароль обязательны"]);
+    echo json_encode(["status" => "error", "message" => "Email та пароль обов'язкові"]);
     exit();
 }
 
 $email = trim($data['email']);
 $password = trim($data['password']);
 
-// Проверяем, передан ли userId, если нет - генерируем новый
+// Перевіряємо, чи передано userId, якщо ні - генеруємо новий
 $user_id = isset($data['userId']) ? $data['userId'] : uniqid();
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo json_encode(["status" => "error", "message" => "Некорректный email"]);
+    echo json_encode(["status" => "error", "message" => "Некоректний email"]);
     exit();
 }
 
 if (strlen($password) < 6) {
-    echo json_encode(["status" => "error", "message" => "Пароль должен быть не менее 6 символов"]);
+    echo json_encode(["status" => "error", "message" => "Пароль має бути не менше 6 символів"]);
     exit();
 }
 
-// Проверка на существующий email
+// Перевірка на існуючий email
 $sql_check = "SELECT id, is_verified FROM users WHERE email = ?";
 $stmt_check = $conn->prepare($sql_check);
 $stmt_check->bind_param("s", $email);
@@ -54,47 +53,47 @@ $stmt_check->fetch();
 
 if ($stmt_check->num_rows > 0) {
     if ($is_verified) {
-        echo json_encode(["status" => "error", "message" => "Email уже зарегистрирован и подтвержден"]);
+        echo json_encode(["status" => "error", "message" => "Email вже зареєстрований та підтверджений"]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Email уже зарегистрирован, но не подтвержден. Проверьте почту"]);
+        echo json_encode(["status" => "error", "message" => "Email вже зареєстрований, але не підтверджений. Перевірте пошту"]);
     }
     exit();
 }
 
-// Хешируем пароль
+// Хешуємо пароль
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-// Генерируем код подтверждения (6 цифр)
+// Генеруємо код підтвердження (6 цифр)
 $verification_code = (string) random_int(100000, 999999);
 
-// Вставляем нового пользователя в базу
+// Вставляємо нового користувача в базу
 $sql = "INSERT INTO users (id, email, password, verification_code, is_verified) VALUES (?, ?, ?, ?, 0)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ssss", $user_id, $email, $hashed_password, $verification_code);
 
 try {
     if ($stmt->execute()) {
-        // Отправляем код на почту
+        // Відправляємо код на пошту
         if (sendVerificationEmail($email, $verification_code)) {
             echo json_encode([
                 "status" => "success",
-                "message" => "Регистрация прошла успешно. Проверьте почту для подтверждения",
+                "message" => "Реєстрація пройшла успішно. Перевірте пошту для підтвердження",
                 "userId" => $user_id
             ]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Ошибка при отправке письма с кодом подтверждения"]);
+            echo json_encode(["status" => "error", "message" => "Помилка при відправці листа з кодом підтвердження"]);
         }
     } else {
-        echo json_encode(["status" => "error", "message" => "Ошибка при регистрации"]);
+        echo json_encode(["status" => "error", "message" => "Помилка при реєстрації"]);
     }
 } catch (Exception $e) {
-    echo json_encode(["status" => "error", "message" => "Ошибка при регистрации: " . $e->getMessage()]);
+    echo json_encode(["status" => "error", "message" => "Помилка при реєстрації: " . $e->getMessage()]);
 }
 
 $stmt->close();
 $conn->close();
 
-// Функция отправки письма
+// Функція відправки листа
 function sendVerificationEmail($email, $verification_code)
 {
     $mail = new PHPMailer(true);
@@ -107,15 +106,15 @@ function sendVerificationEmail($email, $verification_code)
         $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
         $mail->Port = $_ENV['MAIL_PORT'];
 
-        $mail->setFrom($_ENV['ADMIN_EMAIL'], 'Your Website');
+        $mail->setFrom($_ENV['ADMIN_EMAIL'], 'Ваш сайт');
         $mail->addAddress($email);
 
         $mail->isHTML(true);
-        $mail->CharSet = 'UTF-8';  // Устанавливаем правильную кодировку
-        $mail->Subject = "Код подтверждения регистрации";
-        $mail->Body = "Ваш код подтверждения: <b>$verification_code</b>";
+        $mail->CharSet = 'UTF-8';  // Встановлюємо правильну кодування
+        $mail->Subject = "Код підтвердження реєстрації";
+        $mail->Body = "Ваш код підтвердження: <b>$verification_code</b>";
 
-        // Убедитесь, что тело письма в кодировке UTF-8
+        // Переконайтесь, що тіло листа в кодуванні UTF-8
         $mail->Body = mb_convert_encoding($mail->Body, 'UTF-8', 'auto');
 
         return $mail->send();

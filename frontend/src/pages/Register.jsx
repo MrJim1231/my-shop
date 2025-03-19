@@ -21,7 +21,6 @@ const Register = () => {
 
     try {
       const res = await axios.post(`${API_URL}register.php`, { email, password, userId }, { headers: { 'Content-Type': 'application/json' } })
-      console.log('Відповідь сервера:', res.data)
 
       setMessage({
         text: res.data.message,
@@ -43,12 +42,8 @@ const Register = () => {
     e.preventDefault()
     const userId = localStorage.getItem('userId')
 
-    console.log('Перевірка коду для email:', email, 'Код:', verificationCode)
-
     try {
       const res = await axios.post(`${API_URL}verify_email.php`, { email, code: verificationCode }, { headers: { 'Content-Type': 'application/json' } })
-
-      console.log('Відповідь сервера на перевірку коду:', res.data)
 
       setMessage({
         text: res.data.message,
