@@ -9,10 +9,11 @@
 
 .viewedProductsSection h2 {
   text-align: center;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .productGrid {
+  margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Показываем 4 карточки на больших экранах */
   gap: 20px;
@@ -80,5 +81,9 @@
 @media (max-width: 768px) {
   .productGrid {
     grid-template-columns: repeat(2, 1fr); /* Показываем по 2 карточки */
+  }
+
+  .productName {
+    font-size: 15px;
   }
 }

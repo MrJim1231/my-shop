@@ -68,4 +68,8 @@
   .productGrid {
     grid-template-columns: repeat(2, 1fr); /* Показываем по 2 карточки */
   }
+
+  .productName {
+    font-size: 15px;
+  }
 }

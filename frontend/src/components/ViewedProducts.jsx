@@ -32,7 +32,7 @@ function ViewedProducts({ viewedProducts }) {
                   ) : (
                     <div className={styles.noImage}>Зображення відсутнє</div>
                   )}
-                  <h2 className={styles.productName}>{product.name}</h2>
+                  <h2 className={styles.productName}>Комплект постільної білизни {product.name}</h2>
                   <DiscountPrice price={product.price} categoryName={product.categoryName} />
                 </Link>
               </div>

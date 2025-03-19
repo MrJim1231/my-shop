@@ -149,3 +149,12 @@
 .breadcrumbText {
   color: #333;
 }
+
+/* Адаптивность для мобильных устройств */
+
+/* Для экранов меньше 768px (мобильные устройства) */
+@media (max-width: 768px) {
+  .quantityControl {
+    margin-bottom: 10px;
+  }
+}

@@ -105,7 +105,7 @@ function CategoryPage() {
                     )}
                   </div>
 
-                  <h2 className={styles.productName}>{product.name}</h2>
+                  <h2 className={styles.productName}>Комплект постільної білизни {product.name}</h2>
                   <DiscountPrice price={product.price} parentCategoryName={categoryName} categoryName={categoryName} />
                 </Link>
               </div>
