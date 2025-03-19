@@ -86,7 +86,7 @@ function sendResetEmail($email, $reset_link)
         $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
         $mail->Port = $_ENV['MAIL_PORT'];
 
-        $mail->setFrom($_ENV['ADMIN_EMAIL'], 'Ваш сайт');
+        $mail->setFrom($_ENV['ADMIN_EMAIL'], 'Інтернет магазин постільної білизни Sleep & Dream');
         $mail->addAddress($email);
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';
