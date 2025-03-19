@@ -46,6 +46,7 @@
   border: none;
   color: #007bff;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .toggleButton:hover {
@@ -58,4 +59,16 @@
 
 .errorMessage {
   color: red;
+}
+
+.forgotPassword {
+  cursor: pointer;
+  transition: color 0.3s, text-decoration 0.3s; /* Плавный переход */
+  color: #007bff;
+  font-size: 14px;
+}
+
+.forgotPassword:hover {
+  color: #007bff; /* Меняем цвет текста при ховере */
+  text-decoration: underline; /* Добавляем подчеркивание */
 }

@@ -19,8 +19,6 @@ const Register = () => {
     e.preventDefault()
     const userId = localStorage.getItem('userId') || null
 
-    console.log('Відправка даних на сервер:', { email, password, userId })
-
     try {
       const res = await axios.post(`${API_URL}register.php`, { email, password, userId }, { headers: { 'Content-Type': 'application/json' } })
       console.log('Відповідь сервера:', res.data)
@@ -58,8 +56,6 @@ const Register = () => {
       })
 
       if (res.data.status === 'success') {
-        console.log('Токен:', res.data.token) // Выводим токен в консоль
-
         // Проверяем наличие токена
         if (res.data.token) {
           localStorage.setItem('token', res.data.token)

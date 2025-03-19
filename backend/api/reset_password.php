@@ -17,20 +17,20 @@ $dotenv->load();
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($data['token']) || !isset($data['new_password'])) {
-    echo json_encode(["status" => "error", "message" => "Токен и новый пароль обязательны"]);
+    echo json_encode(["status" => "error", "message" => "Токен і новий пароль обов'язкові"]);
     exit();
 }
 
 $token = trim($data['token']);
 $new_password = password_hash(trim($data['new_password']), PASSWORD_BCRYPT);
 
-// Проверка токена
+// Перевірка токена
 $sql = "SELECT id, reset_expiry FROM users WHERE reset_token = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
-    error_log("Ошибка подготовки запроса: " . $conn->error);
-    echo json_encode(["status" => "error", "message" => "Ошибка сервера"]);
+    error_log("Помилка підготовки запиту: " . $conn->error);
+    echo json_encode(["status" => "error", "message" => "Помилка сервера"]);
     exit();
 }
 
@@ -41,28 +41,28 @@ $stmt->bind_result($user_id, $reset_expiry);
 $stmt->fetch();
 
 if ($stmt->num_rows == 0 || time() > $reset_expiry) {
-    echo json_encode(["status" => "error", "message" => "Неверный или истекший токен"]);
+    echo json_encode(["status" => "error", "message" => "Невірний або прострочений токен"]);
     exit();
 }
 
-// Обновление пароля
+// Оновлення пароля
 $sql_update = "UPDATE users SET password = ?, reset_token = NULL, reset_expiry = NULL WHERE id = ?";
 $stmt_update = $conn->prepare($sql_update);
 
 if (!$stmt_update) {
-    error_log("Ошибка подготовки запроса обновления: " . $conn->error);
-    echo json_encode(["status" => "error", "message" => "Ошибка сервера"]);
+    error_log("Помилка підготовки запиту на оновлення: " . $conn->error);
+    echo json_encode(["status" => "error", "message" => "Помилка сервера"]);
     exit();
 }
 
-// Используем 's' для строкового типа данных id
+// Використовуємо 's' для рядкового типу даних id
 $stmt_update->bind_param("ss", $new_password, $user_id);
 $stmt_update->execute();
 
 if ($stmt_update->affected_rows > 0) {
-    echo json_encode(["status" => "success", "message" => "Пароль успешно изменен"]);
+    echo json_encode(["status" => "success", "message" => "Пароль успішно змінено"]);
 } else {
-    echo json_encode(["status" => "error", "message" => "Ошибка обновления пароля"]);
+    echo json_encode(["status" => "error", "message" => "Помилка оновлення пароля"]);
 }
 
 $stmt->close();

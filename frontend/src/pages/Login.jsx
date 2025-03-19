@@ -25,7 +25,6 @@ const Login = () => {
 
   const loginUser = async (e) => {
     e.preventDefault()
-    console.log('Попытка входа с email:', email)
     try {
       const res = await axios.post(
         `${API_URL}login.php`,
@@ -34,7 +33,6 @@ const Login = () => {
           headers: { 'Content-Type': 'application/json' },
         }
       )
-      console.log('Ответ сервера:', res.data)
       setMessage({ text: res.data.message, type: 'success' })
       if (res.data.status === 'success') {
         if (res.data.token && res.data.userId) {
@@ -42,7 +40,6 @@ const Login = () => {
           localStorage.setItem('userId', res.data.userId)
           login({ email, token: res.data.token, userId: res.data.userId })
           setIsLoggedIn(true)
-          console.log('Успешный вход. Перенаправление на заказы')
           navigate('/orders')
         } else {
           console.log('Токен или userId отсутствует в ответе сервера')
@@ -96,7 +93,7 @@ const Login = () => {
             Увійти
           </button>
           <p className={styles.forgotPassword} onClick={() => navigate('/reset-password')}>
-            Забыли пароль?
+            Забули пароль?
           </p>
         </form>
       )}

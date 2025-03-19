@@ -35,8 +35,6 @@ function OrderForm({ onClose, rubberOption }) {
       userId = data.userId // Получаем userId из ответа сервера
       localStorage.setItem('userId', userId) // Сохраняем в localStorage для дальнейшего использования
     }
-
-    console.log('Generated userId:', userId) // Логирование сгенерированного userId
     return userId
   }
 
@@ -51,8 +49,6 @@ function OrderForm({ onClose, rubberOption }) {
 
     // Получаем userId из localStorage или с сервера, если он не был сохранен
     const userId = await getUserId()
-
-    console.log('Submitting order with userId:', userId) // Логирование перед отправкой заказа
 
     // Вычисляем общую сумму
     const totalPrice = getTotalPrice(rubberOption) // Используем getTotalPrice с rubberOption
@@ -84,7 +80,6 @@ function OrderForm({ onClose, rubberOption }) {
       })
 
       const responseData = await response.json()
-      console.log('Server response:', responseData) // Логирование ответа от сервера
 
       if (response.ok) {
         clearCart() // Очищаем корзину после успешного оформления

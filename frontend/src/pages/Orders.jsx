@@ -10,9 +10,6 @@ function Orders() {
     const fetchOrders = async () => {
       const userId = localStorage.getItem('userId')
 
-      // Логирование userId, чтобы убедиться, что мы правильно получаем его
-      console.log('User ID из localStorage:', userId)
-
       if (!userId) {
         setError('Будь ласка, увійдіть в систему, щоб побачити ваші замовлення.')
         setLoading(false)
