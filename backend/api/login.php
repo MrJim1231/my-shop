@@ -15,14 +15,14 @@ use Firebase\JWT\JWT;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Загружаем переменные окружения из .env файла
+// Завантажуємо змінні оточення з .env файлу
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../api'); 
 $dotenv->load();
 
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($data['email']) || !isset($data['password'])) {
-    echo json_encode(["status" => "error", "message" => "Email и пароль обязательны"]);
+    echo json_encode(["status" => "error", "message" => "Email і пароль обов'язкові"]);
     exit();
 }
 
@@ -36,49 +36,48 @@ $stmt_check->execute();
 $stmt_check->store_result();
 
 if ($stmt_check->num_rows == 0) {
-    echo json_encode(["status" => "error", "message" => "Неверный email или пароль"]);
+    echo json_encode(["status" => "error", "message" => "Невірний email або пароль"]);
     exit();
 }
 
 $stmt_check->bind_result($user_id, $hashed_password, $is_verified);
 $stmt_check->fetch();
 
-// Если пароль неверный
+// Якщо пароль невірний
 if (!password_verify($password, $hashed_password)) {
-    echo json_encode(["status" => "error", "message" => "Неверный email или пароль"]);
+    echo json_encode(["status" => "error", "message" => "Невірний email або пароль"]);
     exit();
 }
 
-// Если email не подтвержден
+// Якщо email не підтверджено
 if (!$is_verified) {
-    // Генерируем новый код подтверждения
+    // Генеруємо новий код підтвердження
     $verification_code = (string) random_int(100000, 999999);
 
-
-    // Обновляем код в базе
+    // Оновлюємо код у базі
     $sql_update_code = "UPDATE users SET verification_code = ? WHERE id = ?";
     $stmt_update = $conn->prepare($sql_update_code);
     $stmt_update->bind_param("ss", $verification_code, $user_id);
     $stmt_update->execute();
     $stmt_update->close();
 
-    // Отправляем письмо с кодом
+    // Надсилаємо лист із кодом
     if (sendVerificationEmail($email, $verification_code)) {
         echo json_encode([
             "status" => "verification_required",
-            "message" => "Email не подтвержден. Код повторно отправлен на почту",
+            "message" => "Email не підтверджено. Код повторно відправлено на пошту",
             "userId" => $user_id
         ]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Ошибка при отправке письма с кодом"]);
+        echo json_encode(["status" => "error", "message" => "Помилка при надсиланні листа з кодом"]);
     }
     exit();
 }
 
-// Генерация JWT
+// Генерація JWT
 $secret_key = $_ENV['JWT_SECRET_KEY'];
 if (!$secret_key) {
-    echo json_encode(["status" => "error", "message" => "JWT_SECRET_KEY не задан"]);
+    echo json_encode(["status" => "error", "message" => "JWT_SECRET_KEY не задано"]);
     exit();
 }
 
@@ -95,7 +94,7 @@ $jwt = JWT::encode($payload, $secret_key, 'HS256');
 
 echo json_encode([
     "status" => "success",
-    "message" => "Авторизация успешна",
+    "message" => "Авторизація успішна",
     "token" => $jwt,
     "userId" => $user_id
 ]);
@@ -115,13 +114,13 @@ function sendVerificationEmail($email, $verification_code)
         $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
         $mail->Port = $_ENV['MAIL_PORT'];
 
-        $mail->setFrom($_ENV['ADMIN_EMAIL'], 'Your Website');
+        $mail->setFrom($_ENV['ADMIN_EMAIL'], 'Інтернет магазин постільної білизни Sleep & Dream');
         $mail->addAddress($email);
 
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';
-        $mail->Subject = "Повторный код подтверждения";
-        $mail->Body = "Ваш новый код подтверждения: <b>$verification_code</b>";
+        $mail->Subject = "Повторний код підтвердження";
+        $mail->Body = "Ваш новий код підтвердження: <b>$verification_code</b>";
 
         return $mail->send();
     } catch (Exception $e) {

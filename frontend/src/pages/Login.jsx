@@ -42,21 +42,21 @@ const Login = () => {
           setIsLoggedIn(true)
           navigate('/orders')
         } else {
-          console.log('Токен или userId отсутствует в ответе сервера')
+          console.log('Токен або userId відсутній у відповіді сервера')
         }
       } else if (res.data.status === 'verification_required') {
         setRequiresVerification(true)
-        console.log('Требуется верификация email')
+        console.log('Потрібна верифікація email')
       }
     } catch (err) {
-      console.error('Ошибка авторизации:', err)
+      console.error('Помилка авторизації:', err)
       setMessage({ text: 'Помилка при авторизації', type: 'error' })
     }
   }
 
   const verifyCode = async (e) => {
     e.preventDefault()
-    console.log('Отправка кода подтверждения:', code)
+    console.log('Відправка коду підтвердження:', code)
     try {
       const res = await axios.post(
         `${API_URL}verify_email.php`,
@@ -65,21 +65,21 @@ const Login = () => {
           headers: { 'Content-Type': 'application/json' },
         }
       )
-      console.log('Ответ сервера на верификацию:', res.data)
+      console.log('Відповідь сервера на верифікацію:', res.data)
       if (res.data.status === 'success') {
         localStorage.setItem('token', res.data.token)
         localStorage.setItem('userId', res.data.userId)
         login({ email, token: res.data.token, userId: res.data.userId })
         setIsLoggedIn(true)
         setRequiresVerification(false)
-        console.log('Код подтвержден, вход выполнен')
+        console.log('Код підтверджений, вхід виконано')
         navigate('/orders')
       } else {
-        setMessage({ text: 'Неверный код подтверждения', type: 'error' })
+        setMessage({ text: 'Невірний код підтвердження', type: 'error' })
       }
     } catch (err) {
-      console.error('Ошибка при подтверждении кода:', err)
-      setMessage({ text: 'Ошибка при подтверждении кода', type: 'error' })
+      console.error('Помилка при підтвердженні коду:', err)
+      setMessage({ text: 'Помилка при підтвердженні коду', type: 'error' })
     }
   }
 
@@ -100,9 +100,9 @@ const Login = () => {
 
       {requiresVerification && (
         <form className={styles.form} onSubmit={verifyCode}>
-          <input className={styles.input} type="text" placeholder="Введите код" value={code} onChange={(e) => setCode(e.target.value)} />
+          <input className={styles.input} type="text" placeholder="Введіть код" value={code} onChange={(e) => setCode(e.target.value)} />
           <button className={styles.button} type="submit">
-            Подтвердить
+            Підтвердити
           </button>
         </form>
       )}
