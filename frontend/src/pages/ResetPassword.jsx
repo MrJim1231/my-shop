@@ -52,14 +52,23 @@ export default function ResetPassword() {
 
       {token ? (
         <div>
-          <input type="password" className={styles.input} placeholder="Введіть новий пароль" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+          <input
+            type="password"
+            id="new-password"
+            name="newPassword"
+            className={styles.input}
+            placeholder="Введіть новий пароль"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            autocomplete="new-password"
+          />
           <button className={`${styles.button} ${styles.buttonReset}`} onClick={handleResetPassword} disabled={loading}>
             {loading ? 'Скидаємо...' : 'Скинути пароль'}
           </button>
         </div>
       ) : (
         <div>
-          <input type="email" className={styles.input} placeholder="Введіть email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="email" id="email" name="email" className={styles.input} placeholder="Введіть email" value={email} onChange={(e) => setEmail(e.target.value)} autocomplete="email" />
           <button className={`${styles.button} ${styles.buttonRequest}`} onClick={handleRequestReset} disabled={loading}>
             {loading ? 'Відправка...' : 'Відправити запит'}
           </button>

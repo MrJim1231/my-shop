@@ -26,13 +26,7 @@ const Login = () => {
   const loginUser = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post(
-        `${API_URL}login.php`,
-        { email, password },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      )
+      const res = await axios.post(`${API_URL}login.php`, { email, password }, { headers: { 'Content-Type': 'application/json' } })
       setMessage({ text: res.data.message, type: 'success' })
       if (res.data.status === 'success') {
         if (res.data.token && res.data.userId) {
@@ -58,13 +52,7 @@ const Login = () => {
     e.preventDefault()
     console.log('Відправка коду підтвердження:', code)
     try {
-      const res = await axios.post(
-        `${API_URL}verify_email.php`,
-        { email, code },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      )
+      const res = await axios.post(`${API_URL}verify_email.php`, { email, code }, { headers: { 'Content-Type': 'application/json' } })
       console.log('Відповідь сервера на верифікацію:', res.data)
       if (res.data.status === 'success') {
         localStorage.setItem('token', res.data.token)
@@ -87,8 +75,18 @@ const Login = () => {
     <div className={styles.loginContainer}>
       {!isLoggedIn && !requiresVerification && (
         <form className={styles.form} onSubmit={loginUser}>
-          <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input className={styles.input} type="email" id="email" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
+          <input
+            className={styles.input}
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Пароль"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
           <button className={styles.button} type="submit">
             Увійти
           </button>
@@ -100,7 +98,17 @@ const Login = () => {
 
       {requiresVerification && (
         <form className={styles.form} onSubmit={verifyCode}>
-          <input className={styles.input} type="text" placeholder="Введіть код" value={code} onChange={(e) => setCode(e.target.value)} />
+          <input
+            className={styles.input}
+            type="text"
+            id="verification_code"
+            name="verification_code"
+            placeholder="Введіть код"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            autoComplete="one-time-code"
+            required
+          />
           <button className={styles.button} type="submit">
             Підтвердити
           </button>

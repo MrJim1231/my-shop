@@ -11,10 +11,9 @@ const Register = () => {
   const [verificationCode, setVerificationCode] = useState('')
   const [isCodeSent, setIsCodeSent] = useState(false)
   const [message, setMessage] = useState({ text: '', type: '' })
-  const { login } = useAuth() // Контекст аутентификации
+  const { login } = useAuth()
   const navigate = useNavigate()
 
-  // Функция для отправки данных на сервер для регистрации
   const registerUser = async (e) => {
     e.preventDefault()
     const userId = localStorage.getItem('userId') || null
@@ -28,8 +27,8 @@ const Register = () => {
       })
 
       if (res.data.status === 'success') {
-        localStorage.setItem('userId', res.data.userId) // Сохраняем userId в localStorage
-        setIsCodeSent(true) // Переключаем на форму ввода кода подтверждения
+        localStorage.setItem('userId', res.data.userId)
+        setIsCodeSent(true)
       }
     } catch (err) {
       console.error('Помилка запиту на реєстрацію:', err)
@@ -37,7 +36,6 @@ const Register = () => {
     }
   }
 
-  // Функция для проверки кода подтверждения
   const verifyCode = async (e) => {
     e.preventDefault()
     const userId = localStorage.getItem('userId')
@@ -51,12 +49,11 @@ const Register = () => {
       })
 
       if (res.data.status === 'success') {
-        // Проверяем наличие токена
         if (res.data.token) {
           localStorage.setItem('token', res.data.token)
-          localStorage.setItem('userId', res.data.userId) // Сохраняем userId в localStorage
-          login(res.data) // Передаем весь объект данных, включая токен
-          navigate('/') // Перенаправление на домашнюю страницу или другую страницу
+          localStorage.setItem('userId', res.data.userId)
+          login(res.data)
+          navigate('/')
         } else {
           console.error('Токен отсутствует в ответе сервера')
           setMessage({ text: 'Не вдалося отримати токен', type: 'error' })
@@ -72,15 +69,35 @@ const Register = () => {
     <div className={styles.loginContainer}>
       {!isCodeSent ? (
         <form className={styles.form} onSubmit={registerUser}>
-          <input className={styles.input} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input className={styles.input} type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input className={styles.input} type="email" id="email" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
+          <input
+            className={styles.input}
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Пароль"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
           <button className={styles.button} type="submit">
             Зареєструватися
           </button>
         </form>
       ) : (
         <form className={styles.form} onSubmit={verifyCode}>
-          <input className={styles.input} type="text" placeholder="Код підтвердження" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
+          <input
+            className={styles.input}
+            type="text"
+            id="verification_code"
+            name="verification_code"
+            placeholder="Код підтвердження"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            autoComplete="one-time-code"
+            required
+          />
           <button className={styles.button} type="submit">
             Підтвердити Email
           </button>

@@ -65,7 +65,7 @@ if (!$stmt_update->execute()) {
 }
 $stmt_update->close();
 
-$reset_link = $_ENV['FRONTEND_URL'] . "/reset-password?token=$reset_token";
+$reset_link = $_ENV['BACKEND_URL'] . "/reset-password?token=$reset_token";
 
 if (sendResetEmail($email, $reset_link)) {
     echo json_encode(["status" => "success", "message" => "Посилання для відновлення пароля надіслано на email"]);
