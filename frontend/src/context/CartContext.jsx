@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { toast } from 'react-toastify' // Импортируем toast
-import 'react-toastify/dist/ReactToastify.css' // Подключаем стили для уведомлений
+import { toast } from 'react-toastify' // Імпортуємо toast
+import 'react-toastify/dist/ReactToastify.css' // Підключаємо стилі для сповіщень
 
 const CartContext = createContext()
 
@@ -25,8 +25,8 @@ export const CartProvider = ({ children }) => {
         setCart(updatedCart)
         localStorage.setItem('cart', JSON.stringify(updatedCart))
       } else {
-        // Заменяем alert на toast.error
-        toast.error('Недостаточно товара на складе!')
+        // Замінюємо alert на toast.error
+        toast.error('Недостатньо товару на складі!')
       }
     } else {
       const updatedCart = [...cart, { ...product, quantity: 1 }]
@@ -47,8 +47,8 @@ export const CartProvider = ({ children }) => {
         if (item.quantity < item.quantity_in_stock) {
           return { ...item, quantity: item.quantity + 1 }
         } else {
-          // Заменяем alert на toast.error
-          toast.error('Невозможно добавить больше товара, чем есть на складе!')
+          // Замінюємо alert на toast.error
+          toast.error('Неможливо додати більше товару, ніж є на складі!')
           return item
         }
       }
