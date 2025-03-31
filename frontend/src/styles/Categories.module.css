@@ -100,7 +100,9 @@
 
 .breadcrumbLink {
   text-decoration: none;
-  color: #007bff;
+  /* color: #007bff; */
+  color: #0056b3;
+  font-weight: bold;
 }
 
 .separator {

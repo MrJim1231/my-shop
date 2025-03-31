@@ -83,7 +83,8 @@
 }
 
 .removeButton {
-  background-color: #e74c3c;
+  /* background-color: #e74c3c; */
+  background-color: #a93226; /* Более темный красный */
   border: none;
   color: white;
   padding: 10px 20px;
@@ -95,7 +96,8 @@
 }
 
 .removeButton:hover {
-  background-color: #c0392b;
+  /* background-color: #c0392b; */
+  background-color: #e74c3c;
 }
 
 .cartSummary {
@@ -106,7 +108,8 @@
 }
 
 .checkoutButton {
-  background-color: #27ae60;
+  /* background-color: #27ae60; */
+  background-color: #1e7e34; /* Темно-зеленый */
   border: none;
   color: white;
   padding: 12px 24px;
@@ -118,7 +121,8 @@
 }
 
 .checkoutButton:hover {
-  background-color: #2ecc71;
+  /* background-color: #2ecc71; */
+  background-color: #27ae60;
 }
 
 .cartItem button:disabled {
@@ -139,7 +143,9 @@
 
 .breadcrumbLink {
   text-decoration: none;
-  color: #007bff;
+  /* color: #007bff; */
+  color: #0056b3;
+  font-weight: bold;
 }
 
 .separator {

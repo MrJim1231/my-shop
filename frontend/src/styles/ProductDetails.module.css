@@ -34,7 +34,8 @@
 }
 
 .addToCartButton {
-  background-color: #28a745;
+  /* background-color: #28a745; */
+  background-color: #1e7e34; /* Темно-зеленый */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -59,7 +60,9 @@
 
 .breadcrumbLink {
   text-decoration: none;
-  color: #007bff;
+  color: #0056b3;
+  font-weight: bold;
+  /* color: #007bff; */
 }
 
 .separator {
