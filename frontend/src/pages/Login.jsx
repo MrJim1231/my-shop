@@ -40,7 +40,6 @@ const Login = () => {
         }
       } else if (res.data.status === 'verification_required') {
         setRequiresVerification(true)
-        console.log('Потрібна верифікація email')
       }
     } catch (err) {
       console.error('Помилка авторизації:', err)
@@ -50,17 +49,14 @@ const Login = () => {
 
   const verifyCode = async (e) => {
     e.preventDefault()
-    console.log('Відправка коду підтвердження:', code)
     try {
       const res = await axios.post(`${API_URL}verify_email.php`, { email, code }, { headers: { 'Content-Type': 'application/json' } })
-      console.log('Відповідь сервера на верифікацію:', res.data)
       if (res.data.status === 'success') {
         localStorage.setItem('token', res.data.token)
         localStorage.setItem('userId', res.data.userId)
         login({ email, token: res.data.token, userId: res.data.userId })
         setIsLoggedIn(true)
         setRequiresVerification(false)
-        console.log('Код підтверджений, вхід виконано')
         navigate('/orders')
       } else {
         setMessage({ text: 'Невірний код підтвердження', type: 'error' })
