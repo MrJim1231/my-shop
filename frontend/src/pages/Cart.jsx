@@ -53,9 +53,10 @@ function Cart() {
                   </button>
                 </div>
                 <label>
-                  <input type="checkbox" checked={rubberOption[item.id] || false} onChange={(e) => handleRubberChange(item.id, e.target.checked)} />
+                  <input type="checkbox" id={`rubber-${item.id}`} name={`rubber-${item.id}`} checked={rubberOption[item.id] || false} onChange={(e) => handleRubberChange(item.id, e.target.checked)} />
                   На резинці (+100 грн)
                 </label>
+
                 <button onClick={() => removeFromCart(item.id, item.size)} className={cartStyles.removeButton}>
                   Видалити
                 </button>

@@ -107,12 +107,23 @@ function OrderForm({ onClose, rubberOption }) {
       <div className={styles.orderForm}>
         <h2>Оформление заказа</h2>
         <form onSubmit={handleSubmit}>
-          <input type="text" name="name" placeholder="Ваше имя" value={formData.name} onChange={handleChange} required />
-          <input type="tel" name="phone" placeholder="Телефон" value={formData.phone} onChange={handleChange} required />
-          <input type="text" name="address" placeholder="Адрес доставки" value={formData.address} onChange={handleChange} required />
-          <input type="email" name="email" placeholder="Электронная почта" value={formData.email} onChange={handleChange} required />
-          <textarea name="comment" placeholder="Комментарий к заказу" value={formData.comment} onChange={handleChange} />
+          <label htmlFor="name">Ваше имя</label>
+          <input type="text" id="name" name="name" placeholder="Ваше имя" value={formData.name} onChange={handleChange} required autoComplete="name" />
+
+          <label htmlFor="phone">Телефон</label>
+          <input type="tel" id="phone" name="phone" placeholder="Телефон" value={formData.phone} onChange={handleChange} required autoComplete="tel" />
+
+          <label htmlFor="address">Адрес доставки</label>
+          <input type="text" id="address" name="address" placeholder="Адрес доставки" value={formData.address} onChange={handleChange} required autoComplete="street-address" />
+
+          <label htmlFor="email">Электронная почта</label>
+          <input type="email" id="email" name="email" placeholder="Электронная почта" value={formData.email} onChange={handleChange} required autoComplete="email" />
+
+          <label htmlFor="comment">Комментарий к заказу</label>
+          <textarea id="comment" name="comment" placeholder="Комментарий к заказу" value={formData.comment} onChange={handleChange} autoComplete="off" />
+
           {error && <p className={styles.error}>{error}</p>}
+
           <button type="submit" disabled={loading}>
             {loading ? 'Отправка заказа...' : 'Отправить заказ'}
           </button>
