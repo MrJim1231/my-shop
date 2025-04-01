@@ -74,7 +74,7 @@ function Home() {
                     {imageUrl ? (
                       <img
                         src={imageUrl}
-                        alt={product.name}
+                        alt={`Комплект постільної білизни ${product.name}`}
                         className={styles.productImage}
                         width="250"
                         height="250"
