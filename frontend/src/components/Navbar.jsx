@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { FiMenu, FiX, FiShoppingCart } from 'react-icons/fi'
@@ -9,9 +9,14 @@ function Navbar() {
   const { isAuthenticated, logout } = useAuth()
   const { getTotalItems } = useCart()
   const [isMenuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
+  }
+
+  const isCategoryActive = (path) => {
+    return location.pathname.startsWith(`/${path}`)
   }
 
   return (
@@ -23,7 +28,6 @@ function Navbar() {
           </NavLink>
         </div>
 
-        {/* Мобільний кошик поруч з логотипом */}
         {getTotalItems() > 0 && (
           <div className={`${styles.cartIcon} ${isMenuOpen ? styles.hidden : ''}`}>
             <NavLink to="/cart">
@@ -33,7 +37,6 @@ function Navbar() {
           </div>
         )}
 
-        {/* Десктоп-меню (приховується на мобільних) */}
         <ul className={styles.navLinks}>
           <li>
             <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : '')}>
@@ -41,7 +44,7 @@ function Navbar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/categories" className={({ isActive }) => (isActive ? styles.active : '')}>
+            <NavLink to="/categories" className={({ isActive }) => (isActive || isCategoryActive('category') ? styles.active : '')}>
               Категорії
             </NavLink>
           </li>
@@ -73,13 +76,11 @@ function Navbar() {
           )}
         </ul>
 
-        {/* Бургер-меню (відображається тільки на мобільних) */}
         <div className={styles.burgerIcon} onClick={toggleMenu}>
           {isMenuOpen ? <FiX /> : <FiMenu />}
         </div>
       </nav>
 
-      {/* Мобільне меню (спочатку приховане) */}
       <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ''}`}>
         <ul>
           <li>
