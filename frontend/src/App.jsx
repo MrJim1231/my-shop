@@ -12,6 +12,7 @@ import CategoryPage from './pages/CategoryPage'
 import Orders from './pages/Orders'
 import Footer from './components/Footer'
 import PrivateRoute from './components/PrivateRoute'
+import ScrollToTopButton from './components/ScrollToTopButton'
 import Auth from './pages/Auth' // Импортируем страницу авторизации
 import ResetPassword from './pages/ResetPassword' // Импортируем страницу сброса пароля
 import { ToastContainer } from 'react-toastify' // Импортируем ToastContainer
@@ -43,6 +44,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <ScrollToTopButton />
         </div>
         <ToastContainer position="top-right" autoClose={3000} /> {/* Добавлен ToastContainer */}
       </Router>
