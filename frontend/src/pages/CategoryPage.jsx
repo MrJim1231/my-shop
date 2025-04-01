@@ -92,7 +92,7 @@ function CategoryPage() {
                     {product.images && product.images.length > 0 ? (
                       <img
                         src={product.images[0]}
-                        alt={product.name}
+                        alt={`Комплект постільної білизни ${product.name}`}
                         className={styles.productImage}
                         width="250"
                         height="250"

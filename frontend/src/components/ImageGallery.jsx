@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from '../styles/ImageGallery.module.css' // Импортируем новый файл стилей
 
-const ImageGallery = ({ images }) => {
+const ImageGallery = ({ images, productName }) => {
   const [previousImage, setPreviousImage] = useState(null)
 
   // Убираем повторяющиеся изображения
@@ -24,7 +24,7 @@ const ImageGallery = ({ images }) => {
             <img
               key={index}
               src={image}
-              alt={`Product Image ${index + 1}`}
+              alt={`Комплект постільної білизни ${productName} - фото ${index + 1}`}
               className={styles.thumbnailImage}
               onClick={() => setPreviousImage(image)} // Изменение основного изображения при клике
             />
@@ -36,7 +36,7 @@ const ImageGallery = ({ images }) => {
       <div className={styles.mainImage}>
         <img
           src={mainImage} // Показываем основное изображение
-          alt="Main Product Image"
+          alt={`Комплект постільної білизни ${productName} - основне фото`}
           className={styles.mainImageDisplay}
         />
       </div>

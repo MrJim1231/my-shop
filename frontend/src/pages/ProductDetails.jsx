@@ -184,7 +184,7 @@ function ProductDetails() {
         {/* Заголовок для мобильных */}
         <h3 className={`${styles.productTitle} ${styles.mobileTitle}`}>Комплект постільної білизни {selectedProduct?.name}</h3>
         {/* Використовуємо компонент ImageGallery */}
-        {product?.images && <ImageGallery images={product.images} setPreviousImage={setPreviousImage} previousImage={previousImage} />}
+        {product?.images && <ImageGallery images={product.images} productName={product?.name} setPreviousImage={setPreviousImage} previousImage={previousImage} />}
 
         <div className={styles.section}>
           {/* Заголовок для десктопа */}
