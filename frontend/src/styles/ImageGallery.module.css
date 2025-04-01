@@ -30,6 +30,8 @@
 }
 
 .mainImageDisplay {
+  min-height: 500px;
+  min-width: 500px;
   width: 100%;
   max-width: 500px;
   height: auto;
@@ -59,5 +61,7 @@
   }
   .mainImageDisplay {
     width: 200px;
+    min-height: auto;
+    min-width: auto;
   }
 }
