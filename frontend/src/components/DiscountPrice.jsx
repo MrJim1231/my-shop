@@ -3,11 +3,14 @@ import styles from '../styles/Discount.module.css'
 
 // Функция для применения скидки
 export const applyDiscount = (price, parentCategoryName, categoryName) => {
-  if (parentCategoryName === 'Бязь' || categoryName === 'Бязь') {
-    return price - 500 // Скидка 500 грн на категорию "Бязь"
+  if (parentCategoryName === 'Сатин' || categoryName === 'Сатин') {
+    return price - 1300 // Скидка 500 грн на категорию "Бязь"
+  }
+  if (parentCategoryName === 'Страйп сатин' || categoryName === 'Страйп сатин') {
+    return price - 900 // Скидка 500 грн на категорию "Бязь"
   }
   if (parentCategoryName === 'Ранфорс' || categoryName === 'Ранфорс') {
-    return price - 300 // Скидка 300 грн на категорию "Ранфорс"
+    return price - 700 // Скидка 300 грн на категорию "Ранфорс"
   }
   return price // Без скидки
 }
