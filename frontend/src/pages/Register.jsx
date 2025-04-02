@@ -8,14 +8,20 @@ import styles from '../styles/Auth.module.css'
 const Register = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [verificationCode, setVerificationCode] = useState('')
   const [isCodeSent, setIsCodeSent] = useState(false)
   const [message, setMessage] = useState({ text: '', type: '' })
+  const [showPassword, setShowPassword] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
 
   const registerUser = async (e) => {
     e.preventDefault()
+    if (password !== confirmPassword) {
+      setMessage({ text: 'Паролі не співпадають', type: 'error' })
+      return
+    }
     const userId = localStorage.getItem('userId') || null
 
     try {
@@ -55,7 +61,7 @@ const Register = () => {
           login(res.data)
           navigate('/')
         } else {
-          console.error('Токен отсутствует в ответе сервера')
+          console.error('Токен відсутній у відповіді сервера')
           setMessage({ text: 'Не вдалося отримати токен', type: 'error' })
         }
       }
@@ -72,7 +78,7 @@ const Register = () => {
           <input className={styles.input} type="email" id="email" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
           <input
             className={styles.input}
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             name="password"
             placeholder="Пароль"
@@ -81,6 +87,21 @@ const Register = () => {
             autoComplete="new-password"
             required
           />
+          <input
+            className={styles.input}
+            type={showPassword ? 'text' : 'password'}
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Підтвердіть пароль"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
+          <label>
+            <input type="checkbox" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
+            Показати пароль
+          </label>
           <button className={styles.button} type="submit">
             Зареєструватися
           </button>
