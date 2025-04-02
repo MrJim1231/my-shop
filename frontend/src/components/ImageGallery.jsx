@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from '../styles/ImageGallery.module.css' // Импортируем новый файл стилей
 
 const ImageGallery = ({ images, productName }) => {
   const [previousImage, setPreviousImage] = useState(null)
+
+  // Сбрасываем выбранное изображение при смене товара
+  useEffect(() => {
+    setPreviousImage(null)
+  }, [images, productName])
 
   // Убираем повторяющиеся изображения
   const uniqueImages = [...new Set(images)]
