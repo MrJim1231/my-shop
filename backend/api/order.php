@@ -71,7 +71,7 @@ if ($stmt->execute()) {
         $stmt_item->execute();
     }
 
-    // Отправка письма покупателю
+    // Отправка уведомления админу (всегда)
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
@@ -82,9 +82,56 @@ if ($stmt->execute()) {
         $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
         $mail->Port = $_ENV['MAIL_PORT'];
         $mail->setFrom($_ENV['MAIL_USERNAME'], 'Інтернет магазин постільної білизни Sleep & Dream');
-        $mail->addAddress($email, $name);
+        $mail->addAddress($_ENV['ADMIN_EMAIL'], 'Admin');
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
+        $mail->Subject = "Нове замовлення №$orderNumber";
+
+        $mail->Body = "<h2>Нове замовлення!</h2>
+                       <p><strong>Номер замовлення:</strong> $orderNumber</p>
+                       <p><strong>Ім'я:</strong> $name</p>
+                       <p><strong>Телефон:</strong> $phone</p>
+                       <p><strong>Адреса:</strong> $address</p>
+                       <p><strong>Коментар:</strong> $comment</p>
+                       <p><strong>Підсумкова сума:</strong> $totalPrice грн</p>
+                       <h3>Товари у замовленні:</h3>
+                       <table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
+                           <thead>
+                               <tr>
+                                   <th style='text-align: center;'>Фото</th>
+                                   <th style='text-align: center;'>Назва</th>
+                                   <th style='text-align: center;'>Кількість</th>
+                                   <th style='text-align: center;'>Ціна</th>
+                                   <th style='text-align: center;'>Розмір</th>
+                                   <th style='text-align: center;'>На резинці</th>
+                               </tr>
+                           </thead>
+                           <tbody>";
+
+        foreach ($items as $item) {
+            $rubberText = isset($item['rubber']) && $item['rubber'] ? 'Так' : 'Ні';
+            $imageHtml = !empty($item['image']) ? "<img src='{$item['image']}' alt='{$product_name}' style='max-width: 100px; display: block; margin: 0 auto;'>" : "";
+
+            $mail->Body .= "<tr>
+                                <td style='text-align: center;'>$imageHtml</td>
+                                <td style='text-align: center;'>{$product_name}</td>
+                                <td style='text-align: center;'>{$item['quantity']}</td>
+                                <td style='text-align: center;'>{$item['price']} грн</td>
+                                <td style='text-align: center;'>{$item['size']}</td>
+                                <td style='text-align: center;'>$rubberText</td>
+                            </tr>";
+        }
+
+        $mail->Body .= "</tbody></table>";
+        $mail->send();
+    } catch (Exception $e) {
+        error_log("Ошибка при отправке письма админу: {$mail->ErrorInfo}");
+    }
+
+    // Отправка письма покупателю
+    try {
+        $mail->clearAddresses();
+        $mail->addAddress($email, $name);
         $mail->Subject = "Ваше замовлення №$orderNumber";
         
         $mail->Body = "<h2>Дякуємо за ваше замовлення!</h2>
@@ -124,21 +171,15 @@ if ($stmt->execute()) {
 
         $mail->Body .= "</tbody></table>";
         $mail->send();
-        
-        // Отправка уведомления администратору
-        $mail->clearAddresses();
-        $mail->addAddress($_ENV['ADMIN_EMAIL'], 'Admin');
-        $mail->Subject = "Нове замовлення №$orderNumber";
-        $mail->send();
-        
-        echo json_encode([
-            "status" => "success",
-            "message" => "Замовлення успішно додано і лист надіслано",
-            "userId" => $userId
-        ]);
     } catch (Exception $e) {
-        echo json_encode(["status" => "error", "message" => "Помилка при надсиланні листа: {$mail->ErrorInfo}"]);
+        error_log("Ошибка при отправке письма пользователю: {$mail->ErrorInfo}");
     }
+
+    echo json_encode([
+        "status" => "success",
+        "message" => "Замовлення успішно додано і лист надіслано",
+        "userId" => $userId
+    ]);
 } else {
     echo json_encode(["status" => "error", "message" => "Помилка при додаванні замовлення"]);
 }
