@@ -59,7 +59,7 @@ const Register = () => {
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.userId)
           login(res.data)
-          navigate('/')
+          navigate('/orders')
         } else {
           console.error('Токен відсутній у відповіді сервера')
           setMessage({ text: 'Не вдалося отримати токен', type: 'error' })
