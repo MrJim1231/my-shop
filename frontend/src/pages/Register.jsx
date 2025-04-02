@@ -99,9 +99,10 @@ const Register = () => {
             required
           />
           <label>
-            <input type="checkbox" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
+            <input type="checkbox" id="showPassword" name="showPassword" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
             Показати пароль
           </label>
+
           <button className={styles.button} type="submit">
             Зареєструватися
           </button>

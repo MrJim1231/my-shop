@@ -60,7 +60,7 @@ export default function ResetPassword() {
             placeholder="Введіть новий пароль"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            autocomplete="new-password"
+            autoComplete="new-password"
           />
           <button className={`${styles.button} ${styles.buttonReset}`} onClick={handleResetPassword} disabled={loading}>
             {loading ? 'Скидаємо...' : 'Скинути пароль'}
@@ -68,7 +68,7 @@ export default function ResetPassword() {
         </div>
       ) : (
         <div>
-          <input type="email" id="email" name="email" className={styles.input} placeholder="Введіть email" value={email} onChange={(e) => setEmail(e.target.value)} autocomplete="email" />
+          <input type="email" id="email" name="email" className={styles.input} placeholder="Введіть email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
           <button className={`${styles.button} ${styles.buttonRequest}`} onClick={handleRequestReset} disabled={loading}>
             {loading ? 'Відправка...' : 'Відправити запит'}
           </button>
